@@ -1,0 +1,169 @@
+package org.hanbo.mvc.services;
+
+import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+import org.hanbo.mvc.entities.Article;
+import org.hanbo.mvc.entities.LoginUser;
+import org.hanbo.mvc.exceptions.WebAppException;
+import org.hanbo.mvc.models.ArticleDataModel;
+import org.hanbo.mvc.repositories.ArticlesRepository;
+import org.hanbo.mvc.repositories.UsersRepository;
+import org.hanbo.mvc.services.utilities.ArticleDateModelEntityMapping;
+import org.hanbo.mvc.utilities.IdUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ArticleServiceImpl implements ArticleService
+{
+   @Autowired
+   private UsersRepository userRepo;
+   
+   @Autowired
+   private ArticlesRepository articlesRepo;
+   
+   @Override
+   public ArticleDataModel saveArticle(ArticleDataModel articleDataModel)
+   {
+      validateArticleDataModel(articleDataModel);
+      
+      Date dateNow = new Date();
+      articleDataModel.setArticleCreateDate(dateNow);
+      articleDataModel.setArticleUpdateDate(dateNow);
+      
+      LoginUser user = 
+      userRepo.getUserById(articleDataModel.getAuthorId());
+      if (user == null)
+      {
+         throw new WebAppException(
+            String.format("User with id [%s] cannot be found.", articleDataModel.getAuthorId())
+            , WebAppException.ErrorType.DATA);
+      }
+      
+      Article article = ArticleDateModelEntityMapping.fromDataModel(articleDataModel);
+      article.setId(IdUtil.generateUuid());
+      article.setAuthor(user);
+      
+      articlesRepo.saveArticle(article);
+      
+      return articleDataModel;
+   }
+   
+   @Override
+   public ArticleDataModel getArticleById(String articleId)
+   {
+      Article article = articlesRepo.getReportById(articleId);
+      
+      if(article == null)
+      {
+         throw new WebAppException(
+            String.format("Article with id [%s] cannot be found.", articleId)
+            , WebAppException.ErrorType.DATA);
+      }
+      
+      ArticleDataModel retVal = 
+         ArticleDateModelEntityMapping.toDataModel(article);
+
+      return retVal;
+   }
+
+   @Override
+   public ArticleDataModel getArticleById(String articleId, String authorId)
+   {
+      Article article = articlesRepo.getReportById(articleId, authorId);
+      
+      if(article == null)
+      {
+         throw new WebAppException(
+            String.format("Article with id [%s] cannot be found.", articleId)
+            , WebAppException.ErrorType.DATA);
+      }
+      
+      ArticleDataModel retVal = 
+         ArticleDateModelEntityMapping.toDataModel(article);
+
+      return retVal;
+   }
+   
+   @Override
+   public ArticleDataModel updateArticle(ArticleDataModel articleDataModel)
+   {
+      this.validateArticleDataModel(articleDataModel);
+      
+      String articleId = articleDataModel.getArticleId();
+      String userId = articleDataModel.getAuthorId();
+    
+      validateArticleIds(articleId, userId);
+      
+      Article existingArticle
+         = this.articlesRepo.getReportById(articleId, userId);
+      
+      Date dateNow = new Date();
+      articleDataModel.setArticleUpdateDate(dateNow);
+      articleDataModel.setArticleCreateDate(existingArticle.getCreateDate());
+
+      ArticleDateModelEntityMapping.updateExistingEntity(articleDataModel, existingArticle);
+
+      articlesRepo.saveArticle(existingArticle);
+      
+      return articleDataModel;
+   }
+   
+   private void validateArticleDataModel(ArticleDataModel articleDataModel)
+   {
+      if (StringUtils.isEmpty(articleDataModel.getArticleTitle()))
+      {
+         throw new WebAppException("Article title cannot be empty.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (articleDataModel.getArticleTitle().length() > 128)
+      {
+         throw new WebAppException("Article title has too many characters.", WebAppException.ErrorType.DATA);
+      }
+         
+      if (articleDataModel.getArticleKeywords().length() > 128)
+      {
+         throw new WebAppException("Article keywords has too many characters.", WebAppException.ErrorType.DATA);
+      }
+
+      if (articleDataModel.getArticleCategory().length() > 64)
+      {
+         throw new WebAppException("Article category has too many characters.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(articleDataModel.getArticleType()))
+      {
+         throw new WebAppException("Article type cannot be empty.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (!articleDataModel.getArticleType().equals("post") && !articleDataModel.getArticleType().equals("page"))
+      {
+         throw new WebAppException("Article type is invalid.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (!StringUtils.isEmpty(articleDataModel.getArticleSummary())
+            && articleDataModel.getArticleSummary().length() > 512)
+      {
+         throw new WebAppException("Article summary has too many characters.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(articleDataModel.getAuthorId()))
+      {
+         throw new WebAppException("Author id cannot be empty.", WebAppException.ErrorType.DATA);
+      }
+   }
+   
+   private void validateArticleIds(String articleId, String ownerId)
+   {
+      if (StringUtils.isEmpty(articleId))
+      {
+         throw new WebAppException("Article id cannot be empty.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(ownerId))
+      {
+         throw new WebAppException("Article owner id cannot be empty.", WebAppException.ErrorType.DATA);
+      }
+   }
+}
