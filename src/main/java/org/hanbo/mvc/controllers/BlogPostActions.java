@@ -1,12 +1,11 @@
 package org.hanbo.mvc.controllers;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.ArticleDataModel;
-import org.hanbo.mvc.models.ArticleListDataItem;
+import org.hanbo.mvc.models.ArticleListPageDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.services.ArticleService;
@@ -166,7 +165,7 @@ public class BlogPostActions
    }
       
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-   @RequestMapping(value = "/admin/blog/allPosts", method=RequestMethod.GET)
+   @RequestMapping(value = "/admin/blog/allMyPosts", method=RequestMethod.GET)
    public ModelAndView allMyPosts(
       @RequestParam(value="pageIdx", required=false)
       Integer pageIdx
@@ -193,20 +192,20 @@ public class BlogPostActions
          return _util.createErorrPageViewModel("User Authorization Failure", "User cannot be found.");
       }
 
-      /*List<ArticleListDataItem> articleList
-         = this._articleService.getPostsAsListItems(
-            loginUser.getUserId(), pageIdx
+      ArticleListPageDataModel articleListPage
+         = this._articleService.getUserArticleList(
+            pageIdx, loginUser.getUserId()
          );
-      
+            
       PageMetadata pageMetadata
-         = _util.creatPageMetadata("Preview Post");
+         = _util.creatPageMetadata("List all my posts");
       ModelAndView retVal
          = _util.getDefaultModelAndView(
-            "previewPost", pageMetadata
+            "authorPostsList", pageMetadata
          );
-      retVal.addObject("articleListModel", articleDataModel);
-      */
-      return null;
+      retVal.addObject("articleListPageModel", articleListPage);
+      
+      return retVal;
    }
 
    private Map<String, String> createArticleTypeList()

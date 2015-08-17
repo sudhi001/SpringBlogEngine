@@ -1,20 +1,27 @@
 package org.hanbo.mvc.services;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.entities.LoginUser;
 import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ArticleDataModel;
+import org.hanbo.mvc.models.ArticleListPageDataModel;
+import org.hanbo.mvc.models.ItemListPageDataModel;
+import org.hanbo.mvc.models.SimplifiedArticleDataModel;
 import org.hanbo.mvc.repositories.ArticlesRepository;
 import org.hanbo.mvc.repositories.UsersRepository;
-import org.hanbo.mvc.services.utilities.ArticleDateModelEntityMapping;
+import org.hanbo.mvc.services.utilities.ArticleDataModelEntityMapping;
 import org.hanbo.mvc.utilities.IdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
+@PropertySource("classpath:/site.properties")
 public class ArticleServiceImpl implements ArticleService
 {
    @Autowired
@@ -22,6 +29,9 @@ public class ArticleServiceImpl implements ArticleService
    
    @Autowired
    private ArticlesRepository articlesRepo;
+   
+   @Autowired
+   private Environment configValues;
    
    @Override
    public ArticleDataModel saveArticle(ArticleDataModel articleDataModel)
@@ -41,7 +51,7 @@ public class ArticleServiceImpl implements ArticleService
             , WebAppException.ErrorType.DATA);
       }
       
-      Article article = ArticleDateModelEntityMapping.fromDataModel(articleDataModel);
+      Article article = ArticleDataModelEntityMapping.fromDataModel(articleDataModel);
       article.setId(IdUtil.generateUuid());
       article.setAuthor(user);
       
@@ -63,7 +73,7 @@ public class ArticleServiceImpl implements ArticleService
       }
       
       ArticleDataModel retVal = 
-         ArticleDateModelEntityMapping.toDataModel(article);
+         ArticleDataModelEntityMapping.toDataModel(article);
 
       return retVal;
    }
@@ -81,7 +91,7 @@ public class ArticleServiceImpl implements ArticleService
       }
       
       ArticleDataModel retVal = 
-         ArticleDateModelEntityMapping.toDataModel(article);
+         ArticleDataModelEntityMapping.toDataModel(article);
 
       return retVal;
    }
@@ -103,11 +113,42 @@ public class ArticleServiceImpl implements ArticleService
       articleDataModel.setArticleUpdateDate(dateNow);
       articleDataModel.setArticleCreateDate(existingArticle.getCreateDate());
 
-      ArticleDateModelEntityMapping.updateExistingEntity(articleDataModel, existingArticle);
+      ArticleDataModelEntityMapping.updateExistingEntity(articleDataModel, existingArticle);
 
       articlesRepo.saveArticle(existingArticle);
       
       return articleDataModel;
+   }
+   
+   @Override
+   public ArticleListPageDataModel getUserArticleList(
+      int pageIdx,
+      String authorId)
+   {
+      String itemsCount = configValues.getProperty("postEditsPerPage");
+      
+      int itemsCountVal = Integer.parseInt(itemsCount);
+      
+      List<Article> allArticles
+         = this.articlesRepo.getAllArticlesByUserId(
+            authorId, pageIdx, itemsCountVal, true
+         );
+      
+      long allArticlesCount
+         = this.articlesRepo.getAllArticlesCountsByUserId(authorId);
+      
+      List<SimplifiedArticleDataModel> allArticlesTransformed =
+      ArticleDataModelEntityMapping.toDataListItems(allArticles);
+      
+      ArticleListPageDataModel listPageDataModel
+         = new ArticleListPageDataModel();
+      
+      ItemListPageDataModel.<ArticleListPageDataModel>createPageModel(
+         listPageDataModel, allArticlesTransformed.size(),
+         (int)allArticlesCount, pageIdx, itemsCountVal);
+      listPageDataModel.setListItems(allArticlesTransformed);
+
+      return listPageDataModel;
    }
    
    private void validateArticleDataModel(ArticleDataModel articleDataModel)

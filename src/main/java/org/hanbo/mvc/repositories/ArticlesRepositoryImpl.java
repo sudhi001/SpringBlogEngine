@@ -69,4 +69,67 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
 
       return null;
    }
+
+   @Override
+   @Transactional
+   public long getAllArticlesCountsByUserId(
+      String authorId
+   )
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      StringBuilder querySb = new StringBuilder();
+      querySb.append("Select count(article) from Article article");
+      querySb.append(" where article.author.id = :authorId");
+      
+      Query objQuery = session.createQuery(querySb.toString())
+            .setMaxResults(1)
+            .setFirstResult(0)
+            .setParameter("authorId", authorId);
+
+      List<Long> objList = objQuery.list();
+      if (objList.size() > 0)
+      {
+         return objList.get(0);
+      }
+      
+      return 0L;
+   }
+   
+   @Override
+   @Transactional
+   public List<Article> getAllArticlesByUserId(
+      String authorId, int pageIdx,
+      int pageItemCount, boolean sortDsc
+   )
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      StringBuilder querySb = new StringBuilder();
+      querySb.append("Select article from Article article");
+      querySb.append(" where article.author.id = :authorId");
+      if (sortDsc)
+      {
+         querySb.append(" order by article.updateDate desc");
+      }
+      else
+      {
+         querySb.append(" order by article.updateDate asc");
+      }
+      
+      int pageItemStart = pageIdx *pageItemCount;      
+      Query objQuery = session.createQuery(querySb.toString())
+         .setMaxResults(pageItemCount)
+         .setFirstResult(pageItemStart)
+         .setParameter("authorId", authorId);
+      
+      List<Article> articlesRet = objQuery.list();
+      for (Article article : articlesRet)
+      {
+         article.getAuthor().getUserName();
+         article.getAuthor().getId();         
+      }
+
+      return articlesRet;
+   }
 }

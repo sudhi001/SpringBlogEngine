@@ -1,6 +1,7 @@
 package org.hanbo.mvc.services;
 
 import org.hanbo.mvc.models.ArticleDataModel;
+import org.hanbo.mvc.models.ArticleListPageDataModel;
 
 public interface ArticleService
 {
@@ -10,5 +11,9 @@ public interface ArticleService
 
    ArticleDataModel getArticleById(String articleId, String authorId);
 
-   ArticleDataModel updateArticle(ArticleDataModel articleDataModel);   
+   ArticleDataModel updateArticle(ArticleDataModel articleDataModel);
+   
+   ArticleListPageDataModel getUserArticleList(
+      int pageIdx, String authorId
+   );
 }

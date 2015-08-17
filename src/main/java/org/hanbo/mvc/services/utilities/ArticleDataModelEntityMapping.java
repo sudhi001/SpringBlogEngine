@@ -1,9 +1,13 @@
 package org.hanbo.mvc.services.utilities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.models.ArticleDataModel;
+import org.hanbo.mvc.models.SimplifiedArticleDataModel;
 
-public class ArticleDateModelEntityMapping
+public class ArticleDataModelEntityMapping
 {
    public static Article fromDataModel(ArticleDataModel articleDataModel)
    {
@@ -55,6 +59,38 @@ public class ArticleDateModelEntityMapping
       retVal.setArticleUpdateDate(article.getUpdateDate());
       retVal.setAuthorId(article.getAuthor().getId());
       retVal.setAuthorName(article.getAuthor().getUserName());
+      
+      return retVal;
+   }
+
+   public static List<SimplifiedArticleDataModel> toDataListItems(List<Article> articles)
+   {
+      List<SimplifiedArticleDataModel> retVals
+         = new ArrayList<SimplifiedArticleDataModel>();
+      
+      for (Article article : articles)
+      {
+         SimplifiedArticleDataModel articleDataModel
+            = toDataListItem(article);
+         
+         retVals.add(articleDataModel);
+      }
+      
+      return retVals;
+   }
+   
+   public static SimplifiedArticleDataModel toDataListItem(Article article)
+   {
+      SimplifiedArticleDataModel retVal = new SimplifiedArticleDataModel();
+      retVal.setArticleId(article.getId());
+      retVal.setArticlePublished(article.isPublished());
+      retVal.setArticleSummary(article.getSummary());
+      retVal.setArticleTitle(article.getTitle());
+      retVal.setArticleType(article.getArticleType());
+      retVal.setAuthorId(article.getAuthor().getId());
+      retVal.setAuthorName(article.getAuthor().getUserName());
+      retVal.setArticleCreateDate(article.getCreateDate());
+      retVal.setArticleUpdateDate(article.getUpdateDate());
       
       return retVal;
    }

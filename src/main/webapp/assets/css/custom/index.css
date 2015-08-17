@@ -43,3 +43,13 @@ body {
   height: 35px;
   background-color: transparent;
 }
+
+.post-list {
+  padding-left: 35px;
+  padding-right: 35px;
+}
+
+.post-summary {
+  padding-left: 25px;
+  padding-right: 25px;
+}
