@@ -9,7 +9,11 @@ import org.hanbo.mvc.models.ArticleListPageDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.services.ArticleService;
+import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -48,7 +53,7 @@ public class BlogPostActions
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/blog/addNewPost", method=RequestMethod.POST, params="newPostSaveDraft")
-   public ModelAndView publishNewPost(
+   public ModelAndView addNewPost(
       @ModelAttribute("newPostModel")
       ArticleDataModel article
    )
@@ -206,6 +211,64 @@ public class BlogPostActions
       retVal.addObject("articleListPageModel", articleListPage);
       
       return retVal;
+   }
+   
+   // +++ REST APIs
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/blog/deletePost",
+      method=RequestMethod.DELETE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> deletePost(
+      @RequestParam("articleId")
+      String articleId
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+      
+      String userId = loginUser.getUserId();
+      this._articleService.deleteOwnerArticle(
+            articleId, userId
+         );
+      
+      return new ResponseEntity<String>(HttpStatus.OK);
+   }
+
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/blog/publishPost",
+      method=RequestMethod.PUT,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> publishPost(
+      @RequestParam("articleId")
+      String articleId,
+      @RequestParam("toPublish")
+      boolean toPublish
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+
+      String userId = loginUser.getUserId();
+      this._articleService.publishOwnerArticle(
+         articleId, userId, toPublish
+      );
+
+      return new ResponseEntity<String>(HttpStatus.OK);
    }
 
    private Map<String, String> createArticleTypeList()

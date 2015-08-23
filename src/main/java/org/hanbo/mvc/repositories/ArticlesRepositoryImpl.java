@@ -1,5 +1,6 @@
 package org.hanbo.mvc.repositories;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Article;
@@ -131,5 +132,53 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       }
 
       return articlesRet;
+   }
+   
+   @Override
+   @Transactional
+   public String getArticleOwnerId(String articleId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select article.author.id from Article article where article.id = :articleId"
+      )
+         .setParameter("articleId", articleId)
+         .setMaxResults(1);
+      List<String> objsFound = query.list();
+      if (objsFound.size() > 0)
+      {
+         return objsFound.get(0);
+      }
+      
+      return "";
+   }
+   
+   @Override
+   @Transactional
+   public void deleteArticle(String articleId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "delete from Article where id = :articleId"
+      )
+         .setParameter("articleId", articleId);
+      
+      query.executeUpdate();
+   }
+   
+   @Override
+   @Transactional
+   public void publishArticle(String articleId,
+      boolean articleToPublish)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "update Article set published = :articleToPublish, updateDate = :updateDate where id = :articleId"
+      )
+         .setParameter("articleId", articleId)
+         .setParameter("articleToPublish", articleToPublish)
+         .setParameter("updateDate", new Date());
+      
+      query.executeUpdate();
    }
 }

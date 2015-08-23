@@ -21,4 +21,11 @@ public interface ArticlesRepository
       String authorId, int pageIdx,
       int pageItemCount, boolean sortDsc
    );
+   
+   String getArticleOwnerId(String articleId);
+   
+   void deleteArticle(String articleId);
+   
+   void publishArticle(String articleId,
+      boolean articleToPublish);
 }

@@ -151,6 +151,35 @@ public class ArticleServiceImpl implements ArticleService
       return listPageDataModel;
    }
    
+   @Override
+   public void deleteOwnerArticle(String articleId, String ownerId)
+   {
+      validateArticleOwnership(articleId, ownerId);
+      this.articlesRepo.deleteArticle(articleId);
+   }
+   
+   @Override
+   public void publishOwnerArticle(String articleId, String ownerId, boolean articleToPublish)
+   {
+      validateArticleOwnership(articleId, ownerId);
+      this.articlesRepo.publishArticle(articleId, articleToPublish);      
+   }
+
+   private void validateArticleOwnership(String articleId, String ownerId)
+   {
+      String articleOwnerId = this.articlesRepo.getArticleOwnerId(articleId);
+      
+      if (StringUtils.isEmpty(articleOwnerId))
+      {
+         throw new WebAppException("Article owner id not found.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (!articleOwnerId.equals(ownerId))
+      {
+         throw new WebAppException("Article owner id mismatch.", WebAppException.ErrorType.DATA);
+      }
+   }
+   
    private void validateArticleDataModel(ArticleDataModel articleDataModel)
    {
       if (StringUtils.isEmpty(articleDataModel.getArticleTitle()))

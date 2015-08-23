@@ -16,4 +16,8 @@ public interface ArticleService
    ArticleListPageDataModel getUserArticleList(
       int pageIdx, String authorId
    );
+   
+   void deleteOwnerArticle(String articleId, String ownerId);
+   
+   void publishOwnerArticle(String articleId, String ownerId, boolean articleToPublish);
 }

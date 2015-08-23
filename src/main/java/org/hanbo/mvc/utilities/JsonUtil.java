@@ -12,4 +12,13 @@ public class JsonUtil
       return retVal;
    }
    
+   public static String simpleErrorMessage(String errMsg)
+   {
+      String retVal = String.format(
+         "{ 'ErrorMessage' : '%s' }", errMsg
+      );
+      
+      return retVal;
+   }
+   
 }
