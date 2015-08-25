@@ -164,6 +164,28 @@ public class ArticleServiceImpl implements ArticleService
       validateArticleOwnership(articleId, ownerId);
       this.articlesRepo.publishArticle(articleId, articleToPublish);      
    }
+   
+   @Override
+   public ArticleListPageDataModel getAllViewablePosts(int pageIdx)
+   {
+      String itemsCount = this.configValues.getProperty("publicPostsPerPage");
+      int itemsCountIntVal = Integer.parseInt(itemsCount);
+      
+      long totalPublicPostsCount = this.articlesRepo.getViewableArticlesCount("post");
+      
+      List<Article> allArticles
+         = this.articlesRepo.getViewableArticles("post", pageIdx, itemsCountIntVal);
+      
+      List<SimplifiedArticleDataModel> allArticleDataModels= 
+      ArticleDataModelEntityMapping.toDataListItems(allArticles);
+      
+      ArticleListPageDataModel retVal = new ArticleListPageDataModel();
+      ItemListPageDataModel.createPageModel(retVal, allArticleDataModels.size(),
+         (int)totalPublicPostsCount, pageIdx, itemsCountIntVal);
+      retVal.setListItems(allArticleDataModels);
+      
+      return retVal;
+   }
 
    private void validateArticleOwnership(String articleId, String ownerId)
    {

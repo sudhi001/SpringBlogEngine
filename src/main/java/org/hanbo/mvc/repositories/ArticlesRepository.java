@@ -28,4 +28,9 @@ public interface ArticlesRepository
    
    void publishArticle(String articleId,
       boolean articleToPublish);
+   
+   long getViewableArticlesCount(String articleType);
+   
+   List<Article> getViewableArticles(
+      String articleType, int pageIdx, int itemsCount);
 }

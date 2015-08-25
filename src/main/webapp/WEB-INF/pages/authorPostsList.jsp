@@ -12,6 +12,13 @@
     <hr>
     
     <div class="post-list">
+      <div class="row">
+        <div class="md-col-12 text-right">
+          <p>
+          <a href="${pageContext.request.contextPath}/admin/blog/newPost" class="btn btn-default">New Post</a>
+          </p>
+        </div>
+      </div>
     <c:choose>
       <c:when test="${!articleListPageModel.isDataModelEmpty()}">
 

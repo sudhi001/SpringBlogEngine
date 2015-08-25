@@ -22,7 +22,7 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
-                  <li><a href="${pageContext.request.contextPath}/admin/blog/newPost">Add New Post</a></li>
+                  <li><a href="${pageContext.request.contextPath}/admin/blog/allMyPosts">My Posts</a></li>
                 </ul>
               </li>
             </sec:authorize>

@@ -213,6 +213,33 @@ public class BlogPostActions
       return retVal;
    }
    
+   @RequestMapping(value = "/blog/allPosts/{pageIdx}", method=RequestMethod.GET)
+   public ModelAndView allBlogPosts(
+      @PathVariable(value="pageIdx")
+      int pageIdx
+   )
+   {
+      if (pageIdx <= 0)
+      {
+         pageIdx = 1;
+      }
+      
+      pageIdx -= 1;
+      
+      ArticleListPageDataModel articleListPage = 
+      this._articleService.getAllViewablePosts(pageIdx);
+      
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata("Blog Posts");
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+            "blogPosts", pageMetadata
+         );
+      retVal.addObject("articleListPageModel", articleListPage);
+      
+      return retVal;
+   }
+   
    // +++ REST APIs
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")

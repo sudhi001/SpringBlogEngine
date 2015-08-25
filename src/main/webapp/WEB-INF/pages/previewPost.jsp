@@ -8,7 +8,7 @@
   </tiles:putAttribute>
 
   <tiles:putAttribute name="body">
-    <h3>${articleModel.articleTitle}</h3>
+    <h2>Preview -- ${articleModel.articleTitle}</h2>
     <hr>
     <p>By ${articleModel.authorName}, Created on ${articleModel.getArticleCreateDateString()}; Last modified on ${articleModel.getArticleUpdateDateString()}</p>
     <br/>

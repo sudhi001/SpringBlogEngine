@@ -181,4 +181,55 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       
       query.executeUpdate();
    }
+
+   @Override
+   @Transactional
+   public long getViewableArticlesCount(String articleType)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select count(article) from Article article where article.articleType = :articleType and article.published = true"
+      )
+         .setParameter("articleType", articleType)
+         .setMaxResults(1)
+         .setFirstResult(0);
+      
+      List<Long> objsCount = query.list();
+      if (objsCount.size() > 0)
+      {
+         return objsCount.get(0);
+      }
+      
+      return 0L;
+   }
+
+   @Override
+   @Transactional
+   public List<Article> getViewableArticles(
+      String articleType, int pageIdx, int itemsCount)
+   {
+      int firstResult = pageIdx * itemsCount;
+      
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select article from Article article where article.articleType = :articleType "
+         + "and article.published = true order by article.updateDate desc"
+      )
+         .setParameter("articleType", articleType)
+         .setMaxResults(itemsCount)
+         .setFirstResult(firstResult);
+      
+      List<Article> objsList = query.list();
+      
+      if (objsList.size() > 0)
+      {
+         for (Article article : objsList)
+         {
+            article.getAuthor().getId();
+            article.getAuthor().getUserName();
+         }
+      }
+      
+      return objsList;
+   }
 }
