@@ -13,13 +13,24 @@
     
     <div class="post-list">
       <div class="row">
-        <div class="md-col-12 text-right">
+        <div class="col-md-3">
+          <c:choose>
+            <c:when test="${articleListPageModel.totalElementsCount == 0}">
+              <h4><span class="label label-info">${articleListPageModel.totalElementsCount} articles available</span></h4>
+            </c:when>
+            <c:otherwise>
+              <h4><span class="label label-info">${articleListPageModel.totalElementsCount} articles and counting ...</span></h4>
+            </c:otherwise>            
+          </c:choose>
+        </div>
+        <div class="col-md-9 text-right">
           <p>
-          <a href="${pageContext.request.contextPath}/admin/blog/newPost" class="btn btn-default">New Post</a>
+            <a href="${pageContext.request.contextPath}/admin/blog/newPost" class="btn btn-default">New Post</a>
           </p>
         </div>
       </div>
-    <c:choose>
+
+      <c:choose>
       <c:when test="${!articleListPageModel.isDataModelEmpty()}">
 
       <table class="table table-hover">
@@ -61,6 +72,29 @@
           </tr>
         </c:forEach>        
       </table>
+
+      <div class="row">
+        <div class="md-col-12 text-right">
+          <nav>
+            <ul class="pagination">
+              <c:if test="${articleListPageModel.canGoBack}">
+              <li>
+                <a href="${pageContext.request.contextPath}/admin/blog/allMyPosts?pageIdx=${articleListPageModel.previousPageIdx}" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              </c:if>
+              <c:if test="${articleListPageModel.hasMoreElement}">
+              <li>
+                <a href="${pageContext.request.contextPath}/admin/blog/allMyPosts?pageIdx=${articleListPageModel.nextPageIdx}" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+              </c:if>
+            </ul>
+          </nav>
+        </div>
+      </div>
 
       </c:when>
       <c:otherwise>

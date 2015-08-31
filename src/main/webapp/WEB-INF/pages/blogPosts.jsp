@@ -7,22 +7,54 @@
   </tiles:putAttribute>
 
   <tiles:putAttribute name="body">
-    <h3>Blog Posts</h3>
-    <hr>
+    <div class="row">
+      <div class="col-md-12 text-right">
+        <h2>All My Blog Posts</h2>
+      </div>
+    </div>
     
     <c:choose>
       <c:when test="${articleListPageModel.getListItems().size() > 0}">
         <c:forEach var="articleModel" items="${articleListPageModel.getListItems()}">
           <div class="post-list">
-            <h4><a href="">${articleModel.articleTitle}</a></h4>
-            <p>
-              ${articleModel.articleSummary}
-            </p>
-            <div class="text-right">
-              <span class="glyphicon glyphicon-book"></span> Post
-              <span class="glyphicon glyphicon-calendar"></span> ${articleModel.getArticleUpdateDateString()}         
-              <span class="glyphicon glyphicon-user"></span> ${articleModel.authorName}         
+          
+            <div class="row">
+              <div class="col-md-3"></div>
+              <div class="col-md-9">
+                <h3>${articleModel.articleTitle}</h3>
+                <hr>
+              </div>
             </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="text-center">
+                  <img src="https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240">
+                </div>
+              </div>
+              <div class="col-md-9">
+
+                <div style="min-height: 200px;">
+                  <p>
+${articleModel.articleSummary}
+                  </p>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p class="text-right">
+                      <a href="#">Read more...</a>
+                    </p>
+                  </div>
+                </div>
+                <div class="breadcrumb">
+                  <div class="text-right">
+                    <span class="glyphicon glyphicon-book"></span> ${articleModel.articleType}
+                    <span class="glyphicon glyphicon-calendar"></span> ${articleModel.getArticleUpdateDateString()}
+                    <span class="glyphicon glyphicon-user"></span> ${articleModel.authorName}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
           </div>
         </c:forEach>
       </c:when>
