@@ -46,18 +46,31 @@
             <td>
               <c:choose>
                 <c:when test="${postInfo.articleType.equals('post')}">
-                  <span class="glyphicon glyphicon-book"></span> Post
+                  <p style="padding-top: 5px;">
+                     <span class="glyphicon glyphicon-book"></span> Post
+                  </p>
                 </c:when>
                 <c:otherwise>
-                  <span class="glyphicon glyphicon-file"></span> Page
+                  <p style="padding-top: 5px;">
+                     <span class="glyphicon glyphicon-file"></span> Page
+                  </p>
                 </c:otherwise>
               </c:choose>
             </td>
-            <td><a href="${pageContext.request.contextPath}/admin/blog/editPost/${postInfo.articleId}" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a>
-              <a href="${pageContext.request.contextPath}/admin/blog/previewPost/${postInfo.articleId}"><strong>${postInfo.articleTitle}</strong></a>
+            <td>
+                <a href="${pageContext.request.contextPath}/admin/blog/editPost/${postInfo.articleId}" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="${pageContext.request.contextPath}/admin/blog/previewPost/${postInfo.articleId}"><strong>${postInfo.articleTitle}</strong></a>
             </td>
-            <td><span class="glyphicon glyphicon-user"></span> ${postInfo.authorName}</td>
-            <td><span class="glyphicon glyphicon-calendar"></span> ${postInfo.getArticleUpdateDateString()}</td>
+            <td>
+               <p style="padding-top: 5px;">
+                  <span class="glyphicon glyphicon-user"></span> ${postInfo.authorName}
+               </p>
+            </td>  
+            <td>
+               <p style="padding-top: 5px;">
+                  <span class="glyphicon glyphicon-calendar"></span> ${postInfo.getArticleUpdateDateString()}
+               </p>
+            </td>
             <td>
               <button class="btn btn-danger" onclick="deletePostJson('${postInfo.articleId}')"><span class="glyphicon glyphicon-floppy-remove"></span></button>
               <c:choose>
@@ -68,6 +81,9 @@
                   <button class="btn btn-default" onclick="publishPostJson('${postInfo.articleId}', 'false')"><span class="glyphicon glyphicon-file"></span></button>
                 </c:otherwise>
               </c:choose>
+              <c:if test="${postInfo.articleType.equals('page')}">
+                 <button class="btn btn-default" onclick="setPermaLinkBtnClick('${postInfo.articleId}', '${postInfo.authorId}', '${postInfo.articleTitle}')"><span class="glyphicon glyphicon-link"></span></button>
+              </c:if>
             </td>
           </tr>
         </c:forEach>        
@@ -103,6 +119,38 @@
     </c:choose>
     </div>
     
+    <div class="modal fade" id="permaLinkDlg">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="permaLinkForm" method="post" action="${pageContext.request.contextPath}/admin/blog/setPermaLink">
+            <input type="hidden" id="permaLinkArticleId" name="permaLinkArticleId" value="" />
+            <input type="hidden" id="permaLinkAuthorId" name="permaLinkAuthorId" value="" />
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Set Perma Link</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+               <label class="col-md-3">Article</label>
+               <p class="col-md-9" id="articleTitle"></p>
+            </div>
+            <div class="form-group">
+               <label for="permaLinkField" class="col-md-3">Perma Link</label>
+               <input type="text" class="col-md-9" id="permaLinkPath" name="permaLinkPath" placeholder=""/>
+            </div>
+            <p>
+              <input type="checkbox" id="pageReplacement" name="pageReplacement"> Use as page Replacement
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="submitPermaLinkClick()">Submit Change</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">
@@ -123,7 +171,7 @@
               error: function() {
               }
            });
-        }
+        };
         
         var publishPostJson = function (articleId, toPublish)
         {
@@ -139,7 +187,48 @@
               error: function() {
               }
            });
-        }
+        };
+        
+        var setPermaLinkBtnClick = function (articleId, authorId, articleTitle)
+        {
+           $("#permaLinkDlg #permaLinkForm #permaLinkArticleId").val(articleId);
+           $("#permaLinkDlg #permaLinkForm #permaLinkAuthorId").val(authorId);
+           $("#permaLinkDlg #permaLinkForm #articleTitle").html(articleTitle);
+           $("#permaLinkDlg #permaLinkForm #permaLinkPath").val("");
+           $("#permaLinkDlg #permaLinkForm #pageReplacement").attr("checked", false);
+           
+           $("#permaLinkDlg").modal("show");
+        };
+        
+        /*$('#permaLinkDlg').on('shown.bs.modal', function () {
+           
+        });*/
+        
+        var submitPermaLinkClick = function ()
+        {
+           var pageReplacementVal = false;
+           if ($("#permaLinkDlg #permaLinkForm #pageReplacement").is(":checked"))
+           {
+               pageReplacementVal = true;
+           }
+           
+           var postData = {
+              articleId: $("#permaLinkDlg #permaLinkForm #permaLinkArticleId").val(),
+              authorId: $("#permaLinkDlg #permaLinkForm #permaLinkAuthorId").val(),
+              permaLinkPath: $("#permaLinkDlg #permaLinkForm #permaLinkPath").val(),
+              pageReplacement: pageReplacementVal 
+           };
+
+           $.post("${pageContext.request.contextPath}/admin/blog/setPermaLink",
+        	  JSON.stringify(postData),
+              function(data, status){
+        	     if (status === "success")
+        	     {
+        	     
+        	     }
+              });
+          };
+        
     </script>
   </tiles:putAttribute>
 </tiles:insertDefinition>

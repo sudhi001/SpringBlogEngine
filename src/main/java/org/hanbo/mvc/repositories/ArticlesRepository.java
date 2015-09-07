@@ -33,4 +33,6 @@ public interface ArticlesRepository
    
    List<Article> getViewableArticles(
       String articleType, int pageIdx, int itemsCount);
+   
+   Article findArticleById(String articleId);
 }

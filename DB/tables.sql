@@ -2,6 +2,8 @@ use BlogEngine;
 
 DROP TABLE IF EXISTS image;
 
+DROP TABLE IF EXISTS permalink;
+
 DROP TABLE IF EXISTS article;
 
 DROP TABLE IF EXISTS userrole;
@@ -39,10 +41,23 @@ CREATE TABLE article (
    createdate DATETIME NOT NULL,
    updatedate DATETIME NOT NULL,
    articletype VARCHAR(16) NOT NULL DEFAULT 'post',
-   published BIT(1) NOT NULL DEFAULT 1,
+   published BIT(1) NOT NULL DEFAULT 0,
    
-   FOREIGN KEY (authorId) REFERENCES user(id)
+   FOREIGN KEY (authorid) REFERENCES user(id)
 );
+
+CREATE TABLE permalink(
+   id VARCHAR(45) NOT NULL PRIMARY KEY,
+   path VARCHAR(128) NOT NULL,
+   articleid VARCHAR(45) NOT NULL,
+   authorid VARCHAR(45) NOT NULL,
+   pagereplacement BIT(1) NOT NULL DEFAULT 0,
+
+   FOREIGN KEY (articleid) REFERENCES article(id),
+   FOREIGN KEY (authorid) REFERENCES user(id)
+);
+
+CREATE UNIQUE INDEX permalink_pathidx ON permalink (path);
 
 CREATE TABLE image (
    id VARCHAR(45) NOT NULL PRIMARY KEY,

@@ -47,6 +47,9 @@ public class LoginUser
    @OneToMany(fetch = FetchType.LAZY, mappedBy="author")
    private Set<Article> articles;
    
+   @OneToMany(fetch = FetchType.LAZY, mappedBy="author")
+   private Set<PermaLink> permaLinks;
+
    public LoginUser()
    {
       userRoles = new HashSet<UserRole>();
@@ -141,5 +144,15 @@ public class LoginUser
    public void setArticles(Set<Article> articles)
    {
       this.articles = articles;
+   }
+
+   public Set<PermaLink> getPermaLinks()
+   {
+      return permaLinks;
+   }
+
+   public void setPermaLinks(Set<PermaLink> permaLinks)
+   {
+      this.permaLinks = permaLinks;
    }
 }

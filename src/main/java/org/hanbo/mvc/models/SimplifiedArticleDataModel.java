@@ -1,7 +1,6 @@
 package org.hanbo.mvc.models;
 
 import java.util.Date;
-
 import org.hanbo.mvc.utilities.DateToString;
 
 public class SimplifiedArticleDataModel
@@ -59,6 +58,12 @@ public class SimplifiedArticleDataModel
       return articleKeywords;
    }
    
+   public String[] getArticleKeywordList()
+   {
+      String[] retVals = articleKeywords.split(",");
+      return retVals;
+   }
+
    public void setArticleKeywords(String aricleKeywords)
    {
       this.articleKeywords = aricleKeywords;

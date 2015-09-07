@@ -232,4 +232,23 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       
       return objsList;
    }
+   
+   @Override
+   @Transactional
+   public Article findArticleById(String articleId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select article from Article article where article.id = :articleId"
+      )
+         .setParameter("articleId", articleId);
+      
+      List<Article> objList =  query.list();
+      if (objList.size() > 0)
+      {
+         return objList.get(0);
+      }
+      
+      return null;
+   }
 }

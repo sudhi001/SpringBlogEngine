@@ -1,5 +1,13 @@
 package org.hanbo.mvc.utilities;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.io.IOUtils;
+
 import com.google.gson.Gson;
 
 public class JsonUtil
@@ -12,6 +20,14 @@ public class JsonUtil
       return retVal;
    }
    
+   public static <T> T convertJsonToObject(String jsonVal, Class<T> objType)
+   {
+      Gson gson = new Gson();
+      T retVal = gson.fromJson(jsonVal, objType);
+      
+      return retVal;
+   }
+   
    public static String simpleErrorMessage(String errMsg)
    {
       String retVal = String.format(
@@ -19,6 +35,24 @@ public class JsonUtil
       );
       
       return retVal;
+   }
+   
+   public static String readHttpRequestBody(HttpServletRequest request)
+   {
+      InputStream inStrm = null;
+      try
+      {
+         inStrm = request.getInputStream();
+         return IOUtils.toString(inStrm);   
+      }
+      catch (Exception e)
+      {
+         return "";
+      }
+      finally
+      {
+         IOUtils.closeQuietly(inStrm);
+      }
    }
    
 }
