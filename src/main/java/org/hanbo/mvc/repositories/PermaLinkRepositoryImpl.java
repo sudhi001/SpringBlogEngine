@@ -49,4 +49,17 @@ public class PermaLinkRepositoryImpl implements PermaLinkRepository
       
       return null;
    }
+   
+   @Override
+   @Transactional
+   public void deletePermaLinkByArticle(String articleId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query query =
+      session.createQuery("delete from PermaLink "
+            + "where article.id = :articleId")
+         .setParameter("articleId", articleId);
+      query.executeUpdate();
+   }
 }

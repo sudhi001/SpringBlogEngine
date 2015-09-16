@@ -9,6 +9,7 @@ import org.hanbo.mvc.models.ArticleListPageDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.services.ArticleService;
+import org.hanbo.mvc.services.PermaLinkService;
 import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,9 @@ public class BlogPostActions
    
    @Autowired
    private ArticleService _articleService;
+   
+   @Autowired
+   private PermaLinkService _permaLinkService;
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/blog/newPost", method=RequestMethod.GET)
@@ -262,9 +266,11 @@ public class BlogPostActions
       }
       
       String userId = loginUser.getUserId();
+      
+      this._permaLinkService.deletePermaLink(articleId, userId);
       this._articleService.deleteOwnerArticle(
-            articleId, userId
-         );
+         articleId, userId
+      );
       
       return new ResponseEntity<String>(HttpStatus.OK);
    }

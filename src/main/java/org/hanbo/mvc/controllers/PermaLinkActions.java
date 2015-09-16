@@ -4,9 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.json.GetPermaLinkJsonResponse;
 import org.hanbo.mvc.models.json.NewPermaLinkJsonRequest;
 import org.hanbo.mvc.models.json.NewPermaLinkJsonResponse;
-import org.hanbo.mvc.services.ArticleService;
 import org.hanbo.mvc.services.PermaLinkService;
 import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.apache.log4j.*;
-
-import com.google.gson.Gson;
 
 @Controller
 public class PermaLinkActions
@@ -62,7 +61,7 @@ public class PermaLinkActions
          UserPrincipalDataModel loginUser = this._util.getLoginUser();
          if (loginUser == null)
          {
-            return permaLinkJsonResponse(
+            return newPermaLinkJsonResponse(
                HttpStatus.UNAUTHORIZED, permaLinkReq.getArticleId(),
                "N/A", "User is not logged in to do this");
          }
@@ -70,7 +69,7 @@ public class PermaLinkActions
          String userId = loginUser.getUserId();
          if (!permaLinkReq.getAuthorId().equals(userId))
          {
-            return permaLinkJsonResponse(
+            return newPermaLinkJsonResponse(
                HttpStatus.UNAUTHORIZED, permaLinkReq.getArticleId(),
                "N/A", "Article owner and current user mismatch");
          }
@@ -79,24 +78,75 @@ public class PermaLinkActions
          {
             String linkId = _permaLinkService.setPermaLink(permaLinkReq);
             
-            return permaLinkJsonResponse(
+            return newPermaLinkJsonResponse(
                HttpStatus.OK, permaLinkReq.getArticleId(),
                linkId, "Perma Link has been created");
          }
          catch(Exception e)
          {
-            return permaLinkJsonResponse(
+            return newPermaLinkJsonResponse(
                HttpStatus.BAD_REQUEST, permaLinkReq.getArticleId(),
                "N/A", "Exception occurred");
          }
       }
 
-      return permaLinkJsonResponse(
+      return newPermaLinkJsonResponse(
          HttpStatus.BAD_REQUEST, "N/A", "N/A", "Exception occurred");
    }
+
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/blog/getPermaLink",
+      method=RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> getPermaLink(
+      @RequestParam("articleId")
+      String articleId
+   )
+   {
+      GetPermaLinkJsonResponse response =
+      _permaLinkService.getPermaLink(articleId);
+      
+      if (response.isValid())
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.convertObjectToJson(response),
+            HttpStatus.OK
+         );
+      }
+      
+      return new ResponseEntity<String>(
+         JsonUtil.convertObjectToJson(response),
+         HttpStatus.NOT_ACCEPTABLE
+      );
+   }
    
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/blog/deletePermaLink",
+      method=RequestMethod.DELETE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> deletePermaLink(
+      @RequestParam("articleId")
+      String articleId
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+      
+      _permaLinkService.deletePermaLink(articleId, loginUser.getUserId());
+
+      return new ResponseEntity<String>(
+         HttpStatus.OK
+      );
+   }
    
-   private ResponseEntity<String> permaLinkJsonResponse(
+   private ResponseEntity<String> newPermaLinkJsonResponse(
       HttpStatus statusCode, String articleId,
       String permaLinkId, String statusMsg)
    {

@@ -135,7 +135,7 @@
                <p class="col-md-9" id="articleTitle"></p>
             </div>
             <div class="form-group">
-               <label for="permaLinkField" class="col-md-3">Perma Link</label>
+               <label for="permaLinkPath" class="col-md-3">Perma Link</label>
                <input type="text" class="col-md-9" id="permaLinkPath" name="permaLinkPath" placeholder=""/>
             </div>
             <p>
@@ -143,8 +143,9 @@
             </p>
           </div>
           <div class="modal-footer">
+            <button type="button" class="btn btn-danger" onclick="deletePermaLinkClick()">Remove Link</button>
+            <button type="button" class="btn btn-primary" onclick="submitPermaLinkClick()">Change Link</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="submitPermaLinkClick()">Submit Change</button>
           </div>
           </form>
         </div>
@@ -195,14 +196,22 @@
            $("#permaLinkDlg #permaLinkForm #permaLinkAuthorId").val(authorId);
            $("#permaLinkDlg #permaLinkForm #articleTitle").html(articleTitle);
            $("#permaLinkDlg #permaLinkForm #permaLinkPath").val("");
-           $("#permaLinkDlg #permaLinkForm #pageReplacement").attr("checked", false);
+           $("#permaLinkDlg #permaLinkForm #pageReplacement").prop("checked", false);
            
            $("#permaLinkDlg").modal("show");
         };
         
-        /*$('#permaLinkDlg').on('shown.bs.modal', function () {
-           
-        });*/
+        $('#permaLinkDlg').on('shown.bs.modal', function () {
+        	var articleId = $("#permaLinkDlg #permaLinkForm #permaLinkArticleId").val();
+        	$.get("${pageContext.request.contextPath}/admin/blog/getPermaLink?articleId=" + articleId,
+               function (data) {
+                $("#permaLinkDlg #permaLinkForm #permaLinkPath").val(data.permaLinkPath);
+                if (data.pageReplacement)
+                {
+                   $("#permaLinkDlg #permaLinkForm #pageReplacement").prop("checked", true);
+                }
+            });
+        });
         
         var submitPermaLinkClick = function ()
         {
@@ -221,12 +230,27 @@
 
            $.post("${pageContext.request.contextPath}/admin/blog/setPermaLink",
         	  JSON.stringify(postData),
-              function(data, status){
-        	     if (status === "success")
-        	     {
-        	     
-        	     }
+              function(data){
+                 $("#permaLinkDlg").modal("hide");
+              }).always(function (){
+                 $("#permaLinkDlg").modal("hide");
               });
+          };
+          
+          var deletePermaLinkClick = function ()
+          {
+        	 var articleId = $("#permaLinkDlg #permaLinkForm #permaLinkArticleId").val();
+        	 var deletePermaLinkUrl
+        	    = "${pageContext.request.contextPath}/admin/blog/deletePermaLink?articleId=" +articleId;
+        	 
+        	 $.ajax({
+                url: deletePermaLinkUrl,
+                type: "DELETE",
+                success: function (result)
+                {
+                   $("#permaLinkDlg").modal("hide");
+                }
+        	 });
           };
         
     </script>

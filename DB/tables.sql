@@ -53,7 +53,8 @@ CREATE TABLE permalink(
    authorid VARCHAR(45) NOT NULL,
    pagereplacement BIT(1) NOT NULL DEFAULT 0,
 
-   FOREIGN KEY (articleid) REFERENCES article(id),
+   FOREIGN KEY (articleid) REFERENCES article(id)
+      ON DELETE CASCADE,
    FOREIGN KEY (authorid) REFERENCES user(id)
 );
 

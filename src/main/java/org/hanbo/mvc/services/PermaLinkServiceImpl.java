@@ -5,6 +5,7 @@ import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.entities.LoginUser;
 import org.hanbo.mvc.entities.PermaLink;
 import org.hanbo.mvc.exceptions.WebAppException;
+import org.hanbo.mvc.models.json.GetPermaLinkJsonResponse;
 import org.hanbo.mvc.models.json.NewPermaLinkJsonRequest;
 import org.hanbo.mvc.repositories.ArticlesRepository;
 import org.hanbo.mvc.repositories.PermaLinkRepository;
@@ -51,6 +52,43 @@ public class PermaLinkServiceImpl implements PermaLinkService
       {
          return updateExistingPermaLink(permaLink, permaLinkReq);
       }
+   }
+   
+   @Override
+   public GetPermaLinkJsonResponse getPermaLink(String articleId)
+   {
+      PermaLink permaLink = 
+      _permaLinkRepository.getPermaLinkByArticle(articleId);
+      
+      GetPermaLinkJsonResponse response = new GetPermaLinkJsonResponse();
+      if (permaLink != null)
+      {
+         response.setArticleId(permaLink.getAssociatedArticle().getId());
+         response.setAuthorId(permaLink.getAssociatedAuthor().getId());
+         response.setPageReplacement(permaLink.isPageReplacement());
+         response.setPermaLinkPath(permaLink.getPath());
+         response.setValid(true);
+      }
+      
+      return response;
+   }
+   
+   @Override
+   public void deletePermaLink(String articleId, String authorId)
+   {
+      Article articleToModify = this._articleRepo.getReportById(articleId, authorId);
+      if (articleToModify == null)
+      {
+         throw new WebAppException(
+            String.format("Cannot find article with id [%s]", articleId),
+            WebAppException.ErrorType.DATA);
+      }
+      
+      articleToModify.setPermaLinks(null);
+      
+      this._permaLinkRepository.deletePermaLinkByArticle(articleId);
+      
+      this._articleRepo.saveArticle(articleToModify);
    }
    
    private String createNewPermaLink(

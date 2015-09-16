@@ -7,4 +7,6 @@ public interface PermaLinkRepository
    void savePermaLink(PermaLink linkToSave);
    
    PermaLink getPermaLinkByArticle(String articleId);
+   
+   void deletePermaLinkByArticle(String articleId);
 }
