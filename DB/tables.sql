@@ -2,6 +2,12 @@ use BlogEngine;
 
 DROP TABLE IF EXISTS image;
 
+DROP TABLE IF EXISTS fileresource;
+
+DROP TABLE IF EXISTS textresource;
+
+DROP TABLE IF EXISTS resource;
+
 DROP TABLE IF EXISTS permalink;
 
 DROP TABLE IF EXISTS article;
@@ -59,6 +65,32 @@ CREATE TABLE permalink(
 );
 
 CREATE UNIQUE INDEX permalink_pathidx ON permalink (path);
+
+CREATE TABLE resource(
+   id VARCHAR(45) NOT NULL PRIMARY KEY,
+   name VARCHAR(96) NOT NULL,
+   restype VARCHAR(24) NOT NULL,
+   createdate DATETIME NOT NULL,
+   updatedate DATETIME NOT NULL,
+   ownerid VARCHAR(45) NOT NULL,
+
+   FOREIGN KEY (ownerid) REFERENCES user(id)
+);
+
+CREATE TABLE textresource(
+   id VARCHAR(45) NOT NULL PRIMARY KEY,
+   subtype VARCHAR(16) NOT NULL,
+   value TEXT NOT NULL,
+   length INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE fileresource(
+   id VARCHAR(45) NOT NULL PRIMARY KEY,
+   subtype VARCHAR(16) NOT NULL,
+   filename VARCHAR(256) NOT NULL,
+   imgwidth INT NULL,
+   imgheight INT NULL
+);
 
 CREATE TABLE image (
    id VARCHAR(45) NOT NULL PRIMARY KEY,

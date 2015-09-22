@@ -60,4 +60,12 @@ public class ActionsUtil
       
       return retVal;
    }
+   
+   public ModelAndView createRedirectPageView(String redirectUrl)
+   {
+      ModelAndView retVal = new ModelAndView();
+      retVal.setViewName(redirectUrl);
+      
+      return retVal;
+   }
 }

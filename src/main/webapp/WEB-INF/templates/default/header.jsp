@@ -23,6 +23,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="${pageContext.request.contextPath}/admin/blog/allMyPosts">My Posts</a></li>
+                  <li><a href="${pageContext.request.contextPath}/admin/resources/allMyResources">My Resources</a></li>
                 </ul>
               </li>
             </sec:authorize>

@@ -1,12 +1,5 @@
 package org.hanbo.mvc.utilities;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import org.apache.commons.io.IOUtils;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IMOperation;
 import org.im4java.core.Info;
@@ -123,30 +116,5 @@ public class ImageFileUtil
 
       // execute the operation
       cmd.run(op);
-   }
-   
-   public static void saveImageFile(
-      String uploadFileName,
-      InputStream imageStream
-   ) throws Exception
-   {
-      File imageFile = new File(uploadFileName);
-      FileOutputStream fos = new FileOutputStream(imageFile);
-      
-      IOUtils.copy(imageStream, fos);
-
-      fos.flush();
-      fos.close();
-   }
-   
-   public static void readImageFromFile(
-      String imgFilePath, OutputStream respStream
-   )
-   throws Exception
-   {
-      File imageFile = new File(imgFilePath);
-      FileInputStream fis = new FileInputStream(imageFile);
-         
-      IOUtils.copy(fis, respStream);
    }
 }
