@@ -1,12 +1,18 @@
 package org.hanbo.mvc.services;
 
-import java.io.InputStream;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ResourceService
 {
    void saveTextResource(
       String ownerId, String resourceName,
       String resourceSubType, String resourceValue
+   );
+   
+   void saveResourceFile(
+      String ownerId,
+      String resourceName,
+      String subType, MultipartFile fileToSave
    );
    
    //String resourcePath(String type, String resourceId);

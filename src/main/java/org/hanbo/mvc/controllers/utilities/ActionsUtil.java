@@ -53,7 +53,7 @@ public class ActionsUtil
          = this.creatPageMetadata("Error Page");
       ModelAndView retVal
          = this.getDefaultModelAndView(
-            "errorPage", pageMetadata
+            "error", pageMetadata
          );
       retVal.addObject("errorTitle", errorPageTitle);
       retVal.addObject("errorSummary", errorSummary);
