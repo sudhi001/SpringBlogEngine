@@ -182,19 +182,17 @@ public class BlogPostActions
    {
       if (pageIdx == null)
       {
-         pageIdx = new Integer(1);
+         pageIdx = new Integer(0);
       }
       
-      if (pageIdx <= 0)
+      if (pageIdx < 0)
       {
          return _util.createErorrPageViewModel(
             "Invalid Page Index",
-            "The list of posts should have page idx >= 1."
+            "The list of posts should have page idx >= 0."
          );
       }
-      
-      pageIdx -= 1;
-      
+            
       UserPrincipalDataModel loginUser = this._util.getLoginUser();
       if (loginUser == null)
       {

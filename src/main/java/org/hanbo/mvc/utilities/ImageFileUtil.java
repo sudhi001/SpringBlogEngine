@@ -16,11 +16,6 @@ public class ImageFileUtil
    
    private Logger _logger = LogManager.getLogger(ImageFileUtil.class);
   
-   static
-   {
-      ProcessStarter.setGlobalSearchPath(imageMagickPath);
-   }
-   
    private String originalFile;
    private String resizedFile;
    
@@ -31,6 +26,11 @@ public class ImageFileUtil
    private int resizedFileWidth;
    private int resizedFileHeight;
    private float aspectRatio;
+   
+   public ImageFileUtil()
+   {
+      ProcessStarter.setGlobalSearchPath(imageMagickPath);
+   }
 
    public void setOriginalFile(String filename)
    {

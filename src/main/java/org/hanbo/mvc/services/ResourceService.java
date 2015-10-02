@@ -1,5 +1,11 @@
 package org.hanbo.mvc.services;
 
+import java.io.OutputStream;
+import java.util.List;
+
+import org.hanbo.mvc.models.ResourceListItemDataModel;
+import org.hanbo.mvc.models.ResourceListPageDataModel;
+import org.hanbo.mvc.models.json.TextResourceJsonResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ResourceService
@@ -9,18 +15,29 @@ public interface ResourceService
       String resourceSubType, String resourceValue
    );
    
+   void updateTextResource(
+      String ownerId, String resourceId, String resourceName,
+      String resourceSubType, String resourceValue
+   );
+   
    void saveResourceFile(
       String ownerId,
       String resourceName,
       String subType, MultipartFile fileToSave
    );
-   
-   //String resourcePath(String type, String resourceId);
+  
+   List<ResourceListItemDataModel> getOwnerResources(
+      String ownerId, int pageIdx);
 
-   //String resourceFileName(String type, String resourceId, String fileExt);
+   ResourceListPageDataModel getOwnerResourcesPage(
+      String ownerId, int pageIdx);
    
-   //void saveToFile(String fileName, InputStream uploadFileStream);
+   boolean downloadResource(
+      String resourceId, String resourceSubType,
+      OutputStream outStream) throws Exception;
    
-   //void saveResource();
+   void deleteResource(String resourceId, String ownerId);
+   
+   TextResourceJsonResponse getTextResource(String resourceId, String ownerId);
 }
 

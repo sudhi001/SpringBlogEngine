@@ -20,7 +20,7 @@ public class FileResource extends Resource
    private int imageWidth = 0;
 
    @Column(name = "imgheight", nullable = false)
-   private int imageHeighht = 0;
+   private int imageHeight = 0;
 
    public String getSubResourceType()
    {
@@ -52,13 +52,13 @@ public class FileResource extends Resource
       this.imageWidth = imageWidth;
    }
 
-   public int getImageHeighht()
+   public int getImageHeight()
    {
-      return imageHeighht;
+      return imageHeight;
    }
 
-   public void setImageHeighht(int imageHeighht)
+   public void setImageHeight(int imageHeighht)
    {
-      this.imageHeighht = imageHeighht;
+      this.imageHeight = imageHeighht;
    }
 }

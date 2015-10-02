@@ -1,17 +1,27 @@
 package org.hanbo.mvc.services;
 
-import java.io.InputStream;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.OutputStream;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.entities.FileResource;
 import org.hanbo.mvc.entities.LoginUser;
+import org.hanbo.mvc.entities.Resource;
 import org.hanbo.mvc.entities.TextResource;
 import org.hanbo.mvc.exceptions.WebAppException;
+import org.hanbo.mvc.models.ItemListPageDataModel;
+import org.hanbo.mvc.models.ResourceListItemDataModel;
+import org.hanbo.mvc.models.ResourceListPageDataModel;
+import org.hanbo.mvc.models.json.TextResourceJsonResponse;
 import org.hanbo.mvc.repositories.ResourcesRepository;
 import org.hanbo.mvc.repositories.UsersRepository;
+import org.hanbo.mvc.services.utilities.ResourceDataModelEntityMapping;
 import org.hanbo.mvc.utilities.FileStreamUtil;
 import org.hanbo.mvc.utilities.IdUtil;
+import org.hanbo.mvc.utilities.ImageFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -65,6 +75,37 @@ public class ResourceServiceImpl implements ResourceService
       textResource.setOwner(resourceOwner);
       
       _resRepo.saveResource(textResource);
+   }
+   
+   @Override
+   public void updateTextResource(String ownerId, String resourceId,
+         String resourceName, String resourceSubType, String resourceValue)
+   {
+      // TODO Auto-generated method stub
+      validateTextResourceInputs(
+         resourceName,
+         resourceSubType,
+         resourceValue
+      );
+      
+      LoginUser resourceOwner = _usersRepo.getUserById(ownerId);
+      if (resourceOwner == null)
+      {
+         throw new WebAppException(
+            String.format("Unable to find user with id [%s]", ownerId),
+            WebAppException.ErrorType.DATA);
+      }
+      
+      Resource res = _resRepo.getResourceByOwner(resourceId, ownerId);
+      if (res.getResourceType().equals("text"))
+      {
+         TextResource tres  = (TextResource)res;
+         tres.setName(resourceName);
+         tres.setSubResourceType(resourceSubType);
+         tres.setResourceValue(resourceValue);
+         
+         _resRepo.saveResource(tres);
+      }
    }
    
    @Override
@@ -123,12 +164,119 @@ public class ResourceServiceImpl implements ResourceService
       
       if (subType.equals("image"))
       {
-         
+         setImageFileDimension(fileResource);
       }
       
       fileResource.setOwner(resourceOwner);
       
       _resRepo.saveResource(fileResource);
+   }
+
+   @Override
+   public List<ResourceListItemDataModel> getOwnerResources(
+      String ownerId, int pageIdx)
+   {
+      String itemsCount = configValues.getProperty("ResourceListItemsPerPage");  
+      int itemsCountVal = Integer.parseInt(itemsCount);
+      
+      List<Resource> allFoundResources = 
+         this._resRepo.getResourcesByOwnerId(ownerId, pageIdx, itemsCountVal);
+      
+      List<ResourceListItemDataModel> retVal
+         = ResourceDataModelEntityMapping.listItemsFromEntities(allFoundResources);
+      
+      return retVal;
+   }
+   
+   @Override
+   public ResourceListPageDataModel getOwnerResourcesPage(
+      String ownerId,
+      int pageIdx)
+   {
+      String itemsCount = configValues.getProperty("ResourceListItemsPerPage");  
+      int itemsCountVal = Integer.parseInt(itemsCount);
+      
+      int resourceCount = (int)this._resRepo.getResourceCountByOwnerId(ownerId);
+      
+      List<ResourceListItemDataModel> listRes = getOwnerResources(ownerId, pageIdx);
+      
+      ResourceListPageDataModel retVal = new ResourceListPageDataModel();
+      ItemListPageDataModel.createPageModel(retVal, listRes.size(), resourceCount, pageIdx, itemsCountVal);
+      retVal.setListOfResources(listRes);
+      
+      return retVal;
+   }
+   
+   @Override
+   public boolean downloadResource(
+      String resourceId,
+      String resourceSubType, OutputStream outStream)
+     throws Exception
+   {
+      String resourcePath = resourcePath(resourceSubType.toUpperCase(), resourceId);
+      final String fileToSearch = resourceId + ".";
+      
+      File dirFile = new File(resourcePath);
+      if (dirFile.exists())
+      {
+         File[] filesFound = dirFile.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+               return name.contains(fileToSearch);
+            }
+         });
+         
+         if (filesFound.length > 0)
+         {
+            FileStreamUtil.readFileToOutputStream(filesFound[0].getAbsolutePath(), outStream);
+            return true;
+         }
+      }
+      
+      return false;
+   }
+   
+   @Override
+   public void deleteResource(String resourceId, String ownerId)
+   {
+      Resource resReturned = this._resRepo.getResourceByOwner(resourceId, ownerId);
+      
+      if (resReturned != null)
+      {
+         if(resReturned.getResourceType().equals("file"))
+         {
+            File file = new File(((FileResource)resReturned).getResourceFileName());
+            
+            if (file.exists())
+            {
+               file.delete();
+            }
+         }
+         
+         this._resRepo.deleteResource(resReturned);
+      }
+   }
+   
+   @Override
+   public TextResourceJsonResponse getTextResource(
+      String resourceId,
+      String ownerId
+   )
+   {
+      Resource resource = this._resRepo.getResourceByOwner(resourceId, ownerId);
+      if (resource != null && resource.getResourceType().equals("text"))
+      {
+         TextResource textRes = (TextResource)resource;
+         TextResourceJsonResponse retVal = new TextResourceJsonResponse();
+         retVal.setResourceId(textRes.getId());
+         retVal.setResourceName(textRes.getName());
+         retVal.setSubType(textRes.getSubResourceType());
+         retVal.setResourceValue(textRes.getResourceValue());
+         
+         return retVal;
+      }
+      
+      return null;
    }
    
    private void validateTextResourceInputs(
@@ -267,63 +415,24 @@ public class ResourceServiceImpl implements ResourceService
       );
    }
    
-   /*@Override
-   public String resourcePath(String type, String resourceId)
-   {
-      StringBuilder sb = new StringBuilder();
-      
-      String resourceBasePath = configValues.getProperty("resBasePath");
-      sb.append(resourceBasePath);
-      sb.append("/");
-      sb.append(type);
-      sb.append("/");
-      sb.append("/");
-      
-      char char1 = resourceId.charAt(0);
-      char char2 = resourceId.charAt(1);
-      sb.append(char1);
-      sb.append("/");
-      sb.append(char2);
-      sb.append("/");
-      
-      return sb.toString();
-   }
-
-   @Override
-   public String resourceFileName(String type, String resourceId, String fileExt)
-   {
-      StringBuilder sb = new StringBuilder();
-      
-      String filePath = resourcePath(type, resourceId);
-      
-      sb.append(filePath);
-      sb.append(resourceId);
-      sb.append(".");
-      sb.append(fileExt);
-      
-      return sb.toString();
-   }
-   
-   @Override
-   public void saveToFile(String fileName, InputStream uploadFileStream)
+   private void setImageFileDimension(FileResource fileResource)
    {
       try
       {
-         FileStreamUtil.saveFileToServer(fileName, uploadFileStream);
+         ImageFileUtil imgFileUtil = new ImageFileUtil();
+         
+         imgFileUtil.setOriginalFile(fileResource.getResourceFileName());
+         imgFileUtil.imageFileDimensions();
+         
+         fileResource.setImageWidth(imgFileUtil.getOriginalImageFileSizeX());
+         fileResource.setImageHeight(imgFileUtil.getOriginalImageFileSizeY());
       }
       catch(Exception e)
       {
-         throw new WebAppException(
-            String.format("Unable to save to file [%s], exception message: [%s]", fileName, e.getMessage()),
-            WebAppException.ErrorType.FUNCTIONAL,
-            e
-         );
+         throw new WebAppException("Unable to find the dimension of the image.",
+            WebAppException.ErrorType.FUNCTIONAL, e);
       }
    }
 
-   @Override
-   public void saveResource() {
-      // TODO Auto-generated method stub
-      
-   }*/
+
 }

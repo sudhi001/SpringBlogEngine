@@ -11,6 +11,11 @@ public class DateToString
       return dateFormat.format(dateObj);
    }
    
+   public static String dateStringForDisplay(Date dateObj)
+   {
+      return dateToString(dateObj, "MM/dd/yyyy HH:mm:ss");
+   }
+   
    public static String currentDateString(String formatPattern)
    {
       Date date = new Date();
