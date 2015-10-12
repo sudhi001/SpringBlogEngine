@@ -15,5 +15,8 @@ public interface ResourcesRepository
    
    Resource getResourceByOwner(String resourceId, String ownerId);
    
+   List<Resource> getResourcesByTypeAndOwnerId(
+      String ownerId, String resourceType, int pageIdx, int itemsCount);
+   
    void deleteResource(Resource resource);
 }

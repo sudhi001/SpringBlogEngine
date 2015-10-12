@@ -119,4 +119,28 @@ public class ResourcesRepositoryImpl implements ResourcesRepository
       Session session = _sessionFactory.getCurrentSession();
       session.delete(resource);
    }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<Resource> getResourcesByTypeAndOwnerId(
+      String ownerId, String resourceType, int pageIdx, int itemsCount)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query objQuery = session.createQuery(
+         "select resource from Resource resource"
+         + " where resource.owner.id = :ownerId"
+         + " and resource.resType = :resourceType"
+         + " order by resource.updateDate desc")
+         .setParameter("ownerId", ownerId)
+         .setParameter("resourceType", resourceType)
+         .setFirstResult(pageIdx * itemsCount)
+         .setMaxResults(itemsCount);
+      
+      List<Resource> objList = objQuery.list();
+      return objList;
+   }
 }

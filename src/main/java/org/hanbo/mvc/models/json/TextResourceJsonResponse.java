@@ -8,6 +8,7 @@ public class TextResourceJsonResponse
    private String resourceName;
    private String subType;
    private String resourceValue;
+   private String formattedResourceValue;
    
    public String getResourceId()
    {
@@ -57,4 +58,13 @@ public class TextResourceJsonResponse
          && !StringUtils.isEmpty(this.resourceValue));
    }
 
+   public String getFormattedResourceValue()
+   {
+      return formattedResourceValue;
+   }
+
+   public void setFormattedResourceValue(String formattedResourceValue)
+   {
+      this.formattedResourceValue = formattedResourceValue;
+   }
 }

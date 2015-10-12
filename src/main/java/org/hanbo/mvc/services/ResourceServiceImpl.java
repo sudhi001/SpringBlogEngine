@@ -16,6 +16,7 @@ import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.ResourceListItemDataModel;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
+import org.hanbo.mvc.models.json.TextResourcesListJsonResponse;
 import org.hanbo.mvc.repositories.ResourcesRepository;
 import org.hanbo.mvc.repositories.UsersRepository;
 import org.hanbo.mvc.services.utilities.ResourceDataModelEntityMapping;
@@ -279,6 +280,51 @@ public class ResourceServiceImpl implements ResourceService
       return null;
    }
    
+   @Override
+   public TextResourceJsonResponse getFormattedTextResource(
+      String resourceId,
+      String ownerId
+   )
+   {
+      TextResourceJsonResponse retVal = getTextResource(
+         resourceId,
+         ownerId
+      );
+      
+      if (retVal != null)
+      {
+         String resVal = 
+         createFormattedTextResourceValue(retVal);
+         
+         retVal.setFormattedResourceValue(resVal);
+      }
+      
+      return retVal;
+   }
+   
+   @Override
+   public TextResourcesListJsonResponse getTextResourcesList(
+      String ownerId,
+      int pageIdx
+   )
+   {
+      String itemsCount = configValues.getProperty("ResourceListItemsJsonPerPage");  
+      int itemsCountVal = Integer.parseInt(itemsCount);
+      
+      List<Resource> allFoundResources = 
+         this._resRepo.getResourcesByTypeAndOwnerId(ownerId, "text", pageIdx, itemsCountVal);
+      
+      List<ResourceListItemDataModel> resList
+         = ResourceDataModelEntityMapping.listItemsFromEntities(allFoundResources);
+      
+      TextResourcesListJsonResponse retVal = new TextResourcesListJsonResponse();
+      retVal.setOwnerId(ownerId);
+      retVal.setPageIdx(pageIdx);
+      retVal.setResourceList(resList);
+      
+      return retVal;
+   }
+   
    private void validateTextResourceInputs(
       String resourceName,
       String resourceSubType,
@@ -433,6 +479,39 @@ public class ResourceServiceImpl implements ResourceService
             WebAppException.ErrorType.FUNCTIONAL, e);
       }
    }
-
-
+   
+   private String createFormattedTextResourceValue(TextResourceJsonResponse respObj)
+   {
+      StringBuilder sb = new StringBuilder();
+      
+      sb.append("<!-- resourceId = [");
+      sb.append(respObj.getResourceId());
+      sb.append("], subType=[");
+      sb.append(respObj.getSubType());
+      sb.append("] -->");
+      sb.append(System.getProperty("line.separator"));
+      
+      if (respObj.getSubType().equals("text") || respObj.getSubType().equals("html"))
+      {
+         sb.append(respObj.getResourceValue());
+         sb.append(System.getProperty("line.separator"));
+      }
+      else if (respObj.getSubType().equals("quote"))
+      {
+         sb.append("<blockquote><p>");
+         sb.append(respObj.getResourceValue());
+         sb.append("</p></blockquote>");
+         sb.append(System.getProperty("line.separator"));
+      }
+      else if (respObj.getSubType().equals("snippet"))
+      {
+         sb.append("<pre>");
+         sb.append(respObj.getResourceValue());
+         sb.append("</pre>");
+         sb.append(System.getProperty("line.separator"));
+      }
+      sb.append(System.getProperty("line.separator"));
+      
+      return sb.toString();
+   }
 }

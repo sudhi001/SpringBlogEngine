@@ -6,6 +6,7 @@ import java.util.List;
 import org.hanbo.mvc.models.ResourceListItemDataModel;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
+import org.hanbo.mvc.models.json.TextResourcesListJsonResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ResourceService
@@ -39,5 +40,9 @@ public interface ResourceService
    void deleteResource(String resourceId, String ownerId);
    
    TextResourceJsonResponse getTextResource(String resourceId, String ownerId);
+   
+   TextResourceJsonResponse getFormattedTextResource(String resourceId, String ownerId);
+   
+   TextResourcesListJsonResponse getTextResourcesList(String userId, int pageIdx);
 }
 
