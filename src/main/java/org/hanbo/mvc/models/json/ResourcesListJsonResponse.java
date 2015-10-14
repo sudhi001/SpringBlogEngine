@@ -5,13 +5,13 @@ import java.util.List;
 
 import org.hanbo.mvc.models.ResourceListItemDataModel;
 
-public class TextResourcesListJsonResponse
+public class ResourcesListJsonResponse
 {
    private String ownerId;
    private int pageIdx;
    private List<ResourceListItemDataModel> resourceList;
    
-   public TextResourcesListJsonResponse()
+   public ResourcesListJsonResponse()
    {
       setResourceList(new ArrayList<ResourceListItemDataModel>());
    }

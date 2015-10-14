@@ -94,10 +94,11 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">Insert Image Resource</h4>
           </div>
-          <div class="modal-body">
-            
+          <input type="hidden" id="imgResPageIdx" value=""/>
+          <div id="imgResDlgBody" class="modal-body">
           </div>
           <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="handleClickImageResLoadMore()">Load More</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -110,6 +111,8 @@
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+       // XXX there is way too much replicated code here.
+    
        var handleClickResDlg = function (dlgid)
        {
           dlgid = "#" + dlgid;  
@@ -132,7 +135,7 @@
                 withCredentials: true
              },
              success: function(data) {
-                creatMoreTableRows(tableToAdd, data);
+                creatMoreTableRows(tableToAdd, data, "handleClickAddTextResource");
                 if (data.resourceList.length > 0)
                 {
                    $("#addTextResDlg #textResPageIdx").val(data.pageIdx);
@@ -143,8 +146,37 @@
           });
     	  
           $("#addTextResDlg #txtResDlgBody").append(tableToAdd);
-          //$("#addTextResDlg #txtResTable tr:last").after("<tr><td>Quote</td><td>sample subject</td><td>test</td></tr>");
        });
+
+      $('#addImgResDlg').on('show.bs.modal', function (e)
+      {
+          var existingTable = $("#addImgResDlg #imgResTable");
+          if (existingTable !== null)
+          {
+             existingTable.remove();
+          }
+          var tableToAdd = createEmptyTable('imgResTable');
+           
+          $.ajax({
+             type: "GET",
+             url: "${pageContext.request.contextPath}/admin/resources/getImageResourcesList?pageIdx=0",
+             xhrFields: {
+                withCredentials: true
+             },
+             success: function(data) {
+                creatMoreTableRows(tableToAdd, data, "handleClickAddImageResource");
+                if (data.resourceList.length > 0)
+                {
+                   $("#addImgResDlg #imgResPageIdx").val(data.pageIdx);
+                }
+             },
+             error: function() {
+             }
+          });
+           
+          $("#addImgResDlg #imgResDlgBody").append(tableToAdd);
+       });
+
        
        var createEmptyTable = function (tableId)
        {
@@ -172,7 +204,7 @@
        
        var creatMoreTableRows = function (table, jsonData, clickFunc)
        {          
-    	   prepareMoreTableRow(table, jsonData, "handleClickAddTextResource");
+    	   prepareMoreTableRow(table, jsonData, clickFunc); //"handleClickAddTextResource");
        };
        
        var prepareMoreTableRow = function(table, jsonData, clickFunc) {
@@ -190,7 +222,7 @@
                    'class': 'btn btn-default',
                    'onclick': clickFunc + "('" + jsonData.resourceList[i].resourceId + "')"
                 }).text("Add");
-                td = $("<td></td>").append(btn);                
+                td = $("<td></td>").append(btn);
                 tblRow.append(td);
                 
                 table.append(tblRow);
@@ -214,31 +246,71 @@
              }
           });
        };
-
+       
+       var handleClickAddImageResource = function (resId) {
+           $.ajax({
+              type: "GET",
+              url: "${pageContext.request.contextPath}/admin/resources/getFormattedImageResource=" + resId,
+              xhrFields: {
+                 withCredentials: true
+              },
+              success: function(data) {
+                 var textArea = $("#articleContent");
+                 var currentText = textArea.val();
+                 textArea.val(currentText + data.formattedResourceValue);
+              },
+              error: function() {
+              }
+           });
+        };
+       
        var handleClickTextResLoadMore = function () {
-          var currPageIdx = $("#addTextResDlg #textResPageIdx").val();
-          var nextPageIdx = parseInt(currPageIdx) + 1;
-          var jsonUrl = "${pageContext.request.contextPath}/admin/resources/getTextResourcesList?pageIdx=" + nextPageIdx;
-          
-          $.ajax({
-             type: "GET",
-             url: jsonUrl,
-             xhrFields: {
-                withCredentials: true
-             },
-             success: function(data) {
-            	var table = $("#addTextResDlg #txtResTable");
-            	creatMoreTableRows(table, data, "handleClickAddTextResource");
-                if (data.resourceList.length > 0)
-                {
-                   $("#addTextResDlg #textResPageIdx").val(data.pageIdx);
-                }
-             },
-             error: function() {
-             }
-          });
-       };
+           var currPageIdx = $("#addTextResDlg #textResPageIdx").val();
+           var nextPageIdx = parseInt(currPageIdx) + 1;
+           var jsonUrl = "${pageContext.request.contextPath}/admin/resources/getTextResourcesList?pageIdx=" + nextPageIdx;
+           
+           $.ajax({
+              type: "GET",
+              url: jsonUrl,
+              xhrFields: {
+                 withCredentials: true
+              },
+              success: function(data) {
+                 var table = $("#addTextResDlg #txtResTable");
+                 creatMoreTableRows(table, data, "handleClickAddTextResource");
+                 if (data.resourceList.length > 0)
+                 {
+                    $("#addTextResDlg #textResPageIdx").val(data.pageIdx);
+                 }
+              },
+              error: function() {
+              }
+           });
+        };
 
+        var handleClickImageResLoadMore = function () {
+            var currPageIdx = $("#addImgResDlg #imgResPageIdx").val();
+            var nextPageIdx = parseInt(currPageIdx) + 1;
+            var jsonUrl = "${pageContext.request.contextPath}/admin/resources/getImageResourcesList?pageIdx=" + nextPageIdx;
+            
+            $.ajax({
+               type: "GET",
+               url: jsonUrl,
+               xhrFields: {
+                  withCredentials: true
+               },
+               success: function(data) {
+                  var table = $("#addImgResDlg #imgResTable");
+                  creatMoreTableRows(table, data, "handleClickAddImageResource");
+                  if (data.resourceList.length > 0)
+                  {
+                     $("#addImgResDlg #imgResPageIdx").val(data.pageIdx);
+                  }
+               },
+               error: function() {
+               }
+            });
+         };
     </script>
   </tiles:putAttribute>
 </tiles:insertDefinition>

@@ -32,7 +32,7 @@ public class ResourceDataModelEntityMapping
       return retVal;
    }
 
-   public static List<ResourceListItemDataModel> listItemsFromEntities(List<Resource> resources)
+   public static List<ResourceListItemDataModel> listItemsFromEntities(List<? extends Resource> resources)
    {
       List<ResourceListItemDataModel> retList = new ArrayList<ResourceListItemDataModel>();
       

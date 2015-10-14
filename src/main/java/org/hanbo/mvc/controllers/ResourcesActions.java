@@ -9,7 +9,7 @@ import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
-import org.hanbo.mvc.models.json.TextResourcesListJsonResponse;
+import org.hanbo.mvc.models.json.ResourcesListJsonResponse;
 import org.hanbo.mvc.services.ResourceService;
 import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -277,8 +277,54 @@ public class ResourcesActions
       
       String userId = loginUser.getUserId();
       
-      TextResourcesListJsonResponse jsonResp = 
+      ResourcesListJsonResponse jsonResp = 
       this._resourceService.getTextResourcesList(userId, pageIdx);
+      if (jsonResp != null && jsonResp.isValid())
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.convertObjectToJson(jsonResp), HttpStatus.OK
+         );
+      }
+      
+      return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+   }
+   
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/resources/getImageResourcesList",
+      method=RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> getImageResourcesList(
+      @RequestParam(value="pageIdx", required=false)
+      Integer pageIdx
+   )
+   {
+      if (pageIdx == null)
+      {
+         pageIdx = new Integer(0);
+      }
+      
+      if (pageIdx < 0)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("pageIdx invalid"), HttpStatus.NOT_ACCEPTABLE
+         );
+      }
+      
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+      
+      String userId = loginUser.getUserId();
+      
+      ResourcesListJsonResponse jsonResp = 
+      this._resourceService.getImageResourcesList(userId, pageIdx);
       if (jsonResp != null && jsonResp.isValid())
       {
          return new ResponseEntity<String>(
@@ -324,5 +370,5 @@ public class ResourcesActions
       {
          response.setStatus(404);
       }
-   }
+   }   
 }

@@ -16,7 +16,7 @@ import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.ResourceListItemDataModel;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
-import org.hanbo.mvc.models.json.TextResourcesListJsonResponse;
+import org.hanbo.mvc.models.json.ResourcesListJsonResponse;
 import org.hanbo.mvc.repositories.ResourcesRepository;
 import org.hanbo.mvc.repositories.UsersRepository;
 import org.hanbo.mvc.services.utilities.ResourceDataModelEntityMapping;
@@ -303,27 +303,43 @@ public class ResourceServiceImpl implements ResourceService
    }
    
    @Override
-   public TextResourcesListJsonResponse getTextResourcesList(
+   public ResourcesListJsonResponse getTextResourcesList(
       String ownerId,
       int pageIdx
    )
    {
-      String itemsCount = configValues.getProperty("ResourceListItemsJsonPerPage");  
-      int itemsCountVal = Integer.parseInt(itemsCount);
-      
+      int itemsCountVal = resourceListItemCountFromProperty();
       List<Resource> allFoundResources = 
          this._resRepo.getResourcesByTypeAndOwnerId(ownerId, "text", pageIdx, itemsCountVal);
       
-      List<ResourceListItemDataModel> resList
-         = ResourceDataModelEntityMapping.listItemsFromEntities(allFoundResources);
-      
-      TextResourcesListJsonResponse retVal = new TextResourcesListJsonResponse();
-      retVal.setOwnerId(ownerId);
-      retVal.setPageIdx(pageIdx);
-      retVal.setResourceList(resList);
+      ResourcesListJsonResponse retVal = createResourceListResponse(
+         ownerId,
+         pageIdx,
+         allFoundResources
+      );
       
       return retVal;
    }
+
+   @Override
+   public ResourcesListJsonResponse getImageResourcesList(
+      String ownerId,
+      int pageIdx
+   )
+   {
+      int itemsCountVal = resourceListItemCountFromProperty();
+      List<FileResource> allFoundResources = 
+         this._resRepo.getImageResourcesByOwnerId(ownerId, pageIdx, itemsCountVal);
+      
+      ResourcesListJsonResponse retVal = createResourceListResponse(
+         ownerId,
+         pageIdx,
+         allFoundResources
+      );
+      
+      return retVal;
+   }
+
    
    private void validateTextResourceInputs(
       String resourceName,
@@ -513,5 +529,29 @@ public class ResourceServiceImpl implements ResourceService
       sb.append(System.getProperty("line.separator"));
       
       return sb.toString();
+   }
+   
+   
+   private int resourceListItemCountFromProperty()
+   {
+      String itemsCount = configValues.getProperty("ResourceListItemsJsonPerPage");  
+      return Integer.parseInt(itemsCount);
+   }
+   
+   private ResourcesListJsonResponse createResourceListResponse(
+      String ownerId,
+      Integer pageIdx,
+      List<? extends Resource> allFoundResources
+   )
+   {
+      List<ResourceListItemDataModel> resList
+         = ResourceDataModelEntityMapping.listItemsFromEntities(allFoundResources);
+      
+      ResourcesListJsonResponse retVal = new ResourcesListJsonResponse();
+      retVal.setOwnerId(ownerId);
+      retVal.setPageIdx(pageIdx);
+      retVal.setResourceList(resList);
+      
+      return retVal;
    }
 }

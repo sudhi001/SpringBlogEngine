@@ -50,17 +50,6 @@
       <div class="col-md-3">
       </div>
     </div>
-  
-    <!-- <h2>${articleModel.articleTitle}</h2>
-    <hr>
-    <p><strong>Author:</strong> ${articleModel.authorName} </p>
-     Created on ${articleModel.getArticleCreateDateString()}; Last modified on ${articleModel.getArticleUpdateDateString()}</p>
-    <br/>
-    <c:out value="${articleModel.articleContent}" escapeXml = "false"/>
-    <br/>
-    <p>Keywords: ${articleModel.articleKeywords}</p>
-    <p>Category: ${articleModel.articleCategory}</p>
-     -->
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">

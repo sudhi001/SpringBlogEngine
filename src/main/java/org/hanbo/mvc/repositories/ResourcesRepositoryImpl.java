@@ -2,6 +2,7 @@ package org.hanbo.mvc.repositories;
 
 import java.util.List;
 
+import org.hanbo.mvc.entities.FileResource;
 import org.hanbo.mvc.entities.Resource;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -129,7 +130,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepository
       String ownerId, String resourceType, int pageIdx, int itemsCount)
    {
       Session session = _sessionFactory.getCurrentSession();
-      
+
       Query objQuery = session.createQuery(
          "select resource from Resource resource"
          + " where resource.owner.id = :ownerId"
@@ -139,8 +140,32 @@ public class ResourcesRepositoryImpl implements ResourcesRepository
          .setParameter("resourceType", resourceType)
          .setFirstResult(pageIdx * itemsCount)
          .setMaxResults(itemsCount);
-      
+
       List<Resource> objList = objQuery.list();
+      return objList;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<FileResource> getImageResourcesByOwnerId(
+      String ownerId, int pageIdx, int itemsCount)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+
+      Query objQuery = session.createQuery(
+         "select resource from FileResource resource"
+         + " where resource.owner.id = :ownerId"
+         + " and resource.subResourceType = :subType"
+         + " order by resource.updateDate desc")
+         .setParameter("ownerId", ownerId)
+         .setParameter("subType", "image")
+         .setFirstResult(pageIdx * itemsCount)
+         .setMaxResults(itemsCount);
+
+      List<FileResource> objList = objQuery.list();
       return objList;
    }
 }
