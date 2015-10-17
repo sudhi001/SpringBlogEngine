@@ -8,6 +8,7 @@ import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.json.ImageResourceJsonResponse;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
 import org.hanbo.mvc.models.json.ResourcesListJsonResponse;
 import org.hanbo.mvc.services.ResourceService;
@@ -234,6 +235,38 @@ public class ResourcesActions
       
       TextResourceJsonResponse jsonResp = 
       this._resourceService.getFormattedTextResource(resourceId, userId);
+      if (jsonResp != null && jsonResp.isValid())
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.convertObjectToJson(jsonResp), HttpStatus.OK
+         );
+      }
+      
+      return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+   }
+   
+   @RequestMapping(value="/admin/resources/getFormattedImageResource",
+      method=RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> getFormattedImageResource(
+      @RequestParam("resourceId")
+      String resourceId
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+      
+      String userId = loginUser.getUserId();
+      
+      ImageResourceJsonResponse jsonResp = 
+      this._resourceService.getFormattedImageResource(resourceId, userId);
       if (jsonResp != null && jsonResp.isValid())
       {
          return new ResponseEntity<String>(

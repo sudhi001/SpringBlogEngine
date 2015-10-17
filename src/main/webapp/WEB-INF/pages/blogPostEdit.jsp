@@ -112,6 +112,8 @@
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
     <script type="text/javascript">
        // XXX there is way too much replicated code here.
+       // XXX I really want to clean this up. Please see this for best practice:
+       // http://gregfranko.com/jquery-best-practices/#/27
     
        var handleClickResDlg = function (dlgid)
        {
@@ -250,7 +252,7 @@
        var handleClickAddImageResource = function (resId) {
            $.ajax({
               type: "GET",
-              url: "${pageContext.request.contextPath}/admin/resources/getFormattedImageResource=" + resId,
+              url: "${pageContext.request.contextPath}/admin/resources/getFormattedImageResource?resourceId=" + resId,
               xhrFields: {
                  withCredentials: true
               },

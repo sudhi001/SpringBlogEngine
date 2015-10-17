@@ -15,6 +15,7 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
+            <li><a href="${pageContext.request.contextPath}//blog/allPosts/0">Blog Posts</a></li>          
             <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
               <li><a href="${pageContext.request.contextPath}/signin">Log in</a></li>
             </sec:authorize>

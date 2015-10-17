@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.entities.FileResource;
 import org.hanbo.mvc.entities.LoginUser;
@@ -15,6 +17,7 @@ import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.ResourceListItemDataModel;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
+import org.hanbo.mvc.models.json.ImageResourceJsonResponse;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
 import org.hanbo.mvc.models.json.ResourcesListJsonResponse;
 import org.hanbo.mvc.repositories.ResourcesRepository;
@@ -41,6 +44,9 @@ public class ResourceServiceImpl implements ResourceService
    
    @Autowired
    private ResourcesRepository _resRepo;
+   
+   @Autowired
+   private ServletContext servletContext;
    
    @Override
    public void saveTextResource(
@@ -301,6 +307,37 @@ public class ResourceServiceImpl implements ResourceService
       
       return retVal;
    }
+
+   @Override
+   public ImageResourceJsonResponse getFormattedImageResource(String resourceId, String ownerId)
+   {
+      Resource resource = this._resRepo.getResourceByOwner(resourceId, ownerId);
+      if (resource != null && resource.getResourceType().equals("file"))
+      {
+         FileResource fileRes = (FileResource)resource;
+         if (fileRes.getSubResourceType().equals("image"))
+         {
+            ImageResourceJsonResponse retVal = new ImageResourceJsonResponse();
+            retVal.setResourceId(fileRes.getId());
+            retVal.setResourceName(fileRes.getName());
+            retVal.setWidth(fileRes.getImageWidth());
+            retVal.setHeight(fileRes.getImageHeight());
+            retVal.setOwnerId(ownerId);
+            
+            retVal.setWidthToHeightRatio(
+               calculateImageWidthToHeightRatio(
+                  fileRes.getImageWidth(), fileRes.getImageHeight()
+               )
+            );
+            
+            formatImageSourceForJson(this.servletContext.getContextPath(), retVal);
+            
+            return retVal;
+         }
+      }
+      
+      return null;
+   }
    
    @Override
    public ResourcesListJsonResponse getTextResourcesList(
@@ -553,5 +590,57 @@ public class ResourceServiceImpl implements ResourceService
       retVal.setResourceList(resList);
       
       return retVal;
+   }
+   
+   private static void formatImageSourceForJson(
+      String servletRoot, ImageResourceJsonResponse response
+   )
+   {
+      StringBuilder sb = new StringBuilder();
+      sb.append("<!-- ");
+      sb.append("resourceId=[");
+      sb.append(response.getResourceId());
+      sb.append("] resourceName=[");
+      sb.append(response.getResourceName());
+      sb.append("] -->");
+      sb.append(System.getProperty("line.separator"));
+      
+      sb.append("<!-- ");
+      sb.append("dimension=[");
+      sb.append(response.getWidth());
+      sb.append("X");
+      sb.append(response.getHeight());      
+      sb.append("] widthToHeightRatio=[");
+      sb.append(String.format("%.4f", response.getWidthToHeightRatio()));
+      sb.append("] -->");
+      sb.append(System.getProperty("line.separator"));
+      
+      sb.append("<a href=\"");
+      sb.append(servletRoot);
+      sb.append("/public/imgresource/");
+      sb.append(response.getResourceId());
+      sb.append("\">");
+      sb.append(System.getProperty("line.separator"));
+      sb.append("   <img src=\"");
+      sb.append(servletRoot);
+      sb.append("/public/imgresource/");
+      sb.append(response.getResourceId());
+      sb.append("\" alt=\"");
+      sb.append(response.getResourceName());
+      sb.append("\" width=\"");
+      sb.append(response.getWidth());
+      sb.append("\" height=\"");
+      sb.append(response.getHeight());
+      sb.append("\">");
+      sb.append(System.getProperty("line.separator"));
+      sb.append("</a>");
+      sb.append(System.getProperty("line.separator"));
+      
+      response.setFormattedResourceValue(sb.toString());
+   }
+   
+   private static float calculateImageWidthToHeightRatio(int width, int height)
+   {
+      return ((float)width) / ((float)height);
    }
 }
