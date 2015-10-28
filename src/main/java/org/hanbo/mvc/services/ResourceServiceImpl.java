@@ -3,6 +3,7 @@ package org.hanbo.mvc.services;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.ResourceListItemDataModel;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
+import org.hanbo.mvc.models.json.IconResourceData;
+import org.hanbo.mvc.models.json.IconResourcesListJsonResponse;
 import org.hanbo.mvc.models.json.ImageResourceJsonResponse;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
 import org.hanbo.mvc.models.json.ResourcesListJsonResponse;
@@ -88,7 +91,6 @@ public class ResourceServiceImpl implements ResourceService
    public void updateTextResource(String ownerId, String resourceId,
          String resourceName, String resourceSubType, String resourceValue)
    {
-      // TODO Auto-generated method stub
       validateTextResourceInputs(
          resourceName,
          resourceSubType,
@@ -377,6 +379,74 @@ public class ResourceServiceImpl implements ResourceService
       return retVal;
    }
 
+   @Override
+   public String getArticleIconUrl(String articleId)
+   {
+      Resource iconResource = this._resRepo.getArticleIcon(articleId);
+      
+      if (iconResource != null)
+      {
+         if (iconResource instanceof FileResource
+            && ((FileResource)iconResource).getSubResourceType().equals("image"))
+         {
+            String resId = iconResource.getId();
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append(this.servletContext.getContextPath());
+            sb.append("/public/imgresource/");
+            sb.append(resId);
+            
+            return sb.toString();
+         }
+      }
+      
+      return "";
+   }
+   
+   @Override
+   public IconResourcesListJsonResponse getIconResourcesList(
+      String userId, int pageIdx)
+   {
+      int itemsCount = resourceListItemCountFromProperty();
+      List<FileResource> iconResources =
+         this._resRepo.getIconResources(userId, pageIdx, itemsCount);
+      
+      IconResourcesListJsonResponse retVal = createIconResourceListResponse(
+         userId,
+         pageIdx,
+         iconResources
+      );
+      
+      return retVal;
+   }
+
+   @Override
+   public boolean setArticleIcon(
+      String articleId, String resourceId)
+   {
+      try
+      {
+         this._resRepo.setIconToArticle(articleId, resourceId);
+         return true;
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+   }
+   
+   @Override
+   public boolean removeArticleIcon(String articleId)
+   {
+      try
+      {
+         return this._resRepo.deleteIconToArticle(articleId);
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
+   }
    
    private void validateTextResourceInputs(
       String resourceName,
@@ -469,7 +539,6 @@ public class ResourceServiceImpl implements ResourceService
       }
    }
 
-   
    private String resourcePath(String type, String resourceId)
    {
       StringBuilder sb = new StringBuilder();
@@ -642,5 +711,39 @@ public class ResourceServiceImpl implements ResourceService
    private static float calculateImageWidthToHeightRatio(int width, int height)
    {
       return ((float)width) / ((float)height);
+   }
+   
+   private IconResourcesListJsonResponse createIconResourceListResponse(
+      String ownerId,
+      int pageIdx,
+      List<FileResource> foundIcons
+   )
+   {
+      IconResourcesListJsonResponse retVal = new IconResourcesListJsonResponse();
+      
+      List<IconResourceData> iconList = new ArrayList<IconResourceData>();
+      
+      for (FileResource res : foundIcons)
+      {
+         IconResourceData item = new IconResourceData();
+         item.setIconHeight(res.getImageHeight());
+         item.setIconWidth(res.getImageWidth());
+
+         item.setResourceId(res.getId());
+         item.setIconUrl(iconImageUrl(
+            this.servletContext.getContextPath(), res.getId()));
+         iconList.add(item);
+      }
+
+      retVal.setOwnerId(ownerId);
+      retVal.setPageIdx(pageIdx);
+      retVal.setIconResourcesList(iconList);
+      
+      return retVal;
+   }
+   
+   private static String iconImageUrl(String contextRoot, String resourceId)
+   {
+      return String.format("%s/public/imgresource/%s", contextRoot, resourceId);
    }
 }

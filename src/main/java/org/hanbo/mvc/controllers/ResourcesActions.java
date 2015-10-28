@@ -8,6 +8,7 @@ import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.json.IconResourcesListJsonResponse;
 import org.hanbo.mvc.models.json.ImageResourceJsonResponse;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
 import org.hanbo.mvc.models.json.ResourcesListJsonResponse;
@@ -388,7 +389,120 @@ public class ResourcesActions
    {
       downloadImage(resourceId, response);
    }
+
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/resources/getArticleIcon", method=RequestMethod.GET)
+   public ResponseEntity<String> getArticleIcon(
+      @RequestParam("articleId")
+      String articleId
+   )
+   {
+      String iconUrl = 
+      this._resourceService.getArticleIconUrl(articleId);
+      
+      if (StringUtils.isEmpty(iconUrl))
+      {
+         return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+      }
+      
+      return new ResponseEntity<String>(iconUrl, HttpStatus.OK);
+   }
    
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/resources/setArticleIcon", method=RequestMethod.POST)
+   public ResponseEntity<String> setArticleIcon(
+      @RequestParam("articleId")
+      String articleId,
+      @RequestParam("resourceId")
+      String resourceId
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+      
+      boolean retVal
+         = this._resourceService.setArticleIcon(
+            articleId, resourceId
+         );
+      if (retVal)
+      {
+         String iconUrl = 
+         this._resourceService.getArticleIconUrl(articleId);
+         return new ResponseEntity<String>(iconUrl, HttpStatus.OK);
+      }
+      
+      return new ResponseEntity<String>(HttpStatus.NOT_MODIFIED);
+   }
+
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/resources/removeArticleIcon", method=RequestMethod.DELETE)
+   public ResponseEntity<String> removeArticleIcon(
+      @RequestParam("articleId")
+      String articleId
+   )
+   {
+      boolean retVal
+         = this._resourceService.removeArticleIcon(
+            articleId
+         );
+      if (retVal)
+      {
+         return new ResponseEntity<String>(HttpStatus.OK);
+      }
+      
+      return new ResponseEntity<String>(HttpStatus.NOT_MODIFIED);
+   }
+   
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/resources/getIconResourcesList",
+      method=RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<String> getIconResourcesList(
+      @RequestParam("pageIdx")
+      Integer pageIdx
+   )
+   {
+      if (pageIdx == null)
+      {
+         pageIdx = new Integer(0);
+      }
+      
+      if (pageIdx < 0)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("pageIdx invalid"), HttpStatus.NOT_ACCEPTABLE
+         );
+      }
+      
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+      
+      IconResourcesListJsonResponse respObj = 
+      this._resourceService.getIconResourcesList(
+         loginUser.getUserId(), pageIdx);
+      
+      if (!respObj.isValid())
+      {
+         return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+      }
+      
+      return new ResponseEntity<String>(
+         JsonUtil.convertObjectToJson(respObj), HttpStatus.OK);
+   }
+ 
    private void downloadImage(String resourceId, HttpServletResponse response)
    {
       try

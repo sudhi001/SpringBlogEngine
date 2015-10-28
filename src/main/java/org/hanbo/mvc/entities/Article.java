@@ -70,6 +70,9 @@ public class Article
    @OneToOne(fetch = FetchType.LAZY, mappedBy="article", cascade={CascadeType.ALL})
    private PermaLink permaLinks;
 
+   @OneToOne(fetch = FetchType.LAZY, mappedBy="article", cascade={CascadeType.ALL})
+   private ArticleIcon articleIcon;
+   
    public String getId()
    {
       return id;

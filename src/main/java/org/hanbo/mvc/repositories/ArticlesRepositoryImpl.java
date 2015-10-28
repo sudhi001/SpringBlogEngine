@@ -158,6 +158,9 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    public void deleteArticle(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();
+
+      ResourcesRepositoryImpl.deleteArticleIconByArticleId(session, articleId);
+      
       Query query = session.createQuery(
          "delete from Article where id = :articleId"
       )
@@ -238,6 +241,11 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    public Article findArticleById(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();
+      return internalFindArticleById(session, articleId);
+   }
+   
+   static Article internalFindArticleById(Session session, String articleId)
+   {
       Query query = session.createQuery(
          "select article from Article article where article.id = :articleId"
       )

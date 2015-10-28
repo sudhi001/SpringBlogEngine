@@ -2,8 +2,13 @@ package org.hanbo.mvc.repositories;
 
 import java.util.List;
 
+import org.hanbo.mvc.entities.Article;
+import org.hanbo.mvc.entities.ArticleIcon;
 import org.hanbo.mvc.entities.FileResource;
 import org.hanbo.mvc.entities.Resource;
+import org.hanbo.mvc.entities.TextResource;
+import org.hanbo.mvc.exceptions.WebAppException;
+import org.hanbo.mvc.utilities.IdUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -118,6 +123,9 @@ public class ResourcesRepositoryImpl implements ResourcesRepository
    public void deleteResource(Resource resource)
    {
       Session session = _sessionFactory.getCurrentSession();
+      
+      deleteArticleIconByResId(session, resource.getId());
+      
       session.delete(resource);
    }
    
@@ -167,5 +175,176 @@ public class ResourcesRepositoryImpl implements ResourcesRepository
 
       List<FileResource> objList = objQuery.list();
       return objList;
+   }
+
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public Resource getArticleIcon(String articleId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query objQuery = session.createQuery(
+            "select articleIcon.iconResource from ArticleIcon articleIcon"
+            + " where articleIcon.article.id = :articleId")
+            .setParameter("articleId", articleId)
+            .setMaxResults(1);
+      
+      List<Resource> objList = objQuery.list();
+      if (objList.size() > 0)
+      {
+         return objList.get(0);
+      }
+      
+      return null;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<FileResource> getIconResources(
+      String ownerId, int pageIdx, int itemsCount)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query objQuery = session.createQuery(
+            "select fileResource from FileResource fileResource"
+            + " where fileResource.owner.id = :ownerId"
+            + " and fileResource.imageWidth = fileResource.imageHeight")
+            .setParameter("ownerId", ownerId)
+            .setFirstResult(pageIdx * itemsCount)
+            .setMaxResults(itemsCount);
+      
+      List<FileResource> objList = objQuery.list();
+      return objList;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public void setIconToArticle(String articleId, String resourceId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+
+      Article article = 
+      ArticlesRepositoryImpl.internalFindArticleById(session, articleId);
+      if (article == null)
+      {
+         throw new WebAppException(
+            String.format("Unable to find article with id [%s]", articleId),
+            WebAppException.ErrorType.DATA);
+      }
+
+      FileResource res =  getFileResourceById(session, resourceId);
+      if (res == null)
+      {
+         throw new WebAppException(
+            String.format("Unable to find file resource with id [%s]", resourceId),
+            WebAppException.ErrorType.DATA);         
+      }
+      
+      Query objQuery = session.createQuery(
+            "select articleIcon from ArticleIcon articleIcon"
+            + " where articleIcon.article.id = :articleId")
+            .setParameter("articleId", articleId)
+            .setMaxResults(1);
+      
+      List<ArticleIcon> retObjs = objQuery.list();
+      if (retObjs.size() > 0)
+      {
+         ArticleIcon articleIcon = retObjs.get(0);
+         articleIcon.setIconResource(res);
+         
+         session.saveOrUpdate(articleIcon);
+      }
+      else
+      {
+         ArticleIcon articleIcon = new ArticleIcon();
+         articleIcon.setId(IdUtil.generateUuid());
+         articleIcon.setArticle(article);
+         articleIcon.setIconResource(res);
+         session.saveOrUpdate(articleIcon);
+      }
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public boolean deleteIconToArticle(String articleId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query objQuery = session.createQuery(
+            "select articleIcon from ArticleIcon articleIcon"
+            + " where articleIcon.article.id = :articleId")
+            .setParameter("articleId", articleId)
+            .setMaxResults(1);
+      
+      List<ArticleIcon> retObjs = objQuery.list();
+      if (retObjs.size() > 0)
+      {
+         ArticleIcon articleIcon = retObjs.get(0);
+         session.delete(articleIcon);
+         return true;
+      }
+      
+      return false;
+   }
+   
+   protected static FileResource getFileResourceById(Session session, String resourceId)
+   {
+      return (FileResource)getResourceById(session, resourceId);
+   }
+   
+   protected static TextResource getTextResourceById(Session session, String resourceId)
+   {      
+      return (TextResource)getResourceById(session, resourceId);
+   }
+   
+   private static Resource getResourceById(Session session, String resourceId)
+   {
+      Query objQuery = session.createQuery(
+         "select resource from Resource resource where resource.id = :resourceId")
+         .setParameter("resourceId", resourceId)
+         .setMaxResults(1);
+      
+      List<Resource> objsFound =objQuery.list();
+      if (objsFound.size() > 0)
+      {
+         return objsFound.get(0);
+      }
+      
+      return null;
+   }
+   
+   private static void deleteArticleIcon(Session session, String fieldName, String paramName, String idVal)
+   {
+      StringBuilder sb = new StringBuilder();
+      sb.append("delete from ArticleIcon articleIcon");
+      sb.append(String.format(" where %s = :%s", fieldName, paramName));
+      
+      Query delQuery = session.createQuery(sb.toString())
+         .setParameter(paramName, idVal);
+      
+      delQuery.executeUpdate();
+   }
+   
+   static void deleteArticleIconByResId(Session session, String resourceId)
+   {
+      deleteArticleIcon(
+         session, "iconResource.id", "resourceId", resourceId);
+   }
+   
+   static void deleteArticleIconByArticleId(Session session, String articleId)
+   {
+      deleteArticleIcon(
+         session, "article.id", "articleId", articleId);
    }
 }

@@ -223,10 +223,8 @@ public class BlogPostActions
    {
       if (pageIdx <= 0)
       {
-         pageIdx = 1;
+         pageIdx = 0;
       }
-      
-      pageIdx -= 1;
       
       ArticleListPageDataModel articleListPage = 
       this._articleService.getAllViewablePosts(pageIdx);

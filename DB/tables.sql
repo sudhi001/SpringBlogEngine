@@ -2,6 +2,8 @@ use BlogEngine;
 
 DROP TABLE IF EXISTS image;
 
+DROP TABLE IF EXISTS articleicon;
+
 DROP TABLE IF EXISTS fileresource;
 
 DROP TABLE IF EXISTS textresource;
@@ -90,6 +92,15 @@ CREATE TABLE fileresource(
    filename VARCHAR(256) NOT NULL,
    imgwidth INT NULL,
    imgheight INT NULL
+);
+
+CREATE TABLE articleicon (
+   id VARCHAR(45) NOT NULL PRIMARY KEY,
+   articleid VARCHAR(45) NOT NULL,
+   resourceid VARCHAR(45) NOT NULL,
+   
+   FOREIGN KEY (articleid) REFERENCES article(id),
+   FOREIGN KEY (resourceid) REFERENCES resource(id)
 );
 
 CREATE TABLE image (

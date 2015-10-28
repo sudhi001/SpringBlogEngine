@@ -49,5 +49,4 @@ public class JsonUtil
          IOUtils.closeQuietly(inStrm);
       }
    }
-   
 }
