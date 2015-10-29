@@ -28,7 +28,9 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="text-center">
-                  <img src="https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240">
+                  <c:if test="${articleModel.articleIconResId != null && articleModel.articleIconResId.length() > 0}">
+                    <img src="${pageContext.request.contextPath}/public/imgresource/${articleModel.articleIconResId}">
+                  </c:if>
                 </div>
               </div>
               <div class="col-md-9">

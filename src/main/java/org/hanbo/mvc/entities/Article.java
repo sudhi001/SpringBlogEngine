@@ -198,4 +198,14 @@ public class Article
    {
       this.permaLinks = permaLinks;
    }
+
+   public ArticleIcon getArticleIcon()
+   {
+      return articleIcon;
+   }
+
+   public void setArticleIcon(ArticleIcon articleIcon)
+   {
+      this.articleIcon = articleIcon;
+   }
 }

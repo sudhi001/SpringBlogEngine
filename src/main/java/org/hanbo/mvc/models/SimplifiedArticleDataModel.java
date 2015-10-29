@@ -18,6 +18,8 @@ public class SimplifiedArticleDataModel
    
    private String authorId;
    private String authorName;
+   
+   private String articleIconResId;
 
    public SimplifiedArticleDataModel()
    {      
@@ -149,5 +151,15 @@ public class SimplifiedArticleDataModel
    public void setArticlePublished(boolean articlePublished)
    {
       this.articlePublished = articlePublished;
+   }
+
+   public String getArticleIconResId()
+   {
+      return articleIconResId;
+   }
+
+   public void setArticleIconResId(String articleIconResId)
+   {
+      this.articleIconResId = articleIconResId;
    }  
 }

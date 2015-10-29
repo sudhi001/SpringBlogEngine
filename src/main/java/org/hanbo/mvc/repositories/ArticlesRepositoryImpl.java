@@ -230,6 +230,11 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
          {
             article.getAuthor().getId();
             article.getAuthor().getUserName();
+            
+            if (article.getArticleIcon() != null)
+            {
+               article.getArticleIcon().getIconResource().getId();
+            }
          }
       }
       

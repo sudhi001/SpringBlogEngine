@@ -43,7 +43,7 @@ CREATE TABLE article (
    title VARCHAR(128) NOT NULL,
    keywords VARCHAR(128) NULL,
    category VARCHAR(64) NOT NULL,
-   summary VARCHAR(512) NULL,
+   summary VARCHAR(2048) NULL,
    content MEDIUMTEXT NULL,
    authorid VARCHAR(45) NOT NULL,
    createdate DATETIME NOT NULL,
