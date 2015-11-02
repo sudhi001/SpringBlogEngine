@@ -74,15 +74,7 @@ public class BlogPostActions
       ArticleDataModel articleDataModel
          = this._articleService.saveArticle(article);
       
-      PageMetadata pageMetadata
-         = _util.creatPageMetadata("Preview Post");
-      ModelAndView retVal
-         = _util.getDefaultModelAndView(
-            "previewPost", pageMetadata
-         );
-      retVal.addObject("articleModel", articleDataModel);
-      
-      return retVal;
+      return createModelViewForArticle(articleDataModel, true);
    }
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
@@ -98,18 +90,8 @@ public class BlogPostActions
          return _util.createErorrPageViewModel("User Authorization Failure", "User cannot be found.");
       }
       
-      ArticleDataModel articleDataModel
-         = this._articleService.getArticleById(articleId, loginUser.getUserId());
-
-      PageMetadata pageMetadata
-         = _util.creatPageMetadata("Preview Post");
-      ModelAndView retVal
-         = _util.getDefaultModelAndView(
-            "previewPost", pageMetadata
-         );
-      retVal.addObject("articleModel", articleDataModel);
-      
-      return retVal;
+      return createPostViewModelView(
+         loginUser.getUserId(), articleId, true);
    }
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
@@ -162,15 +144,7 @@ public class BlogPostActions
       ArticleDataModel articleDataModel
          = this._articleService.updateArticle(article);
       
-      PageMetadata pageMetadata
-         = _util.creatPageMetadata("Preview Post");
-      ModelAndView retVal
-         = _util.getDefaultModelAndView(
-            "previewPost", pageMetadata
-         );
-      retVal.addObject("articleModel", articleDataModel);
-      
-      return retVal;
+      return createModelViewForArticle(articleDataModel, true);
    }
       
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
@@ -239,6 +213,30 @@ public class BlogPostActions
       
       return retVal;
    }
+
+   @RequestMapping(value = "/blog/view/{articleId}", method=RequestMethod.GET)
+   public ModelAndView blogView(
+      @PathVariable("articleId")
+      String articleId
+   )
+   {
+      ArticleDataModel articleDataModel
+         = this._articleService.getArticleById(articleId);
+      
+      return createModelViewForArticle(articleDataModel, false);
+   }
+   
+   @RequestMapping(value = "/page/view/{articleId}", method=RequestMethod.GET)
+   public ModelAndView pageView(
+      @PathVariable("articleId")
+      String articleId
+   )
+   {
+      ArticleDataModel articleDataModel
+         = this._articleService.getArticleById(articleId);
+      
+      return createModelViewForArticle(articleDataModel, false);
+   }
    
    // +++ REST APIs
    
@@ -306,6 +304,46 @@ public class BlogPostActions
       
       retVal.put("post", "Post");
       retVal.put("page", "Page");
+      
+      return retVal;
+   }
+   
+   // XXX not very good names
+   private ModelAndView createPostViewModelView(
+      String ownerId, String articleId, boolean previewMode)
+   {
+      ArticleDataModel articleDataModel
+         = this._articleService.getArticleById(articleId, ownerId);
+      return createModelViewForArticle(articleDataModel, previewMode);
+   }
+   
+   private ModelAndView createModelViewForArticle(
+      ArticleDataModel articleDataModel, boolean previewMode)
+   {
+      String pageTitle;
+      String pageTemplate;
+      if (articleDataModel.getArticleType().equals("post"))
+      {
+         pageTitle = previewMode?
+            String.format("Preview Post - %s", articleDataModel.getArticleTitle())
+            : articleDataModel.getArticleTitle();
+         pageTemplate = "viewPost";
+      }
+      else
+      {
+         pageTitle = previewMode?
+            String.format("Preview Page - %s", articleDataModel.getArticleTitle())
+            : articleDataModel.getArticleTitle();
+         pageTemplate = "viewPage";         
+      }
+      
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata(pageTitle);
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+              pageTemplate, pageMetadata
+           );
+      retVal.addObject("articleModel", articleDataModel);
       
       return retVal;
    }

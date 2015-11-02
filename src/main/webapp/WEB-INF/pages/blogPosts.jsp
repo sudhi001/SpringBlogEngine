@@ -34,16 +34,17 @@
                 </div>
               </div>
               <div class="col-md-9">
-
-                <div style="min-height: 200px;">
-                  <p>
+                <div class="row">
+                  <div class="col-md-12">
+                    <p>
 ${articleModel.articleSummary}
-                  </p>
+                    </p>
+                  </div>
                 </div>
                 <div class="row">
                   <div class="col-md-12">
                     <p class="text-right">
-                      <a href="#">Read more...</a>
+                      <a href="${pageContext.request.contextPath}/blog/view/${articleModel.articleId}">Read more...</a>
                     </p>
                   </div>
                 </div>

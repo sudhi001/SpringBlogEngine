@@ -52,11 +52,13 @@ public class ArticleServiceImpl implements ArticleService
       }
       
       Article article = ArticleDataModelEntityMapping.fromDataModel(articleDataModel);
-      article.setId(IdUtil.generateUuid());
+      String articleId = IdUtil.generateUuid();
+      article.setId(articleId);
       article.setAuthor(user);
       
       articlesRepo.saveArticle(article);
       
+      articleDataModel.setArticleId(articleId);
       return articleDataModel;
    }
    
@@ -235,7 +237,7 @@ public class ArticleServiceImpl implements ArticleService
       }
       
       if (!StringUtils.isEmpty(articleDataModel.getArticleSummary())
-            && articleDataModel.getArticleSummary().length() > 512)
+            && articleDataModel.getArticleSummary().length() > 2048)
       {
          throw new WebAppException("Article summary has too many characters.", WebAppException.ErrorType.DATA);
       }
