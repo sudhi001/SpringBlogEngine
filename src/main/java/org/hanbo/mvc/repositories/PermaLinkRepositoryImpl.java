@@ -2,6 +2,7 @@ package org.hanbo.mvc.repositories;
 
 import java.util.List;
 
+import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.entities.PermaLink;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -61,5 +62,35 @@ public class PermaLinkRepositoryImpl implements PermaLinkRepository
             + "where article.id = :articleId")
          .setParameter("articleId", articleId);
       query.executeUpdate();
+   }
+   
+   @Override
+   @Transactional
+   public Article getArticleByPermaLink(String permaLinkValue)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query query =
+      session.createQuery("select permaLink.article from PermaLink permaLink "
+            + "where permaLink.path = :permaLinkValue")
+         .setParameter("permaLinkValue", permaLinkValue);
+
+      List<Article> objList = query.list();
+      if (objList.size() > 0)
+      {
+         Article retVal = objList.get(0);
+         retVal.getAuthor().getUserName();
+         retVal.getAuthor().getId();
+         
+         if (retVal.getArticleIcon() != null)
+         {
+            retVal.getArticleIcon().getId();
+            retVal.getArticleIcon().getIconResource().getId();
+         }
+         
+         return retVal;
+      }
+      
+      return null;
    }
 }

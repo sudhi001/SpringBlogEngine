@@ -3,6 +3,8 @@ package org.hanbo.mvc.controllers;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
+import org.hanbo.mvc.models.ArticleDataModel;
+import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.json.GetPermaLinkJsonResponse;
 import org.hanbo.mvc.models.json.NewPermaLinkJsonRequest;
@@ -16,10 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.apache.log4j.*;
 
 @Controller
@@ -30,11 +34,47 @@ public class PermaLinkActions
    @Autowired
    private ActionsUtil _util;
    
-   //@Autowired
-   //private ArticleService _articleService;
-   
    @Autowired
    private PermaLinkService _permaLinkService;
+   
+   @RequestMapping(value="/permalink/{linkValue}",
+      method=RequestMethod.GET)
+   @ResponseBody
+   public ModelAndView viewPermaLink(
+      @PathVariable("linkValue")
+      String linkValue
+   )
+   {
+      ArticleDataModel articleDataModel =
+         _permaLinkService.findArticleByPermaLink(linkValue);
+      if (articleDataModel == null)
+      {
+         return _util.createErorrPageViewModel("Article not found",
+            String.format("Unable to find article via PermaLink [%s]", linkValue));
+      }
+      
+      if (!articleDataModel.isArticlePublished())
+      {
+         return _util.createErorrPageViewModel("Article is not published",
+            String.format("Article with permalink [%s] is not"
+               + " yet published. Cannot be viewed publicly.",
+            linkValue));
+      }
+      
+      if (articleDataModel.getArticleType().equals("post"))
+      {
+         return createArticleViewPage(
+            articleDataModel.getArticleTitle(), "viewPost",
+            articleDataModel);
+      }
+      else
+      {
+         return createArticleViewPage(
+            articleDataModel.getArticleTitle(), "viewPost",
+            articleDataModel);
+      }
+   }
+
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value="/admin/blog/setPermaLink",
@@ -161,5 +201,20 @@ public class PermaLinkActions
          JsonUtil.convertObjectToJson(response),
          statusCode
       );
+   }
+   
+   private ModelAndView createArticleViewPage(
+      String pageTitle, String pageTemplate,
+      ArticleDataModel articleDataModel)
+   {
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata(pageTitle);
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+              pageTemplate, pageMetadata
+           );
+      retVal.addObject("articleModel", articleDataModel);
+      
+      return retVal;
    }
 }

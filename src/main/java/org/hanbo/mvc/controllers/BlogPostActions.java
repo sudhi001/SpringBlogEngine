@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
+import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ArticleDataModel;
 import org.hanbo.mvc.models.ArticleListPageDataModel;
 import org.hanbo.mvc.models.PageMetadata;
@@ -17,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,12 @@ public class BlogPostActions
    
    @Autowired
    private PermaLinkService _permaLinkService;
+   
+   @ModelAttribute("newPostModel")
+   public ArticleDataModel loadEmptyModelBean()
+   {
+      return new ArticleDataModel();
+   }
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/blog/newPost", method=RequestMethod.GET)
@@ -73,8 +81,9 @@ public class BlogPostActions
       
       ArticleDataModel articleDataModel
          = this._articleService.saveArticle(article);
+      articleDataModel.setPreviewMode(true);
       
-      return createModelViewForArticle(articleDataModel, true);
+      return createModelViewForArticle(articleDataModel);
    }
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
@@ -143,8 +152,9 @@ public class BlogPostActions
       
       ArticleDataModel articleDataModel
          = this._articleService.updateArticle(article);
+      articleDataModel.setPreviewMode(true);
       
-      return createModelViewForArticle(articleDataModel, true);
+      return createModelViewForArticle(articleDataModel);
    }
       
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
@@ -220,10 +230,7 @@ public class BlogPostActions
       String articleId
    )
    {
-      ArticleDataModel articleDataModel
-         = this._articleService.getArticleById(articleId);
-      
-      return createModelViewForArticle(articleDataModel, false);
+      return viewArticle(articleId);
    }
    
    @RequestMapping(value = "/page/view/{articleId}", method=RequestMethod.GET)
@@ -232,10 +239,7 @@ public class BlogPostActions
       String articleId
    )
    {
-      ArticleDataModel articleDataModel
-         = this._articleService.getArticleById(articleId);
-      
-      return createModelViewForArticle(articleDataModel, false);
+      return viewArticle(articleId);
    }
    
    // +++ REST APIs
@@ -297,6 +301,22 @@ public class BlogPostActions
 
       return new ResponseEntity<String>(HttpStatus.OK);
    }
+   
+   @ExceptionHandler(WebAppException.class)
+   public ModelAndView handleException(WebAppException ex)
+   {
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata("Error Occurred");
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+              "error", pageMetadata
+           );
+      retVal.addObject("errorTitle", "Unexpected error occurred...");
+      retVal.addObject("errorSummary",
+         org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace(ex));
+      
+      return retVal;
+   }
 
    private Map<String, String> createArticleTypeList()
    {
@@ -314,24 +334,26 @@ public class BlogPostActions
    {
       ArticleDataModel articleDataModel
          = this._articleService.getArticleById(articleId, ownerId);
-      return createModelViewForArticle(articleDataModel, previewMode);
+      articleDataModel.setPreviewMode(previewMode);
+      return createModelViewForArticle(articleDataModel);
    }
    
    private ModelAndView createModelViewForArticle(
-      ArticleDataModel articleDataModel, boolean previewMode)
+      ArticleDataModel articleDataModel)
    {
+      
       String pageTitle;
       String pageTemplate;
       if (articleDataModel.getArticleType().equals("post"))
       {
-         pageTitle = previewMode?
+         pageTitle = articleDataModel.isPreviewMode()?
             String.format("Preview Post - %s", articleDataModel.getArticleTitle())
             : articleDataModel.getArticleTitle();
          pageTemplate = "viewPost";
       }
       else
       {
-         pageTitle = previewMode?
+         pageTitle = articleDataModel.isPreviewMode()?
             String.format("Preview Page - %s", articleDataModel.getArticleTitle())
             : articleDataModel.getArticleTitle();
          pageTemplate = "viewPage";         
@@ -346,5 +368,19 @@ public class BlogPostActions
       retVal.addObject("articleModel", articleDataModel);
       
       return retVal;
+   }
+   
+   private ModelAndView viewArticle(String articleId)
+   {
+      ArticleDataModel articleDataModel
+         = this._articleService.getArticleById(articleId);
+      
+      if (articleDataModel.isArticlePublished())
+      {
+         return createModelViewForArticle(articleDataModel);
+      }
+      
+      return _util.createErorrPageViewModel("Post is not published",
+         String.format("This post with id [%s] has not been published.", articleId));
    }
 }

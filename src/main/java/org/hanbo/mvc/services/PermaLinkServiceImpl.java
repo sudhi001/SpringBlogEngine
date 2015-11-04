@@ -5,11 +5,13 @@ import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.entities.LoginUser;
 import org.hanbo.mvc.entities.PermaLink;
 import org.hanbo.mvc.exceptions.WebAppException;
+import org.hanbo.mvc.models.ArticleDataModel;
 import org.hanbo.mvc.models.json.GetPermaLinkJsonResponse;
 import org.hanbo.mvc.models.json.NewPermaLinkJsonRequest;
 import org.hanbo.mvc.repositories.ArticlesRepository;
 import org.hanbo.mvc.repositories.PermaLinkRepository;
 import org.hanbo.mvc.repositories.UsersRepository;
+import org.hanbo.mvc.services.utilities.ArticleDataModelEntityMapping;
 import org.hanbo.mvc.utilities.IdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,6 +91,18 @@ public class PermaLinkServiceImpl implements PermaLinkService
       this._permaLinkRepository.deletePermaLinkByArticle(articleId);
       
       this._articleRepo.saveArticle(articleToModify);
+   }
+   
+   @Override
+   public ArticleDataModel findArticleByPermaLink(String permaLinkValue)
+   {
+      Article article = 
+         _permaLinkRepository.getArticleByPermaLink(permaLinkValue);
+      
+      if (article == null)
+         return null;
+      
+      return ArticleDataModelEntityMapping.toDataModel(article);
    }
    
    private String createNewPermaLink(

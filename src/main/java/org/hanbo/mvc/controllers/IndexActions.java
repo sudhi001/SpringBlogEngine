@@ -32,18 +32,4 @@ public class IndexActions
       
       return retVal;
    }
-   
-   @PreAuthorize("hasAnyRole('ROLE_USER')")
-   @RequestMapping("/Hello")
-   public ModelAndView hello()
-   {
-      PageMetadata pageMetadata
-         = _util.creatPageMetadata("Hello");
-      ModelAndView retVal
-         = _util.getDefaultModelAndView(
-            "hello", pageMetadata
-         );
-      
-      return retVal;
-   }
 }

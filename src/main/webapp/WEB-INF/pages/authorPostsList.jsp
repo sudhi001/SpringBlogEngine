@@ -81,9 +81,7 @@
                   <button class="btn btn-default" onclick="publishPostJson('${postInfo.articleId}', 'false')"><span class="glyphicon glyphicon-file"></span></button>
                 </c:otherwise>
               </c:choose>
-              <c:if test="${postInfo.articleType.equals('page')}">
-                 <button class="btn btn-default" onclick="setPermaLinkBtnClick('${postInfo.articleId}', '${postInfo.authorId}', '${postInfo.articleTitle}')"><span class="glyphicon glyphicon-link"></span></button>
-              </c:if>
+              <button class="btn btn-default" onclick="setPermaLinkBtnClick('${postInfo.articleId}', '${postInfo.authorId}', '${postInfo.articleTitle}')"><span class="glyphicon glyphicon-link"></span></button>
             </td>
           </tr>
         </c:forEach>        
