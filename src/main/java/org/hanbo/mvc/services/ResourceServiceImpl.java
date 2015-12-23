@@ -426,8 +426,13 @@ public class ResourceServiceImpl implements ResourceService
    {
       try
       {
-         this._resRepo.setIconToArticle(articleId, resourceId);
-         return true;
+         if (!this._resRepo.isArticleIconAlreadyExist(resourceId))
+         {
+            this._resRepo.setIconToArticle(articleId, resourceId);
+            return true;
+         }
+         
+         return false;
       }
       catch (Exception e)
       {

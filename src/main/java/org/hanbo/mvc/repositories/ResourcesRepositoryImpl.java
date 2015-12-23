@@ -298,6 +298,24 @@ public class ResourcesRepositoryImpl implements ResourcesRepository
       return false;
    }
    
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public boolean isArticleIconAlreadyExist(String resourceId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query objQuery = session.createQuery(
+            "select articleIcon from ArticleIcon articleIcon"
+            + " where articleIcon.iconResource.id = :resourceId")
+            .setParameter("resourceId", resourceId)
+            .setMaxResults(1);
+      
+      List<ArticleIcon> retObjs = objQuery.list();
+      return retObjs.size() > 0;
+   }
+   
    protected static FileResource getFileResourceById(Session session, String resourceId)
    {
       return (FileResource)getResourceById(session, resourceId);

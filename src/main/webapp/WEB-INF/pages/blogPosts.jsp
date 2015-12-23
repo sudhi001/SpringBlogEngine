@@ -13,51 +13,89 @@
       </div>
     </div>
     
+    <hr>
+    
     <c:choose>
       <c:when test="${articleListPageModel.getListItems().size() > 0}">
         <c:forEach var="articleModel" items="${articleListPageModel.getListItems()}">
           <div class="post-list">
-          
-            <div class="row">
-              <div class="col-md-3"></div>
-              <div class="col-md-9">
-                <h3>${articleModel.articleTitle}</h3>
-                <hr>
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <c:choose>
+                  <c:when test="${articleModel.articleIconResId != null && articleModel.articleIconResId.length() > 0}">
+                    <div class="row">
+                      <div class="col-md-2">
+                        <a href="${pageContext.request.contextPath}/blog/view/${articleModel.articleId}">
+                          <img class="media-object" src="${pageContext.request.contextPath}/public/imgresource/${articleModel.articleIconResId}" width="100%" height="100%">
+                        </a>
+                      </div>
+                      <div class="col-md-10">
+                        <h4><a href="${pageContext.request.contextPath}/blog/view/${articleModel.articleId}">
+                           ${articleModel.articleTitle}
+                        </a></h4>
+                        <hr class="postlist-hr">
+                        <div class="postlist-postsummary">
+                          <p>
+                          ${articleModel.articleSummary}
+                          </p>
+                        </div>
+                        
+                        <div class="thumbnail postlist-bottom-sidebar">
+                          <div class="row">
+                            <div class="col-md-3">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                              ${articleModel.getArticleUpdateDateString()}
+                            </div>
+                            <div class="col-md-3">
+                              <span class="glyphicon glyphicon-user"></span>
+                              ${articleModel.getAuthorName()}
+                            </div>             
+                            <div class="col-md-2">
+                            </div>                            
+                            <div class="col-md-4 text-right">
+                              <a href="${pageContext.request.contextPath}/blog/view/${articleModel.articleId}">Read More..</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>                      
+                    </div>
+                  </c:when>
+                  <c:otherwise>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <h4 class="media-heading">
+                          <a href="${pageContext.request.contextPath}/blog/view/${articleModel.articleId}">${articleModel.articleTitle}</a>
+                        </h4>
+                        <hr class="postlist-hr">
+                        <div class="postlist-postsummary">
+                          <p>
+                          ${articleModel.articleSummary}
+                          </p>
+                        </div>
+                        
+                        <div class="thumbnail postlist-bottom-sidebar">
+                          <div class="row">
+                            <div class="col-md-3">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                              ${articleModel.getArticleUpdateDateString()}
+                            </div>
+                            <div class="col-md-3">
+                              <span class="glyphicon glyphicon-user"></span>
+                              ${articleModel.getAuthorName()}
+                            </div>             
+                            <div class="col-md-2">
+                            </div>                            
+                            <div class="col-md-4 text-right">
+                              <a href="${pageContext.request.contextPath}/blog/view/${articleModel.articleId}">Read More...</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </c:otherwise>
+                </c:choose>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-3">
-                <div class="text-center">
-                  <c:if test="${articleModel.articleIconResId != null && articleModel.articleIconResId.length() > 0}">
-                    <img src="${pageContext.request.contextPath}/public/imgresource/${articleModel.articleIconResId}">
-                  </c:if>
-                </div>
-              </div>
-              <div class="col-md-9">
-                <div class="row">
-                  <div class="col-md-12">
-                    <p>
-${articleModel.articleSummary}
-                    </p>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <p class="text-right">
-                      <a href="${pageContext.request.contextPath}/blog/view/${articleModel.articleId}">Read more...</a>
-                    </p>
-                  </div>
-                </div>
-                <div class="breadcrumb">
-                  <div class="text-right">
-                    <span class="glyphicon glyphicon-book"></span> ${articleModel.articleType}
-                    <span class="glyphicon glyphicon-calendar"></span> ${articleModel.getArticleUpdateDateString()}
-                    <span class="glyphicon glyphicon-user"></span> ${articleModel.authorName}
-                  </div>
-                </div>
-              </div>
-            </div>
-            
           </div>
         </c:forEach>
       </c:when>

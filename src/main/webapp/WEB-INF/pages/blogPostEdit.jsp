@@ -129,9 +129,7 @@
           <input type="hidden" id="iconsPageIdx" value=""/>
           <div class="modal-body">
             <div class="row">
-              <div class="col-md-3">
-              </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <div style="text-align: center;">
                   <div class="thumbnail">
                     <input type="hidden" id="selectedIconResId" value=""/>
@@ -141,13 +139,12 @@
                   <button class="btn btn-default" onclick="handleClickRemoveArticleIcon()">Remove</button>
                 </div>
               </div>
-              <div class="col-md-3">
+              <div class="col-md-8">
+                <div style="padding-left: 15px; padding-right: 15px; max-height: 240px; overflow-y: scroll;">
+                  <ul id="iconResourcesList" class="list-group row">
+                  </ul>
+                </div>
               </div>
-            </div>
-            <hr>
-            <div style="padding-left: 15px; padding-right: 15px; max-height: 240px; overflow-y: scroll;">
-               <ul id="iconResourcesList" class="list-group row">
-               </ul>
             </div>
           </div>
           <div class="modal-footer">
@@ -437,14 +434,15 @@
                for (var i = 0; i < jsonData.iconResourcesList.length; i++)
                {
             	   var liItem = $("<li></li>",{
-                      "class": "list-group-item col-md-4"
+                      "class": "list-group-item col-md-6",
+                      "style": "border-style: none !important;"
             	   });
             	   var iconLink = $("<a href='#'></a>");
             	   iconLink.attr("onclick", "handleClickSetIconForArticle('" + jsonData.iconResourcesList[i].resourceId + "')");
             	   var iconImg = $("<img>");
             	   iconImg.attr("src", jsonData.iconResourcesList[i].iconUrl);
-                   iconImg.attr("width", "150");
-                   iconImg.attr("height", "150");
+                   iconImg.attr("width", "100%");
+                   iconImg.attr("height", "100%");
                    
             	   iconLink.append(iconImg);
             	   liItem.append(iconLink);
@@ -476,6 +474,14 @@
                    $("#iconImg").attr("src", data);
                 },
                 error: function() {
+                    $("#iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                    $("#setArticleIconDlg #iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                },
+                statusCode: {
+                   304: function() {
+                	   $("#iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                       $("#setArticleIconDlg #iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                   }
                 }
              });
         	
