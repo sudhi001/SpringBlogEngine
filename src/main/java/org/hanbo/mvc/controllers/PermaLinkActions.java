@@ -70,7 +70,7 @@ public class PermaLinkActions
       else
       {
          return createArticleViewPage(
-            articleDataModel.getArticleTitle(), "viewPost",
+            articleDataModel.getArticleTitle(), "viewPage",
             articleDataModel);
       }
    }
