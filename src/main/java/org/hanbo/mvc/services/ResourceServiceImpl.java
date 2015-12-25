@@ -138,12 +138,18 @@ public class ResourceServiceImpl implements ResourceService
       }
       
       String resourceId = IdUtil.generateUuid();
-      String resourcePath = resourcePath(subType.toUpperCase(), resourceId);
+      String partialResourcePath = this.partialResourcePath(
+         subType.toUpperCase(), resourceId);
+      
+      String resourcePath = resourcePath(partialResourcePath);
       
       String resourceFileNameOnly
          = resourceFileNameOnly(fileToSave.getOriginalFilename(), resourceId);
       
+      makePath(subType.toUpperCase(), resourceId);
+      
       String fullResourceFileName = resourcePath + resourceFileNameOnly;
+      String pathToSave = partialResourcePath + resourceFileNameOnly;
       
       try
       {
@@ -164,7 +170,7 @@ public class ResourceServiceImpl implements ResourceService
       fileResource.setId(resourceId);
       fileResource.setName(resourceName);
       fileResource.setResourceType("file");
-      fileResource.setResourceFileName(fullResourceFileName);
+      fileResource.setResourceFileName(pathToSave);
       
       Date dateNow = new Date();
       fileResource.setCreateDate(dateNow);
@@ -222,7 +228,10 @@ public class ResourceServiceImpl implements ResourceService
       String resourceSubType, OutputStream outStream)
      throws Exception
    {
-      String resourcePath = resourcePath(resourceSubType.toUpperCase(), resourceId);
+      String partialResourcePath = this.partialResourcePath(
+         resourceSubType.toUpperCase(), resourceId);
+      
+      String resourcePath = resourcePath(partialResourcePath);
       final String fileToSearch = resourceId + ".";
       
       File dirFile = new File(resourcePath);
@@ -426,13 +435,8 @@ public class ResourceServiceImpl implements ResourceService
    {
       try
       {
-         if (!this._resRepo.isArticleIconAlreadyExist(resourceId))
-         {
-            this._resRepo.setIconToArticle(articleId, resourceId);
-            return true;
-         }
-         
-         return false;
+         this._resRepo.setIconToArticle(articleId, resourceId);
+         return true;
       }
       catch (Exception e)
       {
@@ -544,6 +548,63 @@ public class ResourceServiceImpl implements ResourceService
       }
    }
 
+   private String resourcePath(String partialPath)
+   {
+      StringBuilder sb = new StringBuilder();
+      
+      String resourceBasePath = configValues.getProperty("resBasePath");
+      sb.append(resourceBasePath);
+      sb.append(partialPath);
+      
+      return sb.toString();
+   }
+   
+   private String partialResourcePath(String type, String resourceId)
+   {
+      StringBuilder sb = new StringBuilder();
+      
+      sb.append("/");
+      sb.append(type);
+      sb.append("/");
+      FileStreamUtil.directoryPathExists(sb.toString());
+      
+      char char1 = resourceId.charAt(0);
+      char char2 = resourceId.charAt(1);
+      sb.append(char1);
+      sb.append("/");
+      FileStreamUtil.directoryPathExists(sb.toString());
+      
+      sb.append(char2);
+      sb.append("/");
+      FileStreamUtil.directoryPathExists(sb.toString());
+      
+      return sb.toString();
+   }
+
+   private void makePath(String type, String resourceId)
+   {
+      StringBuilder sb = new StringBuilder();
+
+      String resourceBasePath = configValues.getProperty("resBasePath"); 
+      sb.append(resourceBasePath);
+   
+      sb.append("/");
+      sb.append(type);
+      sb.append("/");
+      FileStreamUtil.directoryPathExists(sb.toString());
+      
+      char char1 = resourceId.charAt(0);
+      char char2 = resourceId.charAt(1);
+      sb.append(char1);
+      sb.append("/");
+      FileStreamUtil.directoryPathExists(sb.toString());
+      
+      sb.append(char2);
+      sb.append("/");
+      FileStreamUtil.directoryPathExists(sb.toString());
+   }
+   
+   /*
    private String resourcePath(String type, String resourceId)
    {
       StringBuilder sb = new StringBuilder();
@@ -567,6 +628,7 @@ public class ResourceServiceImpl implements ResourceService
       
       return sb.toString();
    }
+   */
    
    public String resourceFileNameOnly(String origFileName, String resourceId)
    {
@@ -594,7 +656,9 @@ public class ResourceServiceImpl implements ResourceService
       {
          ImageFileUtil imgFileUtil = new ImageFileUtil();
          
-         imgFileUtil.setOriginalFile(fileResource.getResourceFileName());
+         String filePath = this.resourcePath(fileResource.getResourceFileName());
+         
+         imgFileUtil.setOriginalFile(filePath);
          imgFileUtil.imageFileDimensions();
          
          fileResource.setImageWidth(imgFileUtil.getOriginalImageFileSizeX());

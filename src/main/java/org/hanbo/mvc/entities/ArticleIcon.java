@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -20,7 +21,7 @@ public class ArticleIcon
    @JoinColumn(name = "articleid")
    private Article article;
       
-   @OneToOne(fetch = FetchType.LAZY)
+   @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "resourceid")
    private Resource iconResource;
 

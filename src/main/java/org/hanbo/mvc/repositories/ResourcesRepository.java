@@ -33,6 +33,4 @@ public interface ResourcesRepository
    void setIconToArticle(String articleId, String resourceId);
    
    boolean deleteIconToArticle(String articleId);
-   
-   boolean isArticleIconAlreadyExist(String resourceId);
 }
