@@ -24,7 +24,11 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="${pageContext.request.contextPath}/admin/blog/allMyPosts">My Posts</a></li>
+                  <li><a href="${pageContext.request.contextPath}/admin/images/allMyImages">My Images</a></li>
+                  <li><a href="${pageContext.request.contextPath}/admin/galleries/allMyGalleries">My Galleries</a></li>
+                  <li><a href="${pageContext.request.contextPath}/admin/updates/allMyUpdates">My Updates</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/resources/allMyResources">My Resources</a></li>
+                  <li><a href="${pageContext.request.contextPath}/admin/comments/guestComments">Guest Comments</a></li>
                 </ul>
               </li>
             </sec:authorize>

@@ -52,11 +52,21 @@ public class LoginUser
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy="owner")
    private Set<Resource> userResources;
+   
+   @OneToMany(fetch = FetchType.LAZY, mappedBy="owner")
+   private Set<Image> userImages;
+
+   @OneToMany(fetch = FetchType.LAZY, mappedBy="owner")
+   private Set<Gallery> userGalleries;
 
    public LoginUser()
    {
       userRoles = new HashSet<UserRole>();
       articles = new HashSet<Article>();
+      permaLinks = new HashSet<PermaLink>();
+      userResources = new HashSet<Resource>();
+      userImages = new HashSet<Image>();
+      userGalleries = new HashSet<Gallery>();
    }
    
    public String getId()
@@ -167,5 +177,21 @@ public class LoginUser
    public void setUserResources(Set<Resource> userResources)
    {
       this.userResources = userResources;
+   }
+
+   public Set<Image> getUserImages() {
+      return userImages;
+   }
+
+   public void setUserImages(Set<Image> userImages) {
+      this.userImages = userImages;
+   }
+
+   public Set<Gallery> getUserGalleries() {
+      return userGalleries;
+   }
+
+   public void setUserGalleries(Set<Gallery> userGalleries) {
+      this.userGalleries = userGalleries;
    }
 }

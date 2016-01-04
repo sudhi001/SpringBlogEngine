@@ -1,0 +1,48 @@
+package org.hanbo.mvc.controllers;
+
+import org.hanbo.mvc.controllers.utilities.ActionsUtil;
+import org.hanbo.mvc.models.ImageDisplayPageDataModel;
+import org.hanbo.mvc.models.PageMetadata;
+import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.services.UserImageGalleryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+public class UserImageGalleryActions
+{
+   @Autowired
+   private ActionsUtil _util;
+   
+   @Autowired
+   private UserImageGalleryService _imageGalleryService;
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/images/allMyImages", method=RequestMethod.GET)
+   public ModelAndView allMyImages()
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+
+      ImageDisplayPageDataModel pageDataModel =
+      _imageGalleryService.getUserImages(loginUser.getUserId(), 0);
+      
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata("All My Images");
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+              "userImageList", pageMetadata
+           );
+      retVal.addObject("userImagesListPageModel", pageDataModel);
+      
+      return retVal;
+   }
+}

@@ -1,5 +1,9 @@
 use BlogEngine;
 
+DROP TABLE IF EXISTS imagetogallery;
+
+DROP TABLE IF EXISTS gallery;
+
 DROP TABLE IF EXISTS image;
 
 DROP TABLE IF EXISTS articleicon;
@@ -108,16 +112,42 @@ CREATE TABLE image (
    title VARCHAR(96) NULL,
    imgname VARCHAR(64) UNIQUE NOT NULL,
    filepath VARCHAR(256) NOT NULL, 
-   thumbnailfilepath VARCHAR(256) NOT NULL, 
+   thumbnailfilepath VARCHAR(256) NOT NULL,
+   snapshotfilepath VARCHAR(256) NULL,
    uploaddate DATETIME NOT NULL,
    sizex INT NOT NULL,
    sizey INT NOT NULL,
    thumb_sizex INT NOT NULL,
    thumb_sizey INT NOT NULL,
+   snapshot_sizex INT NULL,
+   snapshot_sizey INT NULL,   
 
    ownerId VARCHAR(45) NOT NULL,
    
    FOREIGN KEY (ownerId) REFERENCES user(id)
+);
+
+CREATE TABLE gallery (
+   id VARCHAR(45) NOT NULL PRIMARY KEY,
+   title VARCHAR(96) NOT NULL,
+   description VARCHAR(3072) NULL,
+   keywords VARCHAR(128) NULL,
+
+   ownerId VARCHAR(45) NOT NULL,
+   FOREIGN KEY (ownerId) REFERENCES user(id)
+);
+
+CREATE TABLE imagetogallery (
+   id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   galleryid VARCHAR(45) NOT NULL,
+   imageid VARCHAR(45) NOT NULL,   
+
+   FOREIGN KEY (galleryid) REFERENCES gallery(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE,
+   FOREIGN KEY (imageid) REFERENCES image(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE
 );
 
 INSERT INTO user (
