@@ -32,6 +32,10 @@ public class Image
    @Column(name = "title", nullable = true, length = 96)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
    private String title;
+   
+   @Column(name = "keywords", nullable = true, length = 128)
+   @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
+   private String keywords;
 
    @Column(name = "imgname", unique = true, nullable = false, length = 64)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
@@ -93,6 +97,16 @@ public class Image
    public void setTitle(String title)
    {
       this.title = title;
+   }
+   
+   public String getKeywords()
+   {
+      return keywords;
+   }
+
+   public void setKeywords(String keywords)
+   {
+      this.keywords = keywords;
    }
 
    public String getImageName()

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @PropertySource("classpath:/site.properties")
@@ -51,6 +52,22 @@ public class UserImageGalleryServiceImpl
       }
       
       return retVal;
+   }
+   
+   @Override
+   public void uploadImage(String userId, String imageTitle,
+      String imageKeywords, MultipartFile imageToUpload,
+      MultipartFile snapshotToUpload)
+   {
+      // Save the image file to disk
+      
+      // create the thumbnail of the image
+      
+      // calculate the images dimensions
+      
+      // populate the image entity
+      
+      // save it to DB.
    }
    
    private int getConfigValue_ImagesPerPage()

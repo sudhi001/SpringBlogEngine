@@ -10,6 +10,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -44,5 +46,34 @@ public class UserImageGalleryActions
       retVal.addObject("userImagesListPageModel", pageDataModel);
       
       return retVal;
+   }
+   
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/images/addImage", method=RequestMethod.POST)
+   public ModelAndView addImage(
+      @RequestParam("imageTitle")
+      String imageTitle,
+      @RequestParam("imageKeywords")
+      String imageKeywords,
+      @RequestParam("imageToUpload")
+      MultipartFile imageToUpload,
+      @RequestParam("snapshotToUpload")
+      MultipartFile snapshotToUpload
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+      
+      String userId = loginUser.getUserId();
+      
+      _imageGalleryService.uploadImage(userId, imageTitle, imageKeywords,
+         imageToUpload, snapshotToUpload);
+      
+      return _util.createRedirectPageView("/admin/images/allMyImages");
    }
 }

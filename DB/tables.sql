@@ -110,6 +110,7 @@ CREATE TABLE articleicon (
 CREATE TABLE image (
    id VARCHAR(45) NOT NULL PRIMARY KEY,
    title VARCHAR(96) NULL,
+   keywords VARCHAR(128) NULL, 
    imgname VARCHAR(64) UNIQUE NOT NULL,
    filepath VARCHAR(256) NOT NULL, 
    thumbnailfilepath VARCHAR(256) NOT NULL,
