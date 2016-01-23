@@ -1,5 +1,9 @@
 package org.hanbo.mvc.controllers;
 
+import java.io.OutputStream;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.ImageDisplayPageDataModel;
 import org.hanbo.mvc.models.PageMetadata;
@@ -8,6 +12,7 @@ import org.hanbo.mvc.services.UserImageGalleryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,6 +79,37 @@ public class UserImageGalleryActions
       _imageGalleryService.uploadImage(userId, imageTitle, imageKeywords,
          imageToUpload, snapshotToUpload);
       
-      return _util.createRedirectPageView("/admin/images/allMyImages");
+      return _util.createRedirectPageView("redirect:/admin/images/allMyImages");
+   }
+   
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/secure/image-thumb/{imageId}", method=RequestMethod.GET)
+   public void secureImageThumb(
+      @PathVariable("imageId")
+      String imageId,
+      HttpServletResponse response
+   )
+   {
+      downloadImage(imageId, "thumb", response);
+   }
+   
+   
+   private void downloadImage(String imageId, String type, HttpServletResponse response)
+   {
+      try
+      {
+         OutputStream s = response.getOutputStream();
+         
+         boolean retVal = this._imageGalleryService.downloadImage(
+            imageId, type, s
+         );
+         
+         response.setStatus(retVal? 200 : 404);
+      }
+      catch(Exception e)
+      {
+         response.setStatus(404);
+      }
    }
 }

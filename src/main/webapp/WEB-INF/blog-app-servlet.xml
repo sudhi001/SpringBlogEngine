@@ -73,7 +73,7 @@
          <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
          <prop key="hibernate.search.default.directory_provider">org.hibernate.search.store.impl.FSDirectoryProvider</prop>
          <!-- Change the directory for indexing the text -->
-         <prop key="hibernate.search.default.indexBase">C:/Users/hsun/workspace-ee/BlogEngine2/indexes</prop>
+         <prop key="hibernate.search.default.indexBase">C:/Users/hsun/workspace-mars1/SpringBlogEngine/SpringBlogEngine/indexes</prop>
        </props>
      </property>
    </bean>
