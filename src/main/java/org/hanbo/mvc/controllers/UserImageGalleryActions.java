@@ -99,7 +99,18 @@ public class UserImageGalleryActions
          downloadImage(imageId, "thumb", response);
       }
    }
-   
+
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/secure/image-full/{imageId}", method=RequestMethod.GET)
+   public void secureImageDownload(
+      @PathVariable("imageId")
+      String imageId,
+      HttpServletResponse response
+   )
+   {
+      downloadImage(imageId, "", response);
+   }
+
    private void downloadImage(String imageId, String type, HttpServletResponse response)
    {
       try

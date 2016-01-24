@@ -26,7 +26,9 @@
         <div class="row">
           <c:forEach  items="${userImagesListPageModel.getListItems()}" var="imageItem">
           <div class="col-md-3">
-            <img src="${pageContext.request.contextPath}/secure/image-thumb/${imageItem.getImageId()}" width="100%" height="100%">
+            <a class="img-popup" href="${pageContext.request.contextPath}/secure/image-full/${imageItem.getImageId()}">
+              <img src="${pageContext.request.contextPath}/secure/image-thumb/${imageItem.getImageId()}" width="100%" height="100%">
+            </a>
           </div>
           </c:forEach>
         </div>
@@ -39,11 +41,6 @@
         </div>
       </c:otherwise>
     </c:choose>
-    
-    <c:if test="${!userImagesListPageModel.isDataModelEmpty()}">
-
-    </c:if>
-    
     <div id="uploadImageDlg" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -95,10 +92,33 @@
     <script src="${pageContext.request.contextPath}/assets/lightbox/js/jquery.magnific-popup.min.js"></script>
     
     <script type="text/javascript">
+      $(document).ready(function() {
+        $('.img-popup').magnificPopup({
+          type: 'image',
+          closeOnContentClick: true,
+          mainClass: 'mfp-img-mobile',
+          image: {
+            verticalFit: true
+          }
+        });
+      });
+    
        var openImageUploadDlg = function ()
        {
           $("#uploadImageDlg").modal("show");
        };
+       
+       $('#uploadImageDlg').on('hidden.bs.modal', function () {
+          resetAddImageDlg();
+       });
+       
+       var resetAddImageDlg = function ()
+       {
+          $("#uploadImageDlg #addNewImageForm #imageTitle").val("");
+          $("#uploadImageDlg #addNewImageForm #imageKeywords").val("");
+          
+          $("#uploadImageDlg .fileinput").fileinput("clear");
+       };       
     </script>
   </tiles:putAttribute>
 
