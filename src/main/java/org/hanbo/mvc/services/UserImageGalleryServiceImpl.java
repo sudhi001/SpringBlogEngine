@@ -130,7 +130,7 @@ public class UserImageGalleryServiceImpl
          
          imgFileUtil.determineAspectRatio();
          imgFileUtil.setResizedImageWidth(240);
-         imgFileUtil.calculateNewFileDimensions();
+         imgFileUtil.calculateNewFileDimensions(false);
          
          String resizedFileName = filePath + imageId + "-thumb" + fileExt;
          String resizedFileShortName = fileShortPath + imageId + "-thumb" + fileExt;
@@ -201,6 +201,33 @@ public class UserImageGalleryServiceImpl
       
       // save it to DB.
 	   _imageGalleryRepo.saveImage(image);
+   }
+   
+   @Override
+   public boolean imageSnapshotAvailable(String imageId)
+   {
+      String imagePath =imageFilePath(imageId, false);
+      String tempFileName = imageId.toLowerCase() + "-snap.";
+
+      final String fileToSearch = tempFileName;
+      
+      File dirFile = new File(imagePath);
+      if (dirFile.exists())
+      {
+         File[] filesFound = dirFile.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+               return name.contains(fileToSearch);
+            }
+         });
+         
+         if (filesFound.length > 0)
+         {
+            return true;
+         }
+      }
+
+      return false;
    }
    
    @Override

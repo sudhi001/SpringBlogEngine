@@ -93,10 +93,12 @@ public class ImageFileUtil
       _logger.debug(String.format("orig img aspect: %f", this.aspectRatio));
    }
    
-   public void calculateNewFileDimensions()
+   public void calculateNewFileDimensions(boolean useAspectRatio)
    {
       this.resizedFileWidth = this.resizedImageWidth;
-      this.resizedFileHeight = (int)(this.resizedFileWidth / this.aspectRatio);
+      this.resizedFileHeight = useAspectRatio?
+         (int)(this.resizedFileWidth / this.aspectRatio)
+         : this.resizedImageWidth;
 
       _logger.debug(String.format("orig img dimension: %d %d", this.resizedFileWidth, this.resizedFileHeight));
    }

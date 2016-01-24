@@ -12,6 +12,8 @@ public interface UserImageGalleryService
    void uploadImage(String userId, String imageTitle, String imageKeywords,
       MultipartFile imageToUpload, MultipartFile snapshotToUpload);
    
+   boolean imageSnapshotAvailable(String imageId);
+   
    boolean downloadImage(String imageId, String type,
       OutputStream outputStream) throws Exception;
 }

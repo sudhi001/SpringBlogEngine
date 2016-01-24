@@ -82,7 +82,6 @@ public class UserImageGalleryActions
       return _util.createRedirectPageView("redirect:/admin/images/allMyImages");
    }
    
-   
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/secure/image-thumb/{imageId}", method=RequestMethod.GET)
    public void secureImageThumb(
@@ -91,9 +90,15 @@ public class UserImageGalleryActions
       HttpServletResponse response
    )
    {
-      downloadImage(imageId, "thumb", response);
+      if (_imageGalleryService.imageSnapshotAvailable(imageId))
+      {
+         downloadImage(imageId, "snap", response);
+      }
+      else
+      {
+         downloadImage(imageId, "thumb", response);
+      }
    }
-   
    
    private void downloadImage(String imageId, String type, HttpServletResponse response)
    {
