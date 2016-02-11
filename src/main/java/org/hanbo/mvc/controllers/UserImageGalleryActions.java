@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
+import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
 import org.hanbo.mvc.models.ImageDisplayPageDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
@@ -49,6 +50,31 @@ public class UserImageGalleryActions
               "userImageList", pageMetadata
            );
       retVal.addObject("userImagesListPageModel", pageDataModel);
+      
+      return retVal;
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/galleries/allMyGalleries", method=RequestMethod.GET)
+   public ModelAndView allMyGalleries()
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+
+      GalleryDisplayPageDataModel pageDataModel =
+      _imageGalleryService.getUserGalleries(loginUser.getUserId(), 0);
+      
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata("All My Galleries");
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+              "userGalleriesList", pageMetadata
+           );
+      retVal.addObject("userGalleriesListPageModel", pageDataModel);
       
       return retVal;
    }

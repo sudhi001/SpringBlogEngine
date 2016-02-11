@@ -2,6 +2,7 @@ package org.hanbo.mvc.repositories;
 
 import java.util.List;
 
+import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -72,6 +73,41 @@ public class ImageGalleryRepositoryImpl
       .setFirstResult(pageIdx * itemsCount);
       
       List<Image> foundObjs =  query.list();
+      return foundObjs;
+   }
+
+   @Override
+   public long getUserGalleriesCount(String ownerId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query query = session.createQuery(
+         "select count(gallery) from Gallery gallery"
+         + " where gallery.owner.id = :ownerId"
+      ).setParameter("ownerId", ownerId)
+      .setMaxResults(1);
+      
+      List<Long> foundObjs =  query.list();
+      if (foundObjs.size() > 0)
+      {
+         return foundObjs.get(0);
+      }
+      
+      return 0L;
+   }
+
+   @Override
+   public List<Gallery> getUserGalleries(String ownerId, int pageIdx, int itemsCount) {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query query = session.createQuery(
+         "select gallery from Gallery gallery where gallery.owner.id = :ownerId"
+         + " order by gallery.createDate desc"
+      ).setParameter("ownerId", ownerId)
+      .setMaxResults(itemsCount)
+      .setFirstResult(pageIdx * itemsCount);
+      
+      List<Gallery> foundObjs =  query.list();
       return foundObjs;
    }
 }

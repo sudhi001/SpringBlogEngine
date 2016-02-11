@@ -133,6 +133,7 @@ CREATE TABLE gallery (
    title VARCHAR(96) NOT NULL,
    description VARCHAR(3072) NULL,
    keywords VARCHAR(128) NULL,
+   createdate DATETIME NOT NULL,
 
    ownerId VARCHAR(45) NOT NULL,
    FOREIGN KEY (ownerId) REFERENCES user(id)

@@ -9,7 +9,7 @@
   </tiles:putAttribute>
 
   <tiles:putAttribute name="body">
-    <h3>All My Images</h3>
+    <h3>Manage my Galleries/Images</h3>
     <hr>
     
     <div class="row">
@@ -17,6 +17,7 @@
           <span class="label label-info">You have ${userImagesListPageModel.getTotalElementsCount()} image(s)</span>
        </div>
        <div class="col-md-4 text-right">
+          <button class="btn btn-default" onclick="openAddGalleryDlg()">Add Gallery</button>&nbsp;
           <button class="btn btn-default" onclick="openImageUploadDlg()">Add Image</button>
        </div>
     </div>
@@ -76,7 +77,26 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="submit" class="btn btn-primary">Upload</button>
+            <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="addGalleryDlg" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="addGalleryForm" name="addGalleryForm" method="POST" action="${pageContext.request.contextPath}/admin/galleries/addGallery">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Add Gallery</h4>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Add</button>
             <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
           </form>
@@ -92,24 +112,33 @@
     <script src="${pageContext.request.contextPath}/assets/lightbox/js/jquery.magnific-popup.min.js"></script>
     
     <script type="text/javascript">
-      $(document).ready(function() {
-        $('.img-popup').magnificPopup({
-          type: 'image',
-          closeOnContentClick: true,
-          mainClass: 'mfp-img-mobile',
-          image: {
-            verticalFit: true
-          }
-        });
-      });
-    
+       $(document).ready(function() {
+         $('.img-popup').magnificPopup({
+           type: 'image',
+           closeOnContentClick: true,
+           mainClass: 'mfp-img-mobile',
+           image: {
+             verticalFit: true
+           }
+         });
+       });
+       
        var openImageUploadDlg = function ()
        {
           $("#uploadImageDlg").modal("show");
        };
+
+       var openAddGalleryDlg = function ()
+       {
+          $("#addGalleryDlg").modal("show");
+       };
        
        $('#uploadImageDlg').on('hidden.bs.modal', function () {
           resetAddImageDlg();
+       });
+       
+       $('#addGalleryDlg').on('hidden.bs.modal', function () {
+           resetAddGalleryDlg();
        });
        
        var resetAddImageDlg = function ()
@@ -118,7 +147,12 @@
           $("#uploadImageDlg #addNewImageForm #imageKeywords").val("");
           
           $("#uploadImageDlg .fileinput").fileinput("clear");
-       };       
+       };
+       
+       var resetAddGalleryDlg = function ()
+       {
+          
+       }
     </script>
   </tiles:putAttribute>
 

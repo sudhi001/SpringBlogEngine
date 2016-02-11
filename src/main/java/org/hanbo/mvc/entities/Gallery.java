@@ -1,5 +1,6 @@
 package org.hanbo.mvc.entities;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,6 +13,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
@@ -39,6 +42,10 @@ public class Gallery
    @Column(name = "keywords", nullable = true, length = 128)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
    private String keywords;
+   
+   @Column(name = "createdate", nullable = false)
+   @Temporal(TemporalType.TIMESTAMP)
+   private Date createDate;
    
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "ownerid")
@@ -89,6 +96,16 @@ public class Gallery
    public void setKeywords(String keywords)
    {
       this.keywords = keywords;
+   }
+   
+   public Date getCreateDate()
+   {
+      return this.createDate;
+   }
+
+   public void setCreateDate(Date createDate)
+   {
+      this.createDate = createDate;
    }
    
    public LoginUser getOwner()
