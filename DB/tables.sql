@@ -1,4 +1,4 @@
-use BlogEngine;
+use OldBlogEngine;
 
 DROP TABLE IF EXISTS imagetogallery;
 

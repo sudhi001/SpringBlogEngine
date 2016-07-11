@@ -50,7 +50,7 @@
    
    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-     <property name="url" value="jdbc:mysql://127.0.0.1:3306/BlogEngine?autoReconnect=true"/>
+     <property name="url" value="jdbc:mysql://127.0.0.1:3306/OldBlogEngine?autoReconnect=true"/>
      <property name="username" value="dbuser"/>
      <property name="password" value="123test321"/>
      <property name="maxActive" value="8"/>
@@ -73,7 +73,7 @@
          <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
          <prop key="hibernate.search.default.directory_provider">org.hibernate.search.store.impl.FSDirectoryProvider</prop>
          <!-- Change the directory for indexing the text -->
-         <prop key="hibernate.search.default.indexBase">C:/Users/hsun/workspace-mars1/SpringBlogEngine/SpringBlogEngine/indexes</prop>
+         <prop key="hibernate.search.default.indexBase">C:/DevJunk/SpringBlogEngine/indexes</prop>
        </props>
      </property>
    </bean>
