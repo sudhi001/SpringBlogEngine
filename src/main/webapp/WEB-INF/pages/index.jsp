@@ -2,7 +2,7 @@
  
 <tiles:insertDefinition name="defaultTemplate">
   <tiles:putAttribute name="cssContent">
-     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/custom/index.css">
+     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/custom/index.css"></link>
   </tiles:putAttribute>
 
   <tiles:putAttribute name="body">
