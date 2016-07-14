@@ -170,14 +170,10 @@
           }
           else
           {
-        	 var articleId = articleIdField.val();
-        	 displayArticleIcon(articleId);
+            var articleId = articleIdField.val();
+            displayArticleIcon(articleId);
           }
        });
-    
-       // XXX there is way too much replicated code here.
-       // XXX I really want to clean this up. Please see this for best practice:
-       // http://gregfranko.com/jquery-best-practices/#/27
     
        var handleClickResDlg = function (dlgid)
        {
@@ -187,14 +183,14 @@
        
        $('#addTextResDlg').on('show.bs.modal', function (e)
        {
-    	  var existingTable = $("#addTextResDlg #txtResTable");
-    	  if (existingTable !== null)
+         var existingTable = $("#addTextResDlg #txtResTable");
+         if (existingTable !== null)
           {
-    		 existingTable.remove();
+           existingTable.remove();
           }
-    	  var tableToAdd = createEmptyTable('txtResTable');
-    	  
-    	  $.ajax({
+         var tableToAdd = createEmptyTable('txtResTable');
+         
+         $.ajax({
              type: "GET",
              url: "${pageContext.request.contextPath}/admin/resources/getTextResourcesList?pageIdx=0",
              xhrFields: {
@@ -210,7 +206,7 @@
              error: function() {
              }
           });
-    	  
+         
           $("#addTextResDlg #txtResDlgBody").append(tableToAdd);
        });
 
@@ -261,16 +257,16 @@
        
        var tableHeaderColumn = function (colName, colStyle)
        {
-    	  var headerTh = $("<th></th>", {
+         var headerTh = $("<th></th>", {
              'class': colStyle,
              'text': colName
-    	  });
-    	  return headerTh;
+         });
+         return headerTh;
        };
        
        var creatMoreTableRows = function (table, jsonData, clickFunc)
        {          
-    	   prepareMoreTableRow(table, jsonData, clickFunc); //"handleClickAddTextResource");
+          prepareMoreTableRow(table, jsonData, clickFunc); //"handleClickAddTextResource");
        };
        
        var prepareMoreTableRow = function(table, jsonData, clickFunc) {
@@ -401,9 +397,9 @@
          });
          
          var handleClickArticleIconsLoadMore = function() {
-        	 var currPageIdx = $("#setArticleIconDlg #iconsPageIdx").val();
+            var currPageIdx = $("#setArticleIconDlg #iconsPageIdx").val();
              var nextPageIdx = parseInt(currPageIdx) + 1;
-        	 
+            
              loadIconResources(nextPageIdx);
          };
          
@@ -433,21 +429,21 @@
                var items = [];
                for (var i = 0; i < jsonData.iconResourcesList.length; i++)
                {
-            	   var liItem = $("<li></li>",{
+                  var liItem = $("<li></li>",{
                       "class": "list-group-item col-md-6",
                       "style": "border-style: none !important;"
-            	   });
-            	   var iconLink = $("<a href='#'></a>");
-            	   iconLink.attr("onclick", "handleClickSetIconForArticle('" + jsonData.iconResourcesList[i].resourceId + "')");
-            	   var iconImg = $("<img>");
-            	   iconImg.attr("src", jsonData.iconResourcesList[i].iconUrl);
+                  });
+                  var iconLink = $("<a href='#'></a>");
+                  iconLink.attr("onclick", "handleClickSetIconForArticle('" + jsonData.iconResourcesList[i].resourceId + "')");
+                  var iconImg = $("<img>");
+                  iconImg.attr("src", jsonData.iconResourcesList[i].iconUrl);
                    iconImg.attr("width", "100%");
                    iconImg.attr("height", "100%");
                    
-            	   iconLink.append(iconImg);
-            	   liItem.append(iconLink);
-            	   
-            	   items.push(liItem);
+                  iconLink.append(iconImg);
+                  liItem.append(iconLink);
+                  
+                  items.push(liItem);
                }
                
                $("#setArticleIconDlg #iconResourcesList").append(items);
@@ -461,10 +457,10 @@
          };
          
          var handleClickSubmitArticleIcon = function() {
-        	var articleId = $("#newPostForm #articleId").val();
-        	var resId = $("#setArticleIconDlg #selectedIconResId").val();
-        	
-        	$.ajax({
+           var articleId = $("#newPostForm #articleId").val();
+           var resId = $("#setArticleIconDlg #selectedIconResId").val();
+           
+           $.ajax({
                 type: "POST",
                 url: "${pageContext.request.contextPath}/admin/resources/setArticleIcon?articleId=" + articleId + "&resourceId=" + resId,
                 xhrFields: {
@@ -479,12 +475,12 @@
                 },
                 statusCode: {
                    304: function() {
-                	   $("#iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                      $("#iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
                        $("#setArticleIconDlg #iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
                    }
                 }
              });
-        	
+           
          };
 
          var handleClickRemoveArticleIcon = function() {

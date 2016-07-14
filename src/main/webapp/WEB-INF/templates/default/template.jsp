@@ -12,12 +12,25 @@
     
     <link href="${pageContext.request.contextPath}/assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/bootstrap-theme.min.css">
-    <tiles:insertAttribute name="cssContent" />
-    
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/jasny/css/jasny-bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/light-box/css/magnific-popup.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/custom/index.css">
 </head>
 <body>
     <div class="page">
       <tiles:insertAttribute name="header" />
+      
+      <div class="jumbotron-box">
+	      <div class="container">
+	          <div class="row">
+	            <div class="col-xs-12">
+	               <h1>Hello, world!</h1>
+	               <p>This is a test banner subtitle</p>
+	            </div>
+	         </div>
+	      </div>
+      </div>
+      
       <div class="container page-content">
           <tiles:insertAttribute name="body" />
       </div>
