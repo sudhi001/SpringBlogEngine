@@ -4,3 +4,4 @@
 **/logs/*
 **/target/*
 **/*.zip
+**/src/main/webapp/WEB-INF/lib/*.jar
