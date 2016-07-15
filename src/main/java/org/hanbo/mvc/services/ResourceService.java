@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.hanbo.mvc.models.ResourceListItemDataModel;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
-import org.hanbo.mvc.models.json.IconResourcesListJsonResponse;
 import org.hanbo.mvc.models.json.ImageResourceJsonResponse;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
 import org.hanbo.mvc.models.json.ResourcesListJsonResponse;
@@ -50,13 +49,5 @@ public interface ResourceService
    ResourcesListJsonResponse getTextResourcesList(String userId, int pageIdx);
 
    ResourcesListJsonResponse getImageResourcesList(String userId, int pageIdx);
-   
-   IconResourcesListJsonResponse getIconResourcesList(String userId, int pageIdx);
-   
-   boolean setArticleIcon(String articleId, String resourceId);
-   
-   boolean removeArticleIcon(String articleId);
-   
-   String getArticleIconUrl(String articleId); 
 }
 

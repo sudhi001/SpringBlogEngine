@@ -92,14 +92,6 @@ public class ArticleDataModelEntityMapping
       retVal.setArticleCreateDate(article.getCreateDate());
       retVal.setArticleUpdateDate(article.getUpdateDate());
       
-      if (article.getArticleIcon() != null)
-      {
-         retVal.setArticleIconResId(
-            article.getArticleIcon().getIconResource().getId()
-         );
-      }
-      else retVal.setArticleIconResId("");
-       
       return retVal;
    }
 }

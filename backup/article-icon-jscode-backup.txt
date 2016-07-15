@@ -1,0 +1,146 @@
+         var handleClickSetArticleIconBtn = function () {
+            $("#setArticleIconDlg").modal("show"); 
+         };
+         
+         $('#setArticleIconDlg').on('show.bs.modal', function (e) {
+            $('#setArticleIconDlg #iconResourcesList').empty();
+            $('#setArticleIconDlg #iconsPageIdx').val("0");
+            
+            $("#setArticleIconDlg #iconImg").attr(
+               "src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+            
+            var articleIdField = $("#newPostForm #articleId");
+            if (articleIdField.val() !== undefined
+               && articleIdField.val().length > 0)
+            {
+               var articleId = articleIdField.val();
+               displayArticleIcon(articleId);
+            }
+            
+            loadIconResources(0);
+         });
+         
+         var handleClickArticleIconsLoadMore = function() {
+            var currPageIdx = $("#setArticleIconDlg #iconsPageIdx").val();
+             var nextPageIdx = parseInt(currPageIdx) + 1;
+            
+             loadIconResources(nextPageIdx);
+         };
+
+         var loadIconResources = function (nextPageIdx) {
+             var jsonUrl = "${pageContext.request.contextPath}/admin/resources/getIconResourcesList?pageIdx=" + nextPageIdx;
+             
+             $.ajax({
+                 type: "GET",
+                 url: jsonUrl,
+                 xhrFields: {
+                    withCredentials: true
+                 },
+                 success: function(data) {
+                     createMoreIconResULItems(data);
+                    if (data.iconResourcesList.length > 0)
+                    {
+                       $("#setArticleIconDlg #iconsPageIdx").val(data.pageIdx);
+                    }
+                 }
+              });
+         };
+         
+         var createMoreIconResULItems = function (jsonData)
+         {
+            if (jsonData.iconResourcesList.length > 0)
+            {
+               var items = [];
+               for (var i = 0; i < jsonData.iconResourcesList.length; i++)
+               {
+                  var liItem = $("<li></li>",{
+                      "class": "list-group-item col-md-6",
+                      "style": "border-style: none !important;"
+                  });
+                  var iconLink = $("<a href='#'></a>");
+                  iconLink.attr("onclick", "handleClickSetIconForArticle('" + jsonData.iconResourcesList[i].resourceId + "')");
+                  var iconImg = $("<img>");
+                  iconImg.attr("src", jsonData.iconResourcesList[i].iconUrl);
+                   iconImg.attr("width", "100%");
+                   iconImg.attr("height", "100%");
+                   
+                  iconLink.append(iconImg);
+                  liItem.append(iconLink);
+                  
+                  items.push(liItem);
+               }
+               
+               $("#setArticleIconDlg #iconResourcesList").append(items);
+            }
+         };
+         
+         var handleClickSetIconForArticle = function(resId){
+            $("#setArticleIconDlg #selectedIconResId").val(resId);
+            $("#setArticleIconDlg #iconImg").attr(
+               "src", "${pageContext.request.contextPath}/public/imgresource/"+resId);
+         };
+         
+         var handleClickSubmitArticleIcon = function() {
+           var articleId = $("#newPostForm #articleId").val();
+           var resId = $("#setArticleIconDlg #selectedIconResId").val();
+           
+           $.ajax({
+                type: "POST",
+                url: "${pageContext.request.contextPath}/admin/resources/setArticleIcon?articleId=" + articleId + "&resourceId=" + resId,
+                xhrFields: {
+                   withCredentials: true
+                },
+                success: function(data) {
+                   $("#iconImg").attr("src", data);
+                },
+                error: function() {
+                    $("#iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                    $("#setArticleIconDlg #iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                },
+                statusCode: {
+                   304: function() {
+                      $("#iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                       $("#setArticleIconDlg #iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                   }
+                }
+             });
+           
+         };
+
+         var handleClickRemoveArticleIcon = function() {
+             var articleId = $("#newPostForm #articleId").val();
+
+             $.ajax({
+                 type: "DELETE",
+                 url: "${pageContext.request.contextPath}/admin/resources/removeArticleIcon?articleId=" + articleId,
+                 xhrFields: {
+                    withCredentials: true
+                 },
+                 success: function(data) {
+                    $("#iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                    
+                    $("#setArticleIconDlg #iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
+                 },
+                 error: function() {
+                 }
+              });
+          };
+          
+          var displayArticleIcon = function (articleId) {
+              $.ajax({
+                  type: "GET",
+                  url: "${pageContext.request.contextPath}/admin/resources/getArticleIcon?articleId=" + articleId,
+                  xhrFields: {
+                     withCredentials: true
+                  },
+                  success: function(data) {
+                     var iconImg = $("#iconImg");
+                     iconImg.attr("src", data);
+                     
+                     iconImg = $("#setArticleIconDlg #iconImg");
+                     iconImg.attr("src", data);
+                  },
+                  error: function() {
+                  }
+               });
+          };

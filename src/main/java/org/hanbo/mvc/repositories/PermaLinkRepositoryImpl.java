@@ -82,12 +82,6 @@ public class PermaLinkRepositoryImpl implements PermaLinkRepository
          retVal.getAuthor().getUserName();
          retVal.getAuthor().getId();
          
-         if (retVal.getArticleIcon() != null)
-         {
-            retVal.getArticleIcon().getId();
-            retVal.getArticleIcon().getIconResource().getId();
-         }
-         
          return retVal;
       }
       

@@ -129,12 +129,6 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       {
          article.getAuthor().getUserName();
          article.getAuthor().getId();
-         
-         if (article.getArticleIcon() != null)
-         {
-            article.getArticleIcon().getId();
-            article.getArticleIcon().getIconResource().getId();
-         }
       }
 
       return articlesRet;
@@ -165,8 +159,6 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    {
       Session session = _sessionFactory.getCurrentSession();
 
-      ResourcesRepositoryImpl.deleteArticleIconByArticleId(session, articleId);
-      
       Query query = session.createQuery(
          "delete from Article where id = :articleId"
       )
@@ -236,11 +228,6 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
          {
             article.getAuthor().getId();
             article.getAuthor().getUserName();
-            
-            if (article.getArticleIcon() != null)
-            {
-               article.getArticleIcon().getIconResource().getId();
-            }
          }
       }
       

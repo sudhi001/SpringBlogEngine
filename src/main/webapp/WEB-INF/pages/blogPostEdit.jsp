@@ -11,7 +11,7 @@
     <hr>
     
     <div class="row">
-      <div class="col-md-9">
+      <div class="col-md-12">
         <form:form class="form-horizontal" id="newPostForm" role="form" modelAttribute="newPostModel" method="POST" action="${pageContext.request.contextPath}/admin/blog/${actionName}">
           <form:hidden path="articleId" id="articleId"/>
           <div class="form-group">
@@ -70,16 +70,6 @@
           </div>
         </form:form>
       </div>
-      <div id="rightSide" class="col-md-3" style="display:hidden;">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <div style="padding-top: 10px; padding-bottom: 10px; text-align: center">
-              <img id="iconImg" src="https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240" width="200" height="200">
-            </div>
-            <div style="text-align: center"><button id="articleIconBtn" class="btn btn-default" onclick="handleClickSetArticleIconBtn()">Set Article Icon</button></div>
-          </div>
-        </div>
-      </div>
     </div>
     
     
@@ -118,63 +108,12 @@
         </div>
       </div>
     </div>
-    
-    <div id="setArticleIconDlg" class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Set Article Icon</h4>
-          </div>
-          <input type="hidden" id="iconsPageIdx" value=""/>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-4">
-                <div style="text-align: center;">
-                  <div class="thumbnail">
-                    <input type="hidden" id="selectedIconResId" value=""/>
-                    <img id="iconImg" src="https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240" width="200" height="200">
-                  </div>
-                  <button class="btn btn-default" onclick="handleClickSubmitArticleIcon()">Set Icon</button>
-                  <button class="btn btn-default" onclick="handleClickRemoveArticleIcon()">Remove</button>
-                </div>
-              </div>
-              <div class="col-md-8">
-                <div style="padding-left: 15px; padding-right: 15px; max-height: 240px; overflow-y: scroll;">
-                  <ul id="iconResourcesList" class="list-group row">
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="handleClickArticleIconsLoadMore()">Load More</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
     <script type="text/javascript">
-       $(function() {
-          var articleIdField = $("#newPostForm #articleId");
-          if (articleIdField.val() === undefined
-             || articleIdField.val().length == 0)
-          {
-             $("#articleIconBtn").prop("disabled", true);
-          }
-          else
-          {
-            var articleId = articleIdField.val();
-            displayArticleIcon(articleId);
-          }
-       });
-    
        var handleClickResDlg = function (dlgid)
        {
           dlgid = "#" + dlgid;  
@@ -373,154 +312,6 @@
                }
             });
          };
-         
-         var handleClickSetArticleIconBtn = function () {
-            $("#setArticleIconDlg").modal("show"); 
-         };
-         
-         $('#setArticleIconDlg').on('show.bs.modal', function (e) {
-            $('#setArticleIconDlg #iconResourcesList').empty();
-            $('#setArticleIconDlg #iconsPageIdx').val("0");
-            
-            $("#setArticleIconDlg #iconImg").attr(
-               "src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
-            
-            var articleIdField = $("#newPostForm #articleId");
-            if (articleIdField.val() !== undefined
-               && articleIdField.val().length > 0)
-            {
-               var articleId = articleIdField.val();
-               displayArticleIcon(articleId);
-            }
-            
-            loadIconResources(0);
-         });
-         
-         var handleClickArticleIconsLoadMore = function() {
-            var currPageIdx = $("#setArticleIconDlg #iconsPageIdx").val();
-             var nextPageIdx = parseInt(currPageIdx) + 1;
-            
-             loadIconResources(nextPageIdx);
-         };
-         
-         var loadIconResources = function (nextPageIdx) {
-             var jsonUrl = "${pageContext.request.contextPath}/admin/resources/getIconResourcesList?pageIdx=" + nextPageIdx;
-             
-             $.ajax({
-                 type: "GET",
-                 url: jsonUrl,
-                 xhrFields: {
-                    withCredentials: true
-                 },
-                 success: function(data) {
-                     createMoreIconResULItems(data);
-                    if (data.iconResourcesList.length > 0)
-                    {
-                       $("#setArticleIconDlg #iconsPageIdx").val(data.pageIdx);
-                    }
-                 }
-              });
-         };
-         
-         var createMoreIconResULItems = function (jsonData)
-         {
-            if (jsonData.iconResourcesList.length > 0)
-            {
-               var items = [];
-               for (var i = 0; i < jsonData.iconResourcesList.length; i++)
-               {
-                  var liItem = $("<li></li>",{
-                      "class": "list-group-item col-md-6",
-                      "style": "border-style: none !important;"
-                  });
-                  var iconLink = $("<a href='#'></a>");
-                  iconLink.attr("onclick", "handleClickSetIconForArticle('" + jsonData.iconResourcesList[i].resourceId + "')");
-                  var iconImg = $("<img>");
-                  iconImg.attr("src", jsonData.iconResourcesList[i].iconUrl);
-                   iconImg.attr("width", "100%");
-                   iconImg.attr("height", "100%");
-                   
-                  iconLink.append(iconImg);
-                  liItem.append(iconLink);
-                  
-                  items.push(liItem);
-               }
-               
-               $("#setArticleIconDlg #iconResourcesList").append(items);
-            }
-         };
-         
-         var handleClickSetIconForArticle = function(resId){
-            $("#setArticleIconDlg #selectedIconResId").val(resId);
-            $("#setArticleIconDlg #iconImg").attr(
-               "src", "${pageContext.request.contextPath}/public/imgresource/"+resId);
-         };
-         
-         var handleClickSubmitArticleIcon = function() {
-           var articleId = $("#newPostForm #articleId").val();
-           var resId = $("#setArticleIconDlg #selectedIconResId").val();
-           
-           $.ajax({
-                type: "POST",
-                url: "${pageContext.request.contextPath}/admin/resources/setArticleIcon?articleId=" + articleId + "&resourceId=" + resId,
-                xhrFields: {
-                   withCredentials: true
-                },
-                success: function(data) {
-                   $("#iconImg").attr("src", data);
-                },
-                error: function() {
-                    $("#iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
-                    $("#setArticleIconDlg #iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
-                },
-                statusCode: {
-                   304: function() {
-                      $("#iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
-                       $("#setArticleIconDlg #iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
-                   }
-                }
-             });
-           
-         };
-
-         var handleClickRemoveArticleIcon = function() {
-             var articleId = $("#newPostForm #articleId").val();
-
-             $.ajax({
-                 type: "DELETE",
-                 url: "${pageContext.request.contextPath}/admin/resources/removeArticleIcon?articleId=" + articleId,
-                 xhrFields: {
-                    withCredentials: true
-                 },
-                 success: function(data) {
-                    $("#iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
-                    
-                    $("#setArticleIconDlg #iconImg").attr("src", "https://placeholdit.imgix.net/~text?txtsize=9&txt=240%C3%97240&w=240&h=240");
-                 },
-                 error: function() {
-                 }
-              });
-          };
-          
-          var displayArticleIcon = function (articleId) {
-              $.ajax({
-                  type: "GET",
-                  url: "${pageContext.request.contextPath}/admin/resources/getArticleIcon?articleId=" + articleId,
-                  xhrFields: {
-                     withCredentials: true
-                  },
-                  success: function(data) {
-                     var iconImg = $("#iconImg");
-                     iconImg.attr("src", data);
-                     
-                     iconImg = $("#setArticleIconDlg #iconImg");
-                     iconImg.attr("src", data);
-                  },
-                  error: function() {
-                  }
-               });
-          };
-
     </script>
   </tiles:putAttribute>
 </tiles:insertDefinition>

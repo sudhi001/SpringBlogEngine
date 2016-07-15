@@ -1,9 +1,7 @@
 package org.hanbo.mvc.entities;
 
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +10,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -43,9 +40,6 @@ public class Resource
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "ownerid")
    private LoginUser owner;
-   
-   @OneToMany(fetch = FetchType.LAZY, mappedBy="iconResource", cascade={CascadeType.ALL})
-   private List<ArticleIcon> articleIcons;
    
    public String getId()
    {
@@ -105,15 +99,5 @@ public class Resource
    public void setOwner(LoginUser owner)
    {
       this.owner = owner;
-   }
-
-   public List<ArticleIcon> getArticleIcons()
-   {
-      return articleIcons;
-   }
-
-   public void setArticleIcons(List<ArticleIcon> articleIcons)
-   {
-      this.articleIcons = articleIcons;
    }
 }

@@ -24,13 +24,4 @@ public interface ResourcesRepository
       String ownerId, int pageIdx, int itemsCount);
    
    void deleteResource(Resource resource);
-   
-   Resource getArticleIcon(String articleId);
-   
-   List<FileResource> getIconResources(
-      String ownerId, int pageIdx, int itemsCount);
-   
-   void setIconToArticle(String articleId, String resourceId);
-   
-   boolean deleteIconToArticle(String articleId);
 }
