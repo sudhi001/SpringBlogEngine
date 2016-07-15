@@ -9,7 +9,7 @@ import org.apache.log4j.*;
 public class ImageFileUtil
 {
    // local test setting: 
-   private static String imageMagickPath = "/apache/ImageMagick-6.9.3.1";
+   private static String imageMagickPath = "/apache/ImageMagick-7.0.2-4";
    
    // prod setting: 
    //private static String imageMagickPath = "/usr/bin";
