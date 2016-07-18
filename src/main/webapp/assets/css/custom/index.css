@@ -106,8 +106,10 @@ body {
     color: #999;
     font-size: 13px;
 }
-.user-block .username, 
-.user-block .description, 
+.user-block .username,
+.user-block .description {
+	display: block;
+}
 .user-block .comment {
     display: block;
     margin-left: 50px;
@@ -167,6 +169,9 @@ body {
 .img-lg, .box-comments .box-comment img, 
 .user-block.user-block-sm img {
     float: left;
+}
+.img-oval {
+	border-radius: 15%;
 }
 .box-comments .comment-text {
     margin-left: 40px;

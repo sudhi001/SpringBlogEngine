@@ -17,43 +17,54 @@
       </div>
     </div>
     </c:if>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="thumbnail">
+    
+    <div class="content-box">
+      <div class="box-header with-border">
+        <div class="user-block">
           <div class="row">
-            <div class="col-md-4">
-              <div class="breadcrumb"><strong>Category:</strong> ${articleModel.articleCategory}</div>
+            <div class="col-xs-1">
+               <img class="img-oval" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="User Image">
             </div>
-          </div>
-          
-          <div class="post-summary">
-            <div class="row">
-              <div class="col-md-12">
-                <h2>${articleModel.articleTitle}</h2>
+            <div class="col-xs-11">
+              <span class="username">${articleModel.articleTitle}</span>
+              <div class="row">
+                 <div class="col-xs-6"><span class="description">By ${articleModel.authorName}</span></div>
+                 <div class="col-xs-6"><span class="description"><strong>Updated</strong> - ${articleModel.getArticleUpdateDateString()}</span></div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-3"><strong>Author:</strong> ${articleModel.authorName}</div>
-              <div class="col-md-9 text-right"><strong>Last Modified:</strong> ${articleModel.getArticleUpdateDateString()}</div>            
-            </div>
-            <br/>        
-<c:out value="${articleModel.articleContent}" escapeXml = "false"/>
-          </div>
-          
-          <div class="row post-placeholder"></div>
-          
-          <div class="row">
-            <div class="col-md-12">
-              <div class="breadcrumb post-bottom-margin">
-                <strong>Keywords:</strong> 
-                <c:forEach var="keyword" items="${articleModel.getArticleKeywordList()}">
-                  <span class="label label-info">${keyword}</span>
-                </c:forEach>
+              <div class="row">
+                 <div class="col-xs-12"><span class="description"><strong>Category:</strong> ${articleModel.articleCategory}</span></div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
+      <div class="box-body" style="display: block;">
+        <div class="row">
+          <div class="col-xs-12">
+<c:out value="${articleModel.articleContent}" escapeXml = "false"/>
+          </div>
+        </div>
+        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> Share</button>
+        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-thumbs-o-up"></i> Like</button>
+        <span class="pull-right text-muted">127 likes - 3 comments</span>
+      </div>
+
+      <div class="box-footer box-comments" style="display: block;">
+      </div>
+
+      <div class="box-footer" style="display: block;">
+        <form action="#" method="post">
+          <img class="img-responsive img-oval img-sm" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="Alt Text">
+          <div class="img-push row">
+            <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
+               <input type="text" class="form-control input-sm" placeholder="Post your comments">
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+               <button type="submit" class="btn btn-default btn-sm">Comment</button>
+            </div> 
+          </div>
+        </form>
       </div>
     </div>
   </tiles:putAttribute>

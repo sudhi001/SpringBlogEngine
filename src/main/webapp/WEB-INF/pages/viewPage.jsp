@@ -17,11 +17,20 @@
       </div>
     </div>
     </c:if>
-    <div class="row">
-      <div class="col-md-12">
+    
+    <div class="content-box">
+      <div class="box-body" style="display: block;">
+        <div class="row">
+          <div class="col-xs-12">
 <c:out value="${articleModel.articleContent}" escapeXml = "false"/>
+          </div>
+        </div>
+        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> Share</button>
+        <button type="button" class="btn btn-default btn-xs"><i class="fa fa-thumbs-o-up"></i> Like</button>
+        <span class="pull-right text-muted">127 likes</span>
       </div>
     </div>
+    
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">
