@@ -12,9 +12,8 @@
     
     <link href="${pageContext.request.contextPath}/assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/jasny/css/jasny-bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/lightbox/css/magnific-popup.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/custom/index.css">
+    <tiles:insertAttribute name="cssContent" />
+    
 </head>
 <body>
     <div class="page">

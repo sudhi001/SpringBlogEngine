@@ -533,32 +533,6 @@ public class ResourceServiceImpl implements ResourceService
       FileStreamUtil.directoryPathExists(sb.toString());
    }
    
-   /*
-   private String resourcePath(String type, String resourceId)
-   {
-      StringBuilder sb = new StringBuilder();
-      
-      String resourceBasePath = configValues.getProperty("resBasePath");
-      sb.append(resourceBasePath);
-      sb.append("/");
-      sb.append(type);
-      sb.append("/");
-      FileStreamUtil.directoryPathExists(sb.toString());
-      
-      char char1 = resourceId.charAt(0);
-      char char2 = resourceId.charAt(1);
-      sb.append(char1);
-      sb.append("/");
-      FileStreamUtil.directoryPathExists(sb.toString());
-      
-      sb.append(char2);
-      sb.append("/");
-      FileStreamUtil.directoryPathExists(sb.toString());
-      
-      return sb.toString();
-   }
-   */
-   
    public String resourceFileNameOnly(String origFileName, String resourceId)
    {
       int dotPos = origFileName.lastIndexOf(".");

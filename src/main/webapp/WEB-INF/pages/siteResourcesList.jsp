@@ -5,7 +5,7 @@
 <tiles:insertDefinition name="defaultTemplate">
   <tiles:putAttribute name="cssContent">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/jasny/css/jasny-bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/lightbox/css/magnific-popup.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/lightbox2/css/lightbox.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/custom/index.css">
   </tiles:putAttribute>
 
@@ -61,7 +61,7 @@
             <td>
               <c:choose>
                 <c:when test="${resourceInfo.resourceType.equals('file') && resourceInfo.resourceSubType.equals('image')}">
-                  <a class="img-popup" href="${pageContext.request.contextPath}/secure/imgresource/${resourceInfo.resourceId}">
+                  <a data-lightbox="imglighbox-${resourceInfo.resourceId}" href="${pageContext.request.contextPath}/secure/imgresource/${resourceInfo.resourceId}">
                     ${resourceInfo.resourceName}
                   </a>
                 </c:when>
@@ -214,20 +214,9 @@
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/jasny/js/jasny-bootstrap.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/lightbox/js/jquery.magnific-popup.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/lightbox2/js/lightbox.min.js"></script>
     
     <script type="text/javascript">
-       $(document).ready(function() {
-         $('.img-popup').magnificPopup({
-           type: 'image',
-           closeOnContentClick: true,
-           mainClass: 'mfp-img-mobile',
-           image: {
-               verticalFit: true
-           }
-         });
-       });
-       
        var handleClickFileResources = function() {
     	   clearFileResourceDlg();  
     	  $("#addFileResDlg").modal("show");

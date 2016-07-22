@@ -1,6 +1,9 @@
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
  
 <tiles:insertDefinition name="defaultTemplate">
+  <tiles:putAttribute name="cssContent">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/custom/index.css">
+  </tiles:putAttribute>
 
   <tiles:putAttribute name="body">
      <div class="content-box">
