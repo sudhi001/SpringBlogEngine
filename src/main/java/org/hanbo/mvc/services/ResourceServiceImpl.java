@@ -3,7 +3,6 @@ package org.hanbo.mvc.services;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +25,8 @@ import org.hanbo.mvc.repositories.UsersRepository;
 import org.hanbo.mvc.services.utilities.ResourceDataModelEntityMapping;
 import org.hanbo.mvc.utilities.FileStreamUtil;
 import org.hanbo.mvc.utilities.IdUtil;
-import org.hanbo.mvc.utilities.ImageFileUtil;
+import org.hanbo.mvc.utilities.ImageFile;
+import org.hanbo.mvc.utilities.ImageFileProcessingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -583,15 +583,17 @@ public class ResourceServiceImpl implements ResourceService
    {
       try
       {
-         ImageFileUtil imgFileUtil = new ImageFileUtil();
+         String imageMagickFilePath = this.configValues.getProperty("ImageMagickFilePath");
+         ImageFile imgFile = new ImageFile(new ImageFileProcessingUtil(imageMagickFilePath));
+         //ImageFileUtil imgFileUtil = new ImageFileUtil();
          
          String filePath = this.resourcePath(fileResource.getResourceFileName());
          
-         imgFileUtil.setOriginalFile(filePath);
-         imgFileUtil.imageFileDimensions();
+         imgFile.setOriginalFile(filePath);
+         imgFile.imageFileDimensions();
          
-         fileResource.setImageWidth(imgFileUtil.getOriginalImageFileSizeX());
-         fileResource.setImageHeight(imgFileUtil.getOriginalImageFileSizeY());
+         fileResource.setImageWidth(imgFile.getOriginalImageFileSizeX());
+         fileResource.setImageHeight(imgFile.getOriginalImageFileSizeY());
       }
       catch(Exception e)
       {

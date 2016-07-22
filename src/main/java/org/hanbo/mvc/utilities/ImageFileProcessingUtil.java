@@ -1,10 +1,10 @@
 package org.hanbo.mvc.utilities;
 
-public class ImageFileProcessingUtils
+public class ImageFileProcessingUtil
 {
    private String externalProgramsPath;
    
-   public ImageFileProcessingUtils(String extProgsPath)
+   public ImageFileProcessingUtil(String extProgsPath)
    {
       externalProgramsPath = extProgsPath;
    }

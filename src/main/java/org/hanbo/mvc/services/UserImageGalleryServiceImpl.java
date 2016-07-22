@@ -21,7 +21,8 @@ import org.hanbo.mvc.repositories.UsersRepository;
 import org.hanbo.mvc.services.utilities.ImageDataModelEntityMapping;
 import org.hanbo.mvc.utilities.FileStreamUtil;
 import org.hanbo.mvc.utilities.IdUtil;
-import org.hanbo.mvc.utilities.ImageFileUtil;
+import org.hanbo.mvc.utilities.ImageFile;
+import org.hanbo.mvc.utilities.ImageFileProcessingUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -154,8 +155,9 @@ public class UserImageGalleryServiceImpl
       
       try
       {
+         String imageMagickFilePath = this.configValues.getProperty("ImageMagickFilePath");
          // create the thumbnail of the image
-         ImageFileUtil imgFileUtil = new ImageFileUtil();
+         ImageFile imgFileUtil = new ImageFile(new ImageFileProcessingUtil(imageMagickFilePath));
          imgFileUtil.setOriginalFile(fileName);
          imgFileUtil.imageFileDimensions();
          
@@ -208,7 +210,9 @@ public class UserImageGalleryServiceImpl
          {
             FileStreamUtil.saveFileToServer(snapFileName, snapshotToUpload.getInputStream());
 
-            ImageFileUtil imgFileUtil = new ImageFileUtil();
+            String imageMagickFilePath = this.configValues.getProperty("ImageMagickFilePath");
+            // create the thumbnail of the image
+            ImageFile imgFileUtil = new ImageFile(new ImageFileProcessingUtil(imageMagickFilePath));
             imgFileUtil.setOriginalFile(snapFileName);
             imgFileUtil.imageFileDimensions();
             

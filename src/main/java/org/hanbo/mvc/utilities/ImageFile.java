@@ -1,24 +1,17 @@
 package org.hanbo.mvc.utilities;
 
-import org.im4java.core.ConvertCmd;
-import org.im4java.core.IMOperation;
-import org.im4java.core.Info;
-import org.im4java.process.ProcessStarter;
 import org.apache.log4j.*;
 
-public class ImageFileUtil
+public class ImageFile
 {
-   // local test setting: 
-   private static String imageMagickPath = "/apache/ImageMagick-7.0.2-4";
-   
-   // prod setting: 
-   //private static String imageMagickPath = "/usr/bin";
-   
-   private Logger _logger = LogManager.getLogger(ImageFileUtil.class);
+   private Logger _logger = LogManager.getLogger(ImageFile.class);
   
+   private ImageFileProcessingUtil processingUtil;
+   
    private String originalFile;
    private String resizedFile;
    
+   private String imageFormat;
    private int resizedImageWidth;
    
    private int originalFileWidth;
@@ -27,9 +20,9 @@ public class ImageFileUtil
    private int resizedFileHeight;
    private float aspectRatio;
    
-   public ImageFileUtil()
+   public ImageFile(ImageFileProcessingUtil processingUtil)
    {
-      ProcessStarter.setGlobalSearchPath(imageMagickPath);
+      this.processingUtil = processingUtil;
    }
 
    public void setOriginalFile(String filename)
@@ -70,11 +63,25 @@ public class ImageFileUtil
    public void imageFileDimensions()
       throws Exception
    {
-      Info imageInfo = new Info(this.originalFile,true);
-      this.originalFileWidth = imageInfo.getImageWidth();
-      this.originalFileHeight = imageInfo.getImageHeight();
+      originalFileWidth = 0;
+      originalFileHeight = 0;
       
-      _logger.debug(String.format("orig img dimension: %d %d", this.originalFileWidth, this.originalFileHeight));
+      if (processingUtil != null)
+      {
+         String imageInfo 
+            = processingUtil.getImageInfo(this.originalFile);
+         if (imageInfo != null && imageInfo.length() > 0)
+         {
+            String[] infoParts = imageInfo.split("\\s");
+            if (infoParts.length >= 3)
+            {
+               imageFormat = infoParts[0];
+               originalFileWidth = tryParseInt(infoParts[1]);
+               originalFileHeight = tryParseInt(infoParts[2]);
+            }
+         }
+      }
+      _logger.debug(String.format(" +++ orig img dimension: %d %d", this.originalFileWidth, this.originalFileHeight));
    }
    
    public void determineAspectRatio()
@@ -103,20 +110,41 @@ public class ImageFileUtil
       _logger.debug(String.format("orig img dimension: %d %d", this.resizedFileWidth, this.resizedFileHeight));
    }
    
-   public void resizeImageFile()
-      throws Exception
+   public boolean resizeImageFile()
    {
-      ConvertCmd cmd = new ConvertCmd();
+      boolean retVal = false;
+      if (this.processingUtil != null)
+      {
+         retVal = processingUtil.resizeImage(
+            originalFile, resizedFile,
+            true, true, 250, 250);
+      }
+      
+      
+      return retVal;
+   }
 
-      IMOperation op = new IMOperation();
-      op.addImage(this.originalFile);
-      op.resize(this.resizedFileWidth, this.resizedFileHeight);
-      op.background("none");
-      op.gravity("center");
-      op.extent(this.resizedFileWidth, this.resizedFileHeight);
-      op.addImage(this.resizedFile);
+   public String getImageFormat()
+   {
+      return imageFormat;
+   }
 
-      // execute the operation
-      cmd.run(op);
+   public void setImageFormat(String imageFormat)
+   {
+      this.imageFormat = imageFormat;
+   }
+   
+   private static int tryParseInt(String intStrVal)
+   {
+      int retVal;
+      try
+      {
+         retVal = Integer.parseInt(intStrVal);
+      }
+      catch(Exception e)
+      {
+         retVal = 0;
+      }
+      return retVal;
    }
 }
