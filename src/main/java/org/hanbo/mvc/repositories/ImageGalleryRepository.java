@@ -16,4 +16,6 @@ public interface ImageGalleryRepository
    long getUserGalleriesCount(String ownerId);
    
    List<Gallery> getUserGalleries(String ownerId, int pageIdx, int itemsCount);
+   
+   void addGallery(Gallery gallery);
 }

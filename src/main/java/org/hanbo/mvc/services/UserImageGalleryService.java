@@ -19,4 +19,7 @@ public interface UserImageGalleryService
    
    boolean downloadImage(String imageId, String type,
       OutputStream outputStream) throws Exception;
+   
+   void addGallery(String ownerId, String galleryTitle,
+      String galleryKeywords, String galleryDesc);
 }

@@ -79,6 +79,30 @@ public class UserImageGalleryActions
       return retVal;
    }
    
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/galleries/addGallery", method=RequestMethod.POST)
+   public ModelAndView addImage(
+      @RequestParam("galleryTitle")
+      String galleryTitle,
+      @RequestParam("galleryKeywords")
+      String galleryKeywords,
+      @RequestParam("galleryDesc")
+      String galleryDesc
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+
+      _imageGalleryService.addGallery(loginUser.getUserId(), galleryTitle, galleryKeywords, galleryDesc);
+      
+      
+      return _util.createRedirectPageView("redirect:/admin/galleries/allMyGalleries");
+   }
+   
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/images/addImage", method=RequestMethod.POST)

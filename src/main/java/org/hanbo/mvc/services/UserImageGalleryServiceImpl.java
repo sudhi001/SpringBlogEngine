@@ -305,6 +305,61 @@ public class UserImageGalleryServiceImpl
       return false;
    }
    
+   @Override
+   public void addGallery(String ownerId, String galleryTitle,
+      String galleryKeywords, String galleryDesc)
+   {
+      validateGalleryData(galleryTitle, galleryKeywords, galleryDesc);
+      
+      LoginUser galleryOwner = _usersRepo.getUserById(ownerId);
+      if (galleryOwner == null)
+      {
+         throw new WebAppException(
+            String.format("Unable to find user with id [%s]", ownerId),
+            WebAppException.ErrorType.SECURITY);
+      }
+      
+      Gallery gallery = new Gallery();
+      gallery.setTitle(galleryTitle);
+      gallery.setKeywords(galleryKeywords);
+      gallery.setDescription(galleryDesc);
+      gallery.setId(IdUtil.generateUuid());
+      gallery.setOwner(galleryOwner);
+      gallery.setCreateDate(new Date());
+      
+      this._imageGalleryRepo.addGallery(gallery);
+   }
+   
+   private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
+   {
+      if (StringUtils.isEmpty(galleryTitle))
+      {
+         throw new WebAppException(
+            "Gallery title cannot be null or empty string",
+            WebAppException.ErrorType.DATA);
+      }
+      else if (galleryTitle.length() > 96)
+      {
+         throw new WebAppException(
+            "Gallery title can only have max 96 characters",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (!StringUtils.isEmpty(galleryKeywords) && galleryKeywords.length() > 128)
+      {
+         throw new WebAppException(
+            "Gallery keywords can only have max 128 characters",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (!StringUtils.isEmpty(galleryDesc) && galleryDesc.length() > 3072)
+      {
+         throw new WebAppException(
+            "Gallery description can only have max 3027 characters",
+            WebAppException.ErrorType.DATA);
+      }
+   }
+   
    private String imageFilePath(String imageId, boolean createDir)
    {
       StringBuilder sb = new StringBuilder();

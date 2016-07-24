@@ -37,12 +37,37 @@
     <div id="addGalleryDlg" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
-          <form id="addGalleryForm" name="addGalleryForm" method="POST" action="${pageContext.request.contextPath}/admin/galleries/addGallery">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">Add Gallery</h4>
           </div>
+          <form id="addGalleryForm" class="form" name="addGalleryForm" method="POST" action="${pageContext.request.contextPath}/admin/galleries/addGallery">
           <div class="modal-body">
+            <div class="modal-body">
+            <div class="row">
+            <div class="col-md-12">
+            <div class="form-group">
+              <label class="col-md-12 control-label">Title</label>
+              <div class="col-md-12">
+                <input id="galleryTitle" name="galleryTitle" class="form-control"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-12 control-label">Keywords</label>
+              <div class="col-md-12">
+                <input id="galleryKeywords" name="galleryKeywords" class="form-control"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-12 control-label">Description</label>
+              <div class="col-md-12">
+                <textarea class="form-control" id="galleryDesc" name="galleryDesc">
+                </textarea>
+              </div>
+            </div>
+            </div>
+            </div>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Add</button>
@@ -61,46 +86,33 @@
     <script src="${pageContext.request.contextPath}/assets/lightbox2/js/lightbox.min.js"></script>
     
     <script type="text/javascript">
-       $(document).ready(function() {
-         $('.img-popup').magnificPopup({
-           type: 'image',
-           closeOnContentClick: true,
-           mainClass: 'mfp-img-mobile',
-           image: {
-             verticalFit: true
-           }
-         });
-       });
-       
-       var openImageUploadDlg = function ()
+       /*var openImageUploadDlg = function ()
        {
           $("#uploadImageDlg").modal("show");
        };
+       
+       $('#uploadImageDlg').on('hidden.bs.modal', function () {
+          resetAddImageDlg();
+       });
+       var resetAddImageDlg = function ()
+       {
+       };
+       */
 
        var openAddGalleryDlg = function ()
        {
           $("#addGalleryDlg").modal("show");
        };
        
-       $('#uploadImageDlg').on('hidden.bs.modal', function () {
-          resetAddImageDlg();
-       });
-       
        $('#addGalleryDlg').on('hidden.bs.modal', function () {
            resetAddGalleryDlg();
        });
        
-       var resetAddImageDlg = function ()
-       {
-          $("#uploadImageDlg #addNewImageForm #imageTitle").val("");
-          $("#uploadImageDlg #addNewImageForm #imageKeywords").val("");
-          
-          $("#uploadImageDlg .fileinput").fileinput("clear");
-       };
-       
        var resetAddGalleryDlg = function ()
        {
-          
+          $("#addGalleryDlg #galleryTitle").val("");
+          $("#addGalleryDlg #galleryKeywords").val("");
+          $("#addGalleryDlg #galleryDesc").val("");
        }
     </script>
   </tiles:putAttribute>
