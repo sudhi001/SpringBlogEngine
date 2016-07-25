@@ -55,8 +55,10 @@ public class UserImageGalleryActions
    }
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-   @RequestMapping(value = "/admin/galleries/allMyGalleries", method=RequestMethod.GET)
-   public ModelAndView allMyGalleries()
+   @RequestMapping(value = "/admin/galleries/allMyGalleries/{pageIdx}", method=RequestMethod.GET)
+   public ModelAndView allMyGalleries(
+      @PathVariable("pageIdx")
+      Integer pageIdx)
    {
       UserPrincipalDataModel loginUser = this._util.getLoginUser();
       if (loginUser == null)
@@ -64,16 +66,20 @@ public class UserImageGalleryActions
          return _util.createErorrPageViewModel(
             "User Authorization Failure", "User cannot be found.");
       }
+      
+      if (pageIdx == null)
+      {
+         pageIdx = 0;
+      }
 
       GalleryDisplayPageDataModel pageDataModel =
-      _imageGalleryService.getUserGalleries(loginUser.getUserId(), 0);
+      _imageGalleryService.getUserGalleries(loginUser.getUserId(), pageIdx);
       
       PageMetadata pageMetadata
          = _util.creatPageMetadata("All My Galleries");
       ModelAndView retVal
          = _util.getDefaultModelAndView(
-              "userGalleriesList", pageMetadata
-           );
+              "userGalleriesList", pageMetadata);
       retVal.addObject("userGalleriesListPageModel", pageDataModel);
       
       return retVal;
@@ -97,8 +103,8 @@ public class UserImageGalleryActions
             "User Authorization Failure", "User cannot be found.");
       }
 
-      _imageGalleryService.addGallery(loginUser.getUserId(), galleryTitle, galleryKeywords, galleryDesc);
-      
+      _imageGalleryService.addGallery(loginUser.getUserId(),
+            galleryTitle, galleryKeywords, galleryDesc);
       
       return _util.createRedirectPageView("redirect:/admin/galleries/allMyGalleries");
    }

@@ -2,6 +2,8 @@ package org.hanbo.mvc.models;
 
 import java.util.Date;
 
+import org.hanbo.mvc.utilities.DateToString;
+
 public class GalleryDisplayDetail
 {
    private String galleryId;
@@ -61,6 +63,11 @@ public class GalleryDisplayDetail
    public Date getCreateDate()
    {
       return createDate;
+   }
+
+   public String getCreateDateString()
+   {
+      return DateToString.dateStringForDisplay(createDate);
    }
 
    public void setCreateDate(Date createDate)

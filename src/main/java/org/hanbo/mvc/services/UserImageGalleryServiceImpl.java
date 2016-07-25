@@ -78,7 +78,7 @@ public class UserImageGalleryServiceImpl
       int itemsCount = getConfigValue_ImagesPerPage();
       
       List<Gallery> galleryList = 
-            _imageGalleryRepo.getUserGalleries(ownerId, pageIdx, itemsCount);
+         _imageGalleryRepo.getUserGalleries(ownerId, pageIdx, itemsCount);
       
       List<GalleryDisplayDetail> listOfGalleriesDisplay = 
       ImageDataModelEntityMapping.entitiesToGalleriesDisplayDetailList(galleryList);
@@ -100,7 +100,6 @@ public class UserImageGalleryServiceImpl
       }
       
       return retVal;
-
    }
    
    @Override

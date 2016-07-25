@@ -14,7 +14,7 @@
     
     <div class="row">
        <div class="col-md-8">
-          <span class="label label-info">You have  gallery(ies)</span>
+          <span class="label label-info">You have ${userGalleriesListPageModel.getTotalElementsCount()} gallery(ies)</span>
        </div>
        <div class="col-md-4 text-right">
           <button class="btn btn-default" onclick="openAddGalleryDlg()">Add Gallery</button>&nbsp;
@@ -22,7 +22,38 @@
     </div>
     
     <c:choose>
-      <c:when test="${!userImagesListPageModel.isDataModelEmpty()}">
+      <c:when test="${!userGalleriesListPageModel.isDataModelEmpty()}">
+      <table class="table table-hover">
+        <tr>
+          <th class="col-md-1"></th>
+          <th class="col-md-7">Gallery Name</th>
+          <th class="col-md-2">Last Modified</th>
+          <th class="col-md-2">Actions</th>
+        </tr>
+        <c:forEach items="${userGalleriesListPageModel.getListItems()}" var="galleryDetail">
+          <tr>
+            <td>
+               <span class="glyphicon glyphicon-folder-open"></span>
+            </td>
+            <td>
+               <p>
+                  <a href="${pageContext.request.contextPath}/admin/gallery/${galleryDetail.getGalleryId()}">${galleryDetail.getGalleryTitle()}</a>
+               </p>
+            </td>
+            <td>
+               <p>
+                  ${galleryDetail.getCreateDateString()}
+               </p>
+            </td>
+            <td>
+              <div class="row">
+                 <button class="btn btn-sm btn-default">Add Image</button>
+                 &nbsp;<button class="btn btn-sm btn-danger">Hide</button>
+              </div>
+            </td>
+          </tr>
+        </c:forEach>
+      </table>
 
       </c:when>
       <c:otherwise>
@@ -33,7 +64,30 @@
         </div>
       </c:otherwise>
     </c:choose>
-
+    
+    <div class="row">
+      <div class="md-col-12 text-right">
+        <nav>
+          <ul class="pagination">
+            <c:if test="${userGalleriesListPageModel.canGoBack}">
+            <li>
+              <a href="${pageContext.request.contextPath}/admin/galleries/allMyGalleries/${userGalleriesListPageModel.previousPageIdx}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            </c:if>
+            <c:if test="${userGalleriesListPageModel.hasMoreElement}">
+            <li>
+              <a href="${pageContext.request.contextPath}/admin/galleries/allMyGalleries/${userGalleriesListPageModel.nextPageIdx}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+            </c:if>
+          </ul>
+        </nav>
+      </div>
+    </div>
+      
     <div id="addGalleryDlg" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -44,29 +98,29 @@
           <form id="addGalleryForm" class="form" name="addGalleryForm" method="POST" action="${pageContext.request.contextPath}/admin/galleries/addGallery">
           <div class="modal-body">
             <div class="modal-body">
-            <div class="row">
-            <div class="col-md-12">
-            <div class="form-group">
-              <label class="col-md-12 control-label">Title</label>
-              <div class="col-md-12">
-                <input id="galleryTitle" name="galleryTitle" class="form-control"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-md-12 control-label">Keywords</label>
-              <div class="col-md-12">
-                <input id="galleryKeywords" name="galleryKeywords" class="form-control"/>
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-md-12 control-label">Description</label>
-              <div class="col-md-12">
-                <textarea class="form-control" id="galleryDesc" name="galleryDesc">
-                </textarea>
-              </div>
-            </div>
-            </div>
-            </div>
+	            <div class="row">
+		            <div class="col-md-12">
+			            <div class="form-group">
+			              <label class="col-md-12 control-label">Title</label>
+			              <div class="col-md-12">
+			                <input id="galleryTitle" name="galleryTitle" class="form-control"/>
+			              </div>
+			            </div>
+			            <div class="form-group">
+			              <label class="col-md-12 control-label">Keywords</label>
+			              <div class="col-md-12">
+			                <input id="galleryKeywords" name="galleryKeywords" class="form-control"/>
+			              </div>
+			            </div>
+			            <div class="form-group">
+			              <label class="col-md-12 control-label">Description</label>
+			              <div class="col-md-12">
+			                <textarea class="form-control" id="galleryDesc" name="galleryDesc">
+			                </textarea>
+			              </div>
+			            </div>
+		            </div>
+	            </div>
             </div>
           </div>
           <div class="modal-footer">
