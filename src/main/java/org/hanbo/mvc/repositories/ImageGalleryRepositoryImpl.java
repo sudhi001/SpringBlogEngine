@@ -146,4 +146,31 @@ public class ImageGalleryRepositoryImpl
       Session session = _sessionFactory.getCurrentSession();
       session.saveOrUpdate(gallery);
    }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public Gallery getUserGallery(String ownerId, String galleryId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query query = session.createQuery(
+         "select gallery from Gallery gallery where gallery.owner.id = :ownerId and gallery.id = :galleryId"
+         + " order by gallery.createDate desc"
+      ).setParameter("ownerId", ownerId)
+      .setParameter("galleryId", galleryId)
+      .setMaxResults(1)
+      .setFirstResult(0);
+      
+      List<Gallery> foundObjs =  query.list();
+      if (foundObjs.size() > 0)
+      {
+         Gallery gallery = foundObjs.get(0);
+         return gallery;
+      }
+      
+      return null;
+   }
 }

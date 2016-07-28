@@ -117,9 +117,8 @@ public class ImageFile
       {
          retVal = processingUtil.resizeImage(
             originalFile, resizedFile,
-            true, true, 250, 250);
+            true, true, this.resizedFileWidth, this.resizedFileHeight);
       }
-      
       
       return retVal;
    }

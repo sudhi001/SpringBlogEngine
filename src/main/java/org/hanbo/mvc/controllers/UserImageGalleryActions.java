@@ -87,7 +87,7 @@ public class UserImageGalleryActions
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/galleries/addGallery", method=RequestMethod.POST)
-   public ModelAndView addImage(
+   public ModelAndView addGallery(
       @RequestParam("galleryTitle")
       String galleryTitle,
       @RequestParam("galleryKeywords")
@@ -109,7 +109,7 @@ public class UserImageGalleryActions
       return _util.createRedirectPageView("redirect:/admin/galleries/allMyGalleries");
    }
    
-   
+   /*
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/images/addImage", method=RequestMethod.POST)
    public ModelAndView addImage(
@@ -136,7 +136,7 @@ public class UserImageGalleryActions
          imageToUpload, snapshotToUpload);
       
       return _util.createRedirectPageView("redirect:/admin/images/allMyImages");
-   }
+   }*/
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/secure/image-thumb/{imageId}", method=RequestMethod.GET)

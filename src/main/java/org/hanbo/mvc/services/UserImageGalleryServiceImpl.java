@@ -103,9 +103,8 @@ public class UserImageGalleryServiceImpl
    }
    
    @Override
-   public void uploadImage(String userId, String imageTitle,
-      String imageKeywords, MultipartFile imageToUpload,
-      MultipartFile snapshotToUpload)
+   public void uploadImage(String userId, String galleryId,
+      String imageTitle, String imageKeywords, MultipartFile imageToUpload)
    {
       validateUploadedImage(imageToUpload);
       
@@ -164,7 +163,7 @@ public class UserImageGalleryServiceImpl
          imgHeight = imgFileUtil.getOriginalImageFileSizeY();
          
          imgFileUtil.determineAspectRatio();
-         imgFileUtil.setResizedImageWidth(240);
+         imgFileUtil.setResizedImageWidth(250);
          imgFileUtil.calculateNewFileDimensions(false);
          
          String resizedFileName = filePath + imageId + "-thumb" + fileExt;
@@ -188,53 +187,13 @@ public class UserImageGalleryServiceImpl
             String.format("Unexpected error when trying to resize file [%s]", fileName),
             WebAppException.ErrorType.FUNCTIONAL, e);       
       }
-
-	   // Save the snapshot image file to disk
-	   String snapFileName = "";
-	   String snapFileShortName = "";
-	   
-	   int snapShotFileWidth = 0;
-      int snapShotFileHeight = 0;
-	   
-	   if (!snapshotToUpload.isEmpty())
-	   {
-	      String snapFileExt = 
-	         getFileNameExtension(snapshotToUpload.getOriginalFilename());
-	      
-         snapFileName
-            = filePath + imageId + "-snap" + snapFileExt;
-         snapFileShortName
-            = fileShortPath + imageId + "-snap" + snapFileExt;
-         try
-         {
-            FileStreamUtil.saveFileToServer(snapFileName, snapshotToUpload.getInputStream());
-
-            String imageMagickFilePath = this.configValues.getProperty("ImageMagickFilePath");
-            // create the thumbnail of the image
-            ImageFile imgFileUtil = new ImageFile(new ImageFileProcessingUtil(imageMagickFilePath));
-            imgFileUtil.setOriginalFile(snapFileName);
-            imgFileUtil.imageFileDimensions();
-            
-            snapShotFileWidth = imgFileUtil.getOriginalImageFileSizeX();
-            snapShotFileHeight = imgFileUtil.getOriginalImageFileSizeY();
-            
-            image.setSnapshotFilePath(snapFileShortName);
-            image.setSnapshotSizeX(snapShotFileWidth);
-            image.setSnapshotSizeY(snapShotFileHeight);
-         }
-         catch(Exception e)
-         {
-            throw new WebAppException(
-               String.format("Unexpected error when save file [%s]", fileName),
-               WebAppException.ErrorType.FUNCTIONAL, e);
-         }
-	   }
-	   else
-	   {
-         image.setSnapshotFilePath("");
-         image.setSnapshotSizeX(0);
-         image.setSnapshotSizeY(0);
-	   }
+      
+      Gallery galleryToAttach = 
+      _imageGalleryRepo.getUserGallery(imageOwner.getId(), galleryId);
+      if (galleryToAttach != null)
+      {
+         image.getAssociatedGalleries().add(galleryToAttach);
+      }
       
       // save it to DB.
 	   _imageGalleryRepo.saveImage(image);

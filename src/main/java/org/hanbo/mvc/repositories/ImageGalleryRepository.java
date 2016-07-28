@@ -18,4 +18,6 @@ public interface ImageGalleryRepository
    List<Gallery> getUserGalleries(String ownerId, int pageIdx, int itemsCount);
    
    void addGallery(Gallery gallery);
+   
+   Gallery getUserGallery(String ownerId, String galleryId);
 }

@@ -12,8 +12,8 @@ public interface UserImageGalleryService
 
    GalleryDisplayPageDataModel getUserGalleries(String ownerId, int pageIdx);
 
-   void uploadImage(String userId, String imageTitle, String imageKeywords,
-      MultipartFile imageToUpload, MultipartFile snapshotToUpload);
+   void uploadImage(String userId, String galleryId, String imageTitle,
+      String imageKeywords, MultipartFile imageToUpload);
    
    boolean imageSnapshotAvailable(String imageId);
    
