@@ -13,6 +13,10 @@ public class GalleryDisplayDetail
    private String galleryDescription;
    
    private String galleryKeywords;
+
+   private boolean galleryActive;
+   
+   private boolean galleryVisible;
    
    private Date createDate;
    
@@ -93,5 +97,25 @@ public class GalleryDisplayDetail
    public void setOwnerId(String ownerId)
    {
       this.ownerId = ownerId;
+   }
+
+   public boolean isGalleryVisible()
+   {
+      return galleryVisible;
+   }
+
+   public void setGalleryVisible(boolean galleryVisible)
+   {
+      this.galleryVisible = galleryVisible;
+   }
+
+   public boolean isGalleryActive()
+   {
+      return galleryActive;
+   }
+
+   public void setGalleryActive(boolean galleryActive)
+   {
+      this.galleryActive = galleryActive;
    }
 }

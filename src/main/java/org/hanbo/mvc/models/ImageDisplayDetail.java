@@ -13,6 +13,8 @@ public class ImageDisplayDetail
    private String imageThumbFilePath;
    
    private Date uploadDate;
+   
+   private boolean imageActive; 
 
    public String getImageId()
    {
@@ -58,5 +60,15 @@ public class ImageDisplayDetail
    public void setUpdloadDate(Date uploadDate)
    {
       this.uploadDate = uploadDate;
+   }
+
+   public boolean isImageActive()
+   {
+      return imageActive;
+   }
+
+   public void setImageActive(boolean imageActive)
+   {
+      this.imageActive = imageActive;
    }
 }

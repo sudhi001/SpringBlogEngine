@@ -1,6 +1,7 @@
 package org.hanbo.mvc.entities;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -46,9 +47,9 @@ public class Image
    
    @Column(name = "thumbnailfilepath", nullable = false, length = 256)
    private String thumbnailFilePath;
-   
-   @Column(name = "snapshotfilepath", nullable = true, length = 256)
-   private String snapshotFilePath;
+
+   @Column(name = "active", nullable = false)
+   private boolean active;
    
    @Column(name = "uploaddate", nullable = false)
    @Temporal(TemporalType.TIMESTAMP)
@@ -79,6 +80,12 @@ public class Image
    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "galleryImages")
    private Set<Gallery> associatedGalleries;
 
+   public Image()
+   {
+      active = true;
+      associatedGalleries = new HashSet<Gallery>();
+   }
+   
    public String getId()
    {
       return id;
@@ -137,16 +144,6 @@ public class Image
    public void setThumbnailFilePath(String thumbnailFilePath)
    {
       this.thumbnailFilePath = thumbnailFilePath;
-   }
-
-   public String getSnapshotFilePath()
-   {
-      return snapshotFilePath;
-   }
-
-   public void setSnapshotFilePath(String snapshotFilePath)
-   {
-      this.snapshotFilePath = snapshotFilePath;
    }
 
    public Date getUploadDate()
@@ -237,5 +234,15 @@ public class Image
    public void setAssociatedGalleries(Set<Gallery> associatedGalleries)
    {
       this.associatedGalleries = associatedGalleries;
+   }
+
+   public boolean isActive()
+   {
+      return active;
+   }
+
+   public void setActive(boolean active)
+   {
+      this.active = active;
    }
 }

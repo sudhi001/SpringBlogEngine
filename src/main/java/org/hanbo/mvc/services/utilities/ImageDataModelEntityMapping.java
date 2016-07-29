@@ -3,7 +3,6 @@ package org.hanbo.mvc.services.utilities;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
 import org.hanbo.mvc.models.GalleryDisplayDetail;
@@ -17,21 +16,9 @@ public class ImageDataModelEntityMapping
       
       retVal.setImageId(img.getId());
       retVal.setUpdloadDate(img.getUploadDate());
+      retVal.setImageActive(img.isActive());
       retVal.setImageFilePath(img.getFilePath());
-      
-      if (StringUtils.isEmpty(img.getSnapshotFilePath())
-         && !StringUtils.isEmpty(img.getThumbnailFilePath()))
-      {
-         retVal.setImageThumbFilePath(img.getThumbnailFilePath());         
-      }
-      else if (!StringUtils.isEmpty(img.getSnapshotFilePath())
-         && StringUtils.isEmpty(img.getThumbnailFilePath()))
-      {
-         retVal.setImageThumbFilePath(img.getSnapshotFilePath());         
-      }
-      else {
-         retVal.setImageThumbFilePath("");
-      }
+      retVal.setImageThumbFilePath(img.getThumbnailFilePath()); 
       
       return retVal;
    }
@@ -59,6 +46,8 @@ public class ImageDataModelEntityMapping
       retVal.setCreateDate(gallery.getCreateDate());
       retVal.setGalleryKeywords(gallery.getKeywords());
       retVal.setGalleryTitle(gallery.getTitle());
+      retVal.setGalleryActive(gallery.isActive());
+      retVal.setGalleryVisible(gallery.isVisible());
       retVal.setOwnerId(gallery.getOwner().getId());
       retVal.setOwnerName(gallery.getOwner().getUserName());
       

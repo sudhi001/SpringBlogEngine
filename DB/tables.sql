@@ -114,7 +114,7 @@ CREATE TABLE image (
    imgname VARCHAR(64) UNIQUE NOT NULL,
    filepath VARCHAR(256) NOT NULL, 
    thumbnailfilepath VARCHAR(256) NOT NULL,
-   snapshotfilepath VARCHAR(256) NULL,
+   active BIT(1) NOT NULL DEFAULT 1,
    uploaddate DATETIME NOT NULL,
    sizex INT NOT NULL,
    sizey INT NOT NULL,
@@ -132,6 +132,8 @@ CREATE TABLE gallery (
    id VARCHAR(45) NOT NULL PRIMARY KEY,
    title VARCHAR(96) NOT NULL,
    description VARCHAR(3072) NULL,
+   active BIT(1) NOT NULL DEFAULT 1,
+   visible BIT(1) NOT NULL DEFAULT 1,
    keywords VARCHAR(128) NULL,
    createdate DATETIME NOT NULL,
 

@@ -1,6 +1,7 @@
 package org.hanbo.mvc.entities;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -43,6 +44,12 @@ public class Gallery
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
    private String keywords;
    
+   @Column(name = "active", nullable = false)
+   private boolean active;
+
+   @Column(name = "visible", nullable = false)
+   private boolean visible;
+   
    @Column(name = "createdate", nullable = false)
    @Temporal(TemporalType.TIMESTAMP)
    private Date createDate;
@@ -58,6 +65,13 @@ public class Gallery
                nullable = false, updatable = false) })
    private Set<Image> galleryImages;
 
+   public Gallery()
+   {
+      setActive(true);
+      setVisible(true);
+      galleryImages = new HashSet<Image>(); 
+   }
+   
    public String getId()
    {
       return id;
@@ -126,5 +140,25 @@ public class Gallery
    public void setAssociatedImages(Set<Image> galleryImages)
    {
       this.galleryImages = galleryImages;
+   }
+
+   public boolean isActive()
+   {
+      return active;
+   }
+
+   public void setActive(boolean active)
+   {
+      this.active = active;
+   }
+
+   public boolean isVisible()
+   {
+      return visible;
+   }
+
+   public void setVisible(boolean visible)
+   {
+      this.visible = visible;
    }
 }
