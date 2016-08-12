@@ -48,7 +48,24 @@
             <td>
               <div class="row">
                  <button class="btn btn-sm btn-default">Add Image</button>
-                 &nbsp;<button class="btn btn-sm btn-danger">Hide</button>
+                 &nbsp;
+                 <c:choose>
+                    <c:when test="${galleryDetail.isGalleryVisible()}">
+                 	   <button class="btn btn-sm btn-danger">Hide</button>
+                 	</c:when>
+                 	<c:otherwise>
+                 	   <button class="btn btn-sm btn-danger">Show</button>
+                 	</c:otherwise>
+                 </c:choose>
+                 &nbsp;
+                 <c:choose>
+                    <c:when test="${galleryDetail.isGalleryActive()}">
+                 	   <button class="btn btn-sm btn-danger">Disable</button>
+                 	</c:when>
+                 	<c:otherwise>
+                 	   <button class="btn btn-sm btn-danger">Enable</button>
+                 	</c:otherwise>
+                 </c:choose>
               </div>
             </td>
           </tr>
@@ -167,6 +184,38 @@
           $("#addGalleryDlg #galleryTitle").val("");
           $("#addGalleryDlg #galleryKeywords").val("");
           $("#addGalleryDlg #galleryDesc").val("");
+       }
+       
+       var hideGallery = function (galleryId) 
+       {
+    	   $.ajax({
+              type: "GET",
+              url: "${pageContext.request.contextPath}/admin/galleries/hideGallery?galleryId=" + galleryId,
+              xhrFields: {
+                 withCredentials: true
+              },
+              success: function(data) {
+                 location.reload(true);
+              },
+              error: function() {
+              }
+           });
+       }
+       
+       var showGallery = function (galleryId) 
+       {
+    	   $.ajax({
+              type: "GET",
+              url: "${pageContext.request.contextPath}/admin/galleries/showGallery?galleryId=" + galleryId,
+              xhrFields: {
+                 withCredentials: true
+              },
+              success: function(data) {
+           	     location.reload();
+              },
+              error: function() {
+              }
+           });
        }
     </script>
   </tiles:putAttribute>
