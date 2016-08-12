@@ -11,12 +11,15 @@ import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.services.UserImageGalleryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -108,6 +111,37 @@ public class UserImageGalleryActions
       
       return _util.createRedirectPageView("redirect:/admin/galleries/allMyGalleries");
    }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/gallery/showHideGallery",
+      method=RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> showGallery(
+      @RequestParam("galleryId")
+      String galleryId,
+      @RequestParam("show")
+      boolean showGallery
+   )
+   {
+      return null;
+   }
+
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/gallery/showHideGallery",
+      method=RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> enableGallery(
+      @RequestParam("galleryId")
+      String galleryId,
+      @RequestParam("enable")
+      boolean enableGallery
+   )
+   {
+      return null;
+   }
+
    
    /*
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
