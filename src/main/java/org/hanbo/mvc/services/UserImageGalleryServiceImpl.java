@@ -288,6 +288,44 @@ public class UserImageGalleryServiceImpl
       this._imageGalleryRepo.addGallery(gallery);
    }
    
+   public void setGalleryVisibility(String ownerId, String galleryId, boolean showGallery)
+   {
+      if (StringUtils.isEmpty(ownerId))
+      {
+         throw new WebAppException(
+            "the gallery owner id is null or empty",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(galleryId))
+      {
+         throw new WebAppException(
+            "the gallery id is null or empty",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      this._imageGalleryRepo.setGalleryVisibility(ownerId, galleryId, showGallery);
+   }
+   
+   public void enableGallery(String ownerId, String galleryId, boolean enableGallery)
+   {
+      if (StringUtils.isEmpty(ownerId))
+      {
+         throw new WebAppException(
+            "the gallery owner id is null or empty",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(galleryId))
+      {
+         throw new WebAppException(
+            "the gallery id is null or empty",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      this._imageGalleryRepo.enableGallery(ownerId, galleryId, enableGallery);
+   }
+   
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
    {
       if (StringUtils.isEmpty(galleryTitle))

@@ -26,9 +26,9 @@
       <table class="table table-hover">
         <tr>
           <th class="col-md-1"></th>
-          <th class="col-md-7">Gallery Name</th>
+          <th class="col-md-6">Gallery Name</th>
           <th class="col-md-2">Last Modified</th>
-          <th class="col-md-2">Actions</th>
+          <th class="col-md-3">Actions</th>
         </tr>
         <c:forEach items="${userGalleriesListPageModel.getListItems()}" var="galleryDetail">
           <tr>
@@ -51,19 +51,19 @@
                  &nbsp;
                  <c:choose>
                     <c:when test="${galleryDetail.isGalleryVisible()}">
-                 	   <button class="btn btn-sm btn-danger">Hide</button>
+                 	   <button class="btn btn-sm btn-danger" onclick="showGallery('${galleryDetail.getGalleryId()}', false)">Hide</button>
                  	</c:when>
                  	<c:otherwise>
-                 	   <button class="btn btn-sm btn-danger">Show</button>
+                 	   <button class="btn btn-sm btn-danger" onclick="showGallery('${galleryDetail.getGalleryId()}', true)">Show</button>
                  	</c:otherwise>
                  </c:choose>
                  &nbsp;
                  <c:choose>
                     <c:when test="${galleryDetail.isGalleryActive()}">
-                 	   <button class="btn btn-sm btn-danger">Disable</button>
+                 	   <button class="btn btn-sm btn-danger" onclick="setGalleryActive('${galleryDetail.getGalleryId()}', false)">Disable</button>
                  	</c:when>
                  	<c:otherwise>
-                 	   <button class="btn btn-sm btn-danger">Enable</button>
+                 	   <button class="btn btn-sm btn-danger" onclick="setGalleryActive('${galleryDetail.getGalleryId()}', true)">Enable</button>
                  	</c:otherwise>
                  </c:choose>
               </div>
@@ -186,11 +186,16 @@
           $("#addGalleryDlg #galleryDesc").val("");
        }
        
-       var hideGallery = function (galleryId) 
+       var showGallery = function (galleryId, visibility) 
        {
+    	   if (galleryId == null || visibility == null)
+           {
+              return;
+           }
+    	   
     	   $.ajax({
               type: "GET",
-              url: "${pageContext.request.contextPath}/admin/galleries/hideGallery?galleryId=" + galleryId,
+              url: "${pageContext.request.contextPath}/admin/galleries/showGallery?galleryId=" + galleryId + "&show=" + visibility,
               xhrFields: {
                  withCredentials: true
               },
@@ -201,23 +206,28 @@
               }
            });
        }
-       
-       var showGallery = function (galleryId) 
+
+       var setGalleryActive = function (galleryId, active) 
        {
+    	   if (galleryId == null || active == null)
+           {
+              return;
+           }
+    	   
     	   $.ajax({
               type: "GET",
-              url: "${pageContext.request.contextPath}/admin/galleries/showGallery?galleryId=" + galleryId,
+              url: "${pageContext.request.contextPath}/admin/galleries/setGalleryActive?galleryId=" + galleryId + "&enable=" + active,
               xhrFields: {
                  withCredentials: true
               },
               success: function(data) {
-           	     location.reload();
+                 location.reload(true);
               },
               error: function() {
               }
            });
        }
-    </script>
+     </script>
   </tiles:putAttribute>
 
 </tiles:insertDefinition>

@@ -9,8 +9,11 @@ import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
 import org.hanbo.mvc.models.ImageDisplayPageDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.json.GenericJsonResponse;
 import org.hanbo.mvc.services.UserImageGalleryService;
+import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -109,11 +112,11 @@ public class UserImageGalleryActions
       _imageGalleryService.addGallery(loginUser.getUserId(),
             galleryTitle, galleryKeywords, galleryDesc);
       
-      return _util.createRedirectPageView("redirect:/admin/galleries/allMyGalleries");
+      return _util.createRedirectPageView("redirect:/admin/galleries/allMyGalleries/0");
    }
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-   @RequestMapping(value="/admin/gallery/showHideGallery",
+   @RequestMapping(value="/admin/galleries/showGallery",
       method=RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
    @ResponseBody
@@ -124,11 +127,32 @@ public class UserImageGalleryActions
       boolean showGallery
    )
    {
-      return null;
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("Not authorized"),
+            HttpStatus.FORBIDDEN);
+      }
+      
+      try
+      {
+         this._imageGalleryService.setGalleryVisibility(loginUser.getUserId(),
+               galleryId, showGallery);
+         return new ResponseEntity<String>(
+            JsonUtil.convertObjectToJson(new GenericJsonResponse(true, "operation successful.")),
+            HttpStatus.OK);
+      }
+      catch(Exception e)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("Exception occurred."),
+            HttpStatus.INTERNAL_SERVER_ERROR);
+      }
    }
 
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-   @RequestMapping(value="/admin/gallery/showHideGallery",
+   @RequestMapping(value="/admin/galleries/setGalleryActive",
       method=RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
    @ResponseBody
@@ -139,7 +163,29 @@ public class UserImageGalleryActions
       boolean enableGallery
    )
    {
-      return null;
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("Not authorized"),
+            HttpStatus.FORBIDDEN);
+      }
+      
+      try
+      {
+         this._imageGalleryService.enableGallery(loginUser.getUserId(),
+               galleryId, enableGallery);
+         return new ResponseEntity<String>(
+            JsonUtil.convertObjectToJson(new GenericJsonResponse(true, "operation successful.")),
+            HttpStatus.OK);
+      }
+      catch(Exception e)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("Exception occurred."),
+            HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
    }
 
    

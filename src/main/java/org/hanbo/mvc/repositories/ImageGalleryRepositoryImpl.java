@@ -173,4 +173,60 @@ public class ImageGalleryRepositoryImpl
       
       return null;
    }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public void setGalleryVisibility(String ownerId, String galleryId, boolean showGallery)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query query = session.createQuery(
+         "select gallery from Gallery gallery where gallery.owner.id = :ownerId and gallery.id = :galleryId"
+         + " order by gallery.createDate desc"
+      ).setParameter("ownerId", ownerId)
+      .setParameter("galleryId", galleryId)
+      .setMaxResults(1)
+      .setFirstResult(0);
+      
+      List<Gallery> foundObjs =  query.list();
+      if (foundObjs.size() > 0)
+      {
+         Gallery gallery = foundObjs.get(0);
+                  
+         gallery.setVisible(showGallery);
+         
+         session.update(gallery);
+      }
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public void enableGallery(String ownerId, String galleryId, boolean enableGallery)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query query = session.createQuery(
+         "select gallery from Gallery gallery where gallery.owner.id = :ownerId and gallery.id = :galleryId"
+         + " order by gallery.createDate desc"
+      ).setParameter("ownerId", ownerId)
+      .setParameter("galleryId", galleryId)
+      .setMaxResults(1)
+      .setFirstResult(0);
+      
+      List<Gallery> foundObjs =  query.list();
+      if (foundObjs.size() > 0)
+      {
+         Gallery gallery = foundObjs.get(0);
+         
+         gallery.setActive(enableGallery);
+         
+         session.update(gallery);
+      }
+   }
 }

@@ -22,4 +22,8 @@ public interface UserImageGalleryService
    
    void addGallery(String ownerId, String galleryTitle,
       String galleryKeywords, String galleryDesc);
+
+   void setGalleryVisibility(String ownerId, String galleryId, boolean showGallery);
+
+   void enableGallery(String ownerId, String galleryId, boolean enableGallery);
 }

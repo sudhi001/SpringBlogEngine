@@ -20,4 +20,8 @@ public interface ImageGalleryRepository
    void addGallery(Gallery gallery);
    
    Gallery getUserGallery(String ownerId, String galleryId);
+
+   void setGalleryVisibility(String ownerId, String galleryId, boolean showGallery);
+
+   void enableGallery(String ownerId, String galleryId, boolean enableGallery);
 }
