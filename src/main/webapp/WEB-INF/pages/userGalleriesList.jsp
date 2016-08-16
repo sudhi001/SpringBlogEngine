@@ -51,19 +51,19 @@
                  &nbsp;
                  <c:choose>
                     <c:when test="${galleryDetail.isGalleryVisible()}">
-                 	   <button class="btn btn-sm btn-danger" onclick="showGallery('${galleryDetail.getGalleryId()}', false)">Hide</button>
+                 	   <button class="btn btn-sm btn-danger" onclick="showGallery('${galleryDetail.getGalleryId()}', false)"><span class="glyphicon glyphicon-eye-close"></span></button>
                  	</c:when>
                  	<c:otherwise>
-                 	   <button class="btn btn-sm btn-danger" onclick="showGallery('${galleryDetail.getGalleryId()}', true)">Show</button>
+                 	   <button class="btn btn-sm btn-success" onclick="showGallery('${galleryDetail.getGalleryId()}', true)"><span class="glyphicon glyphicon-eye-open"></span></button>
                  	</c:otherwise>
                  </c:choose>
                  &nbsp;
                  <c:choose>
                     <c:when test="${galleryDetail.isGalleryActive()}">
-                 	   <button class="btn btn-sm btn-danger" onclick="setGalleryActive('${galleryDetail.getGalleryId()}', false)">Disable</button>
+                 	   <button class="btn btn-sm btn-danger" onclick="setGalleryActive('${galleryDetail.getGalleryId()}', false)"><span class="glyphicon glyphicon-remove-circle"></span></button>
                  	</c:when>
                  	<c:otherwise>
-                 	   <button class="btn btn-sm btn-danger" onclick="setGalleryActive('${galleryDetail.getGalleryId()}', true)">Enable</button>
+                 	   <button class="btn btn-sm btn-success" onclick="setGalleryActive('${galleryDetail.getGalleryId()}', true)"><span class="glyphicon glyphicon-ok-circle"></span></button>
                  	</c:otherwise>
                  </c:choose>
               </div>
@@ -114,7 +114,6 @@
           </div>
           <form id="addGalleryForm" class="form" name="addGalleryForm" method="POST" action="${pageContext.request.contextPath}/admin/galleries/addGallery">
           <div class="modal-body">
-            <div class="modal-body">
 	            <div class="row">
 		            <div class="col-md-12">
 			            <div class="form-group">
@@ -138,7 +137,6 @@
 			            </div>
 		            </div>
 	            </div>
-            </div>
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Add</button>
@@ -148,6 +146,50 @@
         </div>
       </div>
     </div>
+    
+    <div id="uploadImageDlg" class="modal fade" tabindex="-1" role="dialog">
+       <div class="modal-dialog">
+          <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Upload Image</h4>
+             </div>
+             <form id="uploadImageForm" class="form" name="uploadImageForm" method="POST" action="${pageContext.request.contextPath}/admin/image/uploadImage">
+                <input type="hidden" id="uploadImageGalleryId" name="uploadImageGalleryId" value="dummyValue" >
+                <div class="modal-body">
+                   <div class="row">
+		              <div class="col-md-12">
+			            <div class="form-group">
+			              <label class="col-md-12 control-label">Title</label>
+			              <div class="col-md-12">
+			                <input id="galleryTitle" name="galleryTitle" class="form-control"/>
+			              </div>
+			            </div>
+			            <div class="form-group">
+			              <label class="col-md-12 control-label">Keywords</label>
+			              <div class="col-md-12">
+			                <input id="galleryKeywords" name="galleryKeywords" class="form-control"/>
+			              </div>
+			            </div>
+			            <div class="form-group">
+			              <label class="col-md-12 control-label">Description</label>
+			              <div class="col-md-12">
+			                <textarea class="form-control" id="galleryDesc" name="galleryDesc">
+			                </textarea>
+			              </div>
+			            </div>
+		              </div>
+	               </div>
+                </div>
+                <div class="modal-footer">
+                   <button type="submit" class="btn btn-primary">Add</button>
+                   <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+             </form>
+          </div>
+       </div>
+    </div>
+    
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">
@@ -157,7 +199,7 @@
     <script src="${pageContext.request.contextPath}/assets/lightbox2/js/lightbox.min.js"></script>
     
     <script type="text/javascript">
-       /*var openImageUploadDlg = function ()
+       var openImageUploadDlg = function ()
        {
           $("#uploadImageDlg").modal("show");
        };
@@ -168,7 +210,7 @@
        var resetAddImageDlg = function ()
        {
        };
-       */
+       
 
        var openAddGalleryDlg = function ()
        {
