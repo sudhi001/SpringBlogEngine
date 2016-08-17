@@ -47,7 +47,7 @@
             </td>
             <td>
               <div class="row">
-                 <button class="btn btn-sm btn-default">Add Image</button>
+                 <button class="btn btn-sm btn-default" onclick="openImageUploadDlg()">Add Image</button>
                  &nbsp;
                  <c:choose>
                     <c:when test="${galleryDetail.isGalleryVisible()}">
@@ -162,20 +162,23 @@
 			            <div class="form-group">
 			              <label class="col-md-12 control-label">Title</label>
 			              <div class="col-md-12">
-			                <input id="galleryTitle" name="galleryTitle" class="form-control"/>
+			                <input id="imageTitle" name="imageTitle" class="form-control"/>
 			              </div>
 			            </div>
 			            <div class="form-group">
 			              <label class="col-md-12 control-label">Keywords</label>
 			              <div class="col-md-12">
-			                <input id="galleryKeywords" name="galleryKeywords" class="form-control"/>
+			                <input id="imageKeywords" name="imagesKeywords" class="form-control"/>
 			              </div>
 			            </div>
 			            <div class="form-group">
-			              <label class="col-md-12 control-label">Description</label>
+			              <label class="col-md-12 control-label">Image File</label>
 			              <div class="col-md-12">
-			                <textarea class="form-control" id="galleryDesc" name="galleryDesc">
-			                </textarea>
+                             <div id="imageUploadControl" class="fileinput fileinput-new input-group" data-provides="fileinput">
+                             <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="imageToUpload" id="imageToUpload"></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                             </div>
 			              </div>
 			            </div>
 		              </div>
@@ -207,8 +210,12 @@
        $('#uploadImageDlg').on('hidden.bs.modal', function () {
           resetAddImageDlg();
        });
+       
        var resetAddImageDlg = function ()
        {
+          $("#uploadImageDlg #imageTitle").val("");
+          $("#uploadImageDlg #imageKeywords").val("");
+          $("#uploadImageDlg #imageUploadControl").fileinput("clear");
        };
        
 
