@@ -47,7 +47,7 @@
             </td>
             <td>
               <div class="row">
-                 <button class="btn btn-sm btn-default" onclick="openImageUploadDlg()">Add Image</button>
+                 <button class="btn btn-sm btn-default" onclick="openImageUploadDlg('${galleryDetail.getGalleryId()}')">Add Image</button>
                  &nbsp;
                  <c:choose>
                     <c:when test="${galleryDetail.isGalleryVisible()}">
@@ -168,7 +168,7 @@
 			            <div class="form-group">
 			              <label class="col-md-12 control-label">Keywords</label>
 			              <div class="col-md-12">
-			                <input id="imageKeywords" name="imagesKeywords" class="form-control"/>
+			                <input id="imageKeywords" name="imageKeywords" class="form-control"/>
 			              </div>
 			            </div>
 			            <div class="form-group">
@@ -180,12 +180,17 @@
                                 <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
                              </div>
 			              </div>
+			              <div class="row">
+			                 <div class="col-xs-12">
+                                <div class="alert alert-danger" id="uploadError" style="visible: hidden"></div>
+			                 </div>
+			              </div>
 			            </div>
 		              </div>
 	               </div>
                 </div>
                 <div class="modal-footer">
-                   <button type="submit" class="btn btn-primary">Add</button>
+                   <button type="button" class="btn btn-primary" onclick="validateUploadAndSubmit()">Add</button>
                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
              </form>
@@ -202,8 +207,10 @@
     <script src="${pageContext.request.contextPath}/assets/lightbox2/js/lightbox.min.js"></script>
     
     <script type="text/javascript">
-       var openImageUploadDlg = function ()
+       var openImageUploadDlg = function (galleryId)
        {
+    	  resetAddImageDlg();
+    	  $("#uploadImageDlg #uploadImageGalleryId").val(galleryId);
           $("#uploadImageDlg").modal("show");
        };
        
@@ -213,11 +220,55 @@
        
        var resetAddImageDlg = function ()
        {
+     	  $("#uploadImageDlg #uploadError").html("");
+          $("#uploadImageDlg #uploadError").hide();
+    	   
+    	  $("#uploadImageDlg #uploadImageGalleryId").val("");
           $("#uploadImageDlg #imageTitle").val("");
           $("#uploadImageDlg #imageKeywords").val("");
           $("#uploadImageDlg #imageUploadControl").fileinput("clear");
        };
        
+       var validateUploadAndSubmit = function()
+       {
+          var isValid = true;
+          var errorMsg = "";
+     	  var imageTitleVal = $("#uploadImageDlg #imageTitle").val();
+          if (imageTitleVal == null || imageTitle.length <= 0)
+          {
+            errorMsg = "the title of the image is empty";
+     	    isValid = false;
+          }
+          else if (imageTitleVal != null && imageTitle.length > 128)
+          {
+            errorMsg = "the title of the image is too long";
+            isValid = false;
+          }
+     	  
+     	  var imageKeywords = $("#uploadImageDlg #imageKeywords").val();
+          if (imageKeywords != null && imageKeywords.length > 128)
+          {
+             errorMsg = "the keywords of the image is too long";
+             isValid = false;
+          }
+           
+     	  var imageToUpload = $("#uploadImageDlg #imageToUpload").val();
+          if (imageToUpload == null || imageToUpload.length <= 0)
+          {
+             errorMsg = "the file name of the image is empty";
+             isValid = false;
+          }
+           
+          if (!isValid)
+          {
+             $("#uploadImageDlg #uploadError").html(errorMsg);
+             $("#uploadImageDlg #uploadError").show();
+          }
+          else
+          {
+             $("#uploadImageDlg #uploadImageForm")[0].submit();
+          }
+       };
 
        var openAddGalleryDlg = function ()
        {
