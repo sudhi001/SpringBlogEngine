@@ -188,6 +188,35 @@ public class UserImageGalleryActions
 
    }
 
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/images/uploadImage", method=RequestMethod.POST)
+   public ModelAndView addImage(
+      @RequestParam("uploadImageGalleryId")
+      String galleryId,
+      @RequestParam("imageTitle")
+      String imageTitle,
+      @RequestParam("imageKeywords")
+      String imageKeywords,
+      @RequestParam("imageToUpload")
+      MultipartFile imageToUpload
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+      
+      String userId = loginUser.getUserId();
+      _imageGalleryService.uploadImage(userId, galleryId,
+            imageTitle, imageKeywords,
+            imageToUpload);
+      
+      return _util.createRedirectPageView(
+         String.format("redirect:/admin/gallery/%s", galleryId)
+      );
+   }
    
    /*
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")

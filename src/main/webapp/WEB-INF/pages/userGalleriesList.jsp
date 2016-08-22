@@ -159,7 +159,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Upload Image</h4>
              </div>
-             <form id="uploadImageForm" class="form" name="uploadImageForm" method="POST" action="${pageContext.request.contextPath}/admin/image/uploadImage">
+             <form id="uploadImageForm" class="form" name="uploadImageForm" method="POST" action="${pageContext.request.contextPath}/admin/images/uploadImage">
                 <input type="hidden" id="uploadImageGalleryId" name="uploadImageGalleryId" value="dummyValue" >
                 <div class="modal-body">
                    <div class="row">

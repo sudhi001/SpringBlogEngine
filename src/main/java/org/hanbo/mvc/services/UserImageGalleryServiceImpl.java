@@ -194,6 +194,12 @@ public class UserImageGalleryServiceImpl
       {
          image.getAssociatedGalleries().add(galleryToAttach);
       }
+      else
+      {
+         throw new WebAppException(
+            String.format("Unable to find gallery with id [%s]", galleryId),
+            WebAppException.ErrorType.FUNCTIONAL); 
+      }
       
       // save it to DB.
 	   _imageGalleryRepo.saveImage(image);
