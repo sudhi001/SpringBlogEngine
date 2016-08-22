@@ -135,11 +135,16 @@
 			                </textarea>
 			              </div>
 			            </div>
+			            <div class="form-group row">
+			              <div class="col-xs-12">
+                             <div class="alert alert-danger" id="addGalleryError" style="visible: hidden"></div>
+			              </div>
+			            </div>
 		            </div>
 	            </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="button" class="btn btn-primary" onclick="validateAddGalleryAndSubmit()">Add</button>
             <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
           </form>
@@ -180,7 +185,7 @@
                                 <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
                              </div>
 			              </div>
-			              <div class="row">
+			              <div class="form-group row">
 			                 <div class="col-xs-12">
                                 <div class="alert alert-danger" id="uploadError" style="visible: hidden"></div>
 			                 </div>
@@ -239,7 +244,7 @@
             errorMsg = "the title of the image is empty";
      	    isValid = false;
           }
-          else if (imageTitleVal != null && imageTitle.length > 128)
+          else if (imageTitleVal != null && imageTitle.length > 96)
           {
             errorMsg = "the title of the image is too long";
             isValid = false;
@@ -269,9 +274,12 @@
              $("#uploadImageDlg #uploadImageForm")[0].submit();
           }
        };
+       
+       ///////////////////////////////
 
        var openAddGalleryDlg = function ()
        {
+          resetAddGalleryDlg();
           $("#addGalleryDlg").modal("show");
        };
        
@@ -281,10 +289,54 @@
        
        var resetAddGalleryDlg = function ()
        {
+      	  $("#addGalleryDlg #addGalleryError").html("");
+          $("#addGalleryDlg #addGalleryError").hide();
+          
           $("#addGalleryDlg #galleryTitle").val("");
           $("#addGalleryDlg #galleryKeywords").val("");
           $("#addGalleryDlg #galleryDesc").val("");
        }
+       
+       var validateAddGalleryAndSubmit = function()
+       {
+          var isValid = true;
+          var errorMsg = "";
+     	  var gallerName = $("#addGalleryDlg #galleryTitle").val();
+          if (gallerName == null || gallerName.length <= 0)
+          {
+            errorMsg = "the title of the gallery is empty";
+     	    isValid = false;
+          }
+          else if (gallerName != null && gallerName.length > 96)
+          {
+            errorMsg = "the title of the gallery is too long";
+            isValid = false;
+          }
+     	  
+     	  var galleryDesc = $("#addGalleryDlg #galleryDesc").val();
+          if (galleryDesc != null && galleryDesc.length > 3072)
+          {
+             errorMsg = "the description of the gallery is too long";
+             isValid = false;
+          }
+           
+     	  var galleryKeywords = $("#addGalleryDlg #galleryKeywords").val();
+          if (galleryKeywords != null && galleryKeywords.length > 128)
+          {
+             errorMsg = "the keywords for gallery is too long";
+             isValid = false;
+          }
+           
+          if (!isValid)
+          {
+             $("#addGalleryDlg #addGalleryError").html(errorMsg);
+             $("#addGalleryDlg #addGalleryError").show();
+          }
+          else
+          {
+             $("#addGalleryDlg #addGalleryForm")[0].submit();
+          }
+       };
        
        var showGallery = function (galleryId, visibility) 
        {
