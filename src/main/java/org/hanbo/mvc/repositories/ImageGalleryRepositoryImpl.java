@@ -27,10 +27,19 @@ public class ImageGalleryRepositoryImpl
       propagation = Propagation.REQUIRED,
       isolation = Isolation.READ_COMMITTED
    )
-   public void saveImage(Image image)
+   public void saveImage(Image image, String galleryId, String ownerId)
    {
       Session session = _sessionFactory.getCurrentSession();
+      
       session.saveOrUpdate(image);
+      
+      Gallery associatedGallery = getUserGallery(session, galleryId, ownerId);
+      if (associatedGallery != null)
+      {
+         associatedGallery.getAssociatedImages().add(image);
+      }
+      
+      session.update(associatedGallery);
    }
    
    @Override
@@ -155,23 +164,7 @@ public class ImageGalleryRepositoryImpl
    public Gallery getUserGallery(String ownerId, String galleryId)
    {
       Session session = _sessionFactory.getCurrentSession();
-      
-      Query query = session.createQuery(
-         "select gallery from Gallery gallery where gallery.owner.id = :ownerId and gallery.id = :galleryId"
-         + " order by gallery.createDate desc"
-      ).setParameter("ownerId", ownerId)
-      .setParameter("galleryId", galleryId)
-      .setMaxResults(1)
-      .setFirstResult(0);
-      
-      List<Gallery> foundObjs =  query.list();
-      if (foundObjs.size() > 0)
-      {
-         Gallery gallery = foundObjs.get(0);
-         return gallery;
-      }
-      
-      return null;
+      return getUserGallery(session, galleryId, ownerId);
    }
    
    @Override
@@ -228,5 +221,25 @@ public class ImageGalleryRepositoryImpl
          
          session.update(gallery);
       }
+   }
+   
+   private Gallery getUserGallery(Session session, String galleryId, String ownerId)
+   {
+      Query query = session.createQuery(
+         "select gallery from Gallery gallery where gallery.owner.id = :ownerId and gallery.id = :galleryId"
+         + " order by gallery.createDate desc"
+      ).setParameter("ownerId", ownerId)
+      .setParameter("galleryId", galleryId)
+      .setMaxResults(1)
+      .setFirstResult(0);
+      
+      List<Gallery> foundObjs =  query.list();
+      if (foundObjs.size() > 0)
+      {
+         Gallery gallery = foundObjs.get(0);
+         return gallery;
+      }
+      
+      return null;
    }
 }

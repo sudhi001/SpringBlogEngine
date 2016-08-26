@@ -29,11 +29,15 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.apache.log4j.*;
+
 @Service
 @PropertySource("classpath:/site.properties")
 public class UserImageGalleryServiceImpl
    implements UserImageGalleryService
 {
+   private static Logger _logger = LogManager.getLogger(UserImageGalleryServiceImpl.class);
+   
    @Autowired
    private ImageGalleryRepository _imageGalleryRepo;
    
@@ -188,10 +192,13 @@ public class UserImageGalleryServiceImpl
             WebAppException.ErrorType.FUNCTIONAL, e);       
       }
       
-      Gallery galleryToAttach = 
+      _logger.info(galleryId);
+      
+      /*Gallery galleryToAttach = 
       _imageGalleryRepo.getUserGallery(imageOwner.getId(), galleryId);
       if (galleryToAttach != null)
       {
+         _logger.info("gallery is not null");
          image.getAssociatedGalleries().add(galleryToAttach);
       }
       else
@@ -199,10 +206,19 @@ public class UserImageGalleryServiceImpl
          throw new WebAppException(
             String.format("Unable to find gallery with id [%s]", galleryId),
             WebAppException.ErrorType.FUNCTIONAL); 
-      }
+      }*/
       
-      // save it to DB.
-	   _imageGalleryRepo.saveImage(image);
+      try
+      {
+         // save it to DB.
+   	   _imageGalleryRepo.saveImage(image, galleryId, imageOwner.getId());
+      }
+      catch(Exception e)
+      {
+         throw new WebAppException(
+            String.format("Unable to add new image [%s] to gallery with id [%s]", image.getId(), galleryId),
+            WebAppException.ErrorType.FUNCTIONAL); 
+      }
    }
    
    @Override

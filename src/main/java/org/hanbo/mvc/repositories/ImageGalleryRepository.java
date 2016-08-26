@@ -7,7 +7,7 @@ import org.hanbo.mvc.entities.Image;
 
 public interface ImageGalleryRepository
 {
-   void saveImage(Image image);
+   void saveImage(Image image, String galleryId, String ownerId);
  
    long getUserImagesCount(String ownerId);
    
