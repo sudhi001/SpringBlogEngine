@@ -4,7 +4,6 @@
 <tiles:insertDefinition name="defaultTemplate">
   <tiles:putAttribute name="cssContent">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/jasny/css/jasny-bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/lightbox2/css/lightbox.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/custom/index.css">
   </tiles:putAttribute>
 
@@ -51,19 +50,19 @@
                  &nbsp;
                  <c:choose>
                     <c:when test="${galleryDetail.isGalleryVisible()}">
-                 	   <button class="btn btn-sm btn-danger" onclick="showGallery('${galleryDetail.getGalleryId()}', false)"><span class="glyphicon glyphicon-eye-close"></span></button>
+                 	   <button class="btn btn-sm btn-danger" onclick="showGallery('${pageContext.request.contextPath}',  '${galleryDetail.getGalleryId()}', false)"><span class="glyphicon glyphicon-eye-close"></span></button>
                  	</c:when>
                  	<c:otherwise>
-                 	   <button class="btn btn-sm btn-success" onclick="showGallery('${galleryDetail.getGalleryId()}', true)"><span class="glyphicon glyphicon-eye-open"></span></button>
+                 	   <button class="btn btn-sm btn-success" onclick="showGallery('${pageContext.request.contextPath}', '${galleryDetail.getGalleryId()}', true)"><span class="glyphicon glyphicon-eye-open"></span></button>
                  	</c:otherwise>
                  </c:choose>
                  &nbsp;
                  <c:choose>
                     <c:when test="${galleryDetail.isGalleryActive()}">
-                 	   <button class="btn btn-sm btn-danger" onclick="setGalleryActive('${galleryDetail.getGalleryId()}', false)"><span class="glyphicon glyphicon-remove-circle"></span></button>
+                 	   <button class="btn btn-sm btn-danger" onclick="setGalleryActive('${pageContext.request.contextPath}', '${galleryDetail.getGalleryId()}', false)"><span class="glyphicon glyphicon-remove-circle"></span></button>
                  	</c:when>
                  	<c:otherwise>
-                 	   <button class="btn btn-sm btn-success" onclick="setGalleryActive('${galleryDetail.getGalleryId()}', true)"><span class="glyphicon glyphicon-ok-circle"></span></button>
+                 	   <button class="btn btn-sm btn-success" onclick="setGalleryActive('${pageContext.request.contextPath}', '${galleryDetail.getGalleryId()}', true)"><span class="glyphicon glyphicon-ok-circle"></span></button>
                  	</c:otherwise>
                  </c:choose>
               </div>
@@ -210,177 +209,8 @@
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/jasny/js/jasny-bootstrap.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/lightbox2/js/lightbox.min.js"></script>
-    
-    <script type="text/javascript">
-       var openImageUploadDlg = function (galleryId)
-       {
-    	  resetAddImageDlg();
-    	  $("#uploadImageDlg #uploadImageGalleryId").val(galleryId);
-          $("#uploadImageDlg").modal("show");
-       };
-       
-       $('#uploadImageDlg').on('hidden.bs.modal', function () {
-          resetAddImageDlg();
-       });
-       
-       var resetAddImageDlg = function ()
-       {
-     	  $("#uploadImageDlg #uploadError").html("");
-          $("#uploadImageDlg #uploadError").hide();
-    	   
-    	  $("#uploadImageDlg #uploadImageGalleryId").val("");
-          $("#uploadImageDlg #imageTitle").val("");
-          $("#uploadImageDlg #imageKeywords").val("");
-          $("#uploadImageDlg #imageUploadControl").fileinput("clear");
-       };
-       
-       var validateUploadAndSubmit = function()
-       {
-          var isValid = true;
-          var errorMsg = "";
-     	  var imageTitleVal = $("#uploadImageDlg #imageTitle").val();
-          if (imageTitleVal == null || imageTitle.length <= 0)
-          {
-            errorMsg = "the title of the image is empty";
-     	    isValid = false;
-          }
-          else if (imageTitleVal != null && imageTitle.length > 96)
-          {
-            errorMsg = "the title of the image is too long";
-            isValid = false;
-          }
-     	  
-     	  var imageKeywords = $("#uploadImageDlg #imageKeywords").val();
-          if (imageKeywords != null && imageKeywords.length > 128)
-          {
-             errorMsg = "the keywords of the image is too long";
-             isValid = false;
-          }
-           
-     	  var imageToUpload = $("#uploadImageDlg #imageToUpload").val();
-          if (imageToUpload == null || imageToUpload.length <= 0)
-          {
-             errorMsg = "the file name of the image is empty";
-             isValid = false;
-          }
-           
-          if (!isValid)
-          {
-             $("#uploadImageDlg #uploadError").html(errorMsg);
-             $("#uploadImageDlg #uploadError").show();
-          }
-          else
-          {
-             $("#uploadImageDlg #uploadImageForm")[0].submit();
-          }
-       };
-       
-       ///////////////////////////////
-
-       var openAddGalleryDlg = function ()
-       {
-          resetAddGalleryDlg();
-          $("#addGalleryDlg").modal("show");
-       };
-       
-       $('#addGalleryDlg').on('hidden.bs.modal', function () {
-           resetAddGalleryDlg();
-       });
-       
-       var resetAddGalleryDlg = function ()
-       {
-      	  $("#addGalleryDlg #addGalleryError").html("");
-          $("#addGalleryDlg #addGalleryError").hide();
-          
-          $("#addGalleryDlg #galleryTitle").val("");
-          $("#addGalleryDlg #galleryKeywords").val("");
-          $("#addGalleryDlg #galleryDesc").val("");
-       }
-       
-       var validateAddGalleryAndSubmit = function()
-       {
-          var isValid = true;
-          var errorMsg = "";
-     	  var gallerName = $("#addGalleryDlg #galleryTitle").val();
-          if (gallerName == null || gallerName.length <= 0)
-          {
-            errorMsg = "the title of the gallery is empty";
-     	    isValid = false;
-          }
-          else if (gallerName != null && gallerName.length > 96)
-          {
-            errorMsg = "the title of the gallery is too long";
-            isValid = false;
-          }
-     	  
-     	  var galleryDesc = $("#addGalleryDlg #galleryDesc").val();
-          if (galleryDesc != null && galleryDesc.length > 3072)
-          {
-             errorMsg = "the description of the gallery is too long";
-             isValid = false;
-          }
-           
-     	  var galleryKeywords = $("#addGalleryDlg #galleryKeywords").val();
-          if (galleryKeywords != null && galleryKeywords.length > 128)
-          {
-             errorMsg = "the keywords for gallery is too long";
-             isValid = false;
-          }
-           
-          if (!isValid)
-          {
-             $("#addGalleryDlg #addGalleryError").html(errorMsg);
-             $("#addGalleryDlg #addGalleryError").show();
-          }
-          else
-          {
-             $("#addGalleryDlg #addGalleryForm")[0].submit();
-          }
-       };
-       
-       var showGallery = function (galleryId, visibility) 
-       {
-    	   if (galleryId == null || visibility == null)
-           {
-              return;
-           }
-    	   
-    	   $.ajax({
-              type: "GET",
-              url: "${pageContext.request.contextPath}/admin/galleries/showGallery?galleryId=" + galleryId + "&show=" + visibility,
-              xhrFields: {
-                 withCredentials: true
-              },
-              success: function(data) {
-                 location.reload(true);
-              },
-              error: function() {
-              }
-           });
-       }
-
-       var setGalleryActive = function (galleryId, active) 
-       {
-    	   if (galleryId == null || active == null)
-           {
-              return;
-           }
-    	   
-    	   $.ajax({
-              type: "GET",
-              url: "${pageContext.request.contextPath}/admin/galleries/setGalleryActive?galleryId=" + galleryId + "&enable=" + active,
-              xhrFields: {
-                 withCredentials: true
-              },
-              success: function(data) {
-                 location.reload(true);
-              },
-              error: function() {
-              }
-           });
-       }
-     </script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/uploadModal.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/addGalleryModal.js"></script>
   </tiles:putAttribute>
 
 </tiles:insertDefinition>
