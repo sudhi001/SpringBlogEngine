@@ -3,20 +3,18 @@ package org.hanbo.mvc.services;
 import java.io.OutputStream;
 
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
-import org.hanbo.mvc.models.ImageDisplayPageDataModel;
+import org.hanbo.mvc.models.GalleyImagesPageDisplayDataModel;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserImageGalleryService
 {
-   ImageDisplayPageDataModel getUserImages(String ownerId, int pageIdx);
-
    GalleryDisplayPageDataModel getUserGalleries(String ownerId, int pageIdx);
 
+   GalleyImagesPageDisplayDataModel getUserGalleryImages(String ownerId, String galleryId, int pageIdx);
+   
    void uploadImage(String userId, String galleryId, String imageTitle,
       String imageKeywords, MultipartFile imageToUpload);
-   
-   boolean imageSnapshotAvailable(String imageId);
-   
+      
    boolean downloadImage(String imageId, String type,
       OutputStream outputStream) throws Exception;
    

@@ -21,6 +21,10 @@ public interface ImageGalleryRepository
    
    Gallery getUserGallery(String ownerId, String galleryId);
 
+   long getGalleryImagesCount(String ownerId, String galleryId);
+   
+   List<Image> getGalleryImages(String ownerId, String galleryId, int pageIdx, int itemsCount);
+   
    void setGalleryVisibility(String ownerId, String galleryId, boolean showGallery);
 
    void enableGallery(String ownerId, String galleryId, boolean enableGallery);

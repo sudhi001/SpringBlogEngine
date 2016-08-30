@@ -13,6 +13,7 @@ import org.hanbo.mvc.entities.LoginUser;
 import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.GalleryDisplayDetail;
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
+import org.hanbo.mvc.models.GalleyImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.hanbo.mvc.models.ImageDisplayPageDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
@@ -47,7 +48,7 @@ public class UserImageGalleryServiceImpl
    @Autowired
    private Environment configValues;
    
-   public ImageDisplayPageDataModel getUserImages(String ownerId, int pageIdx)
+   /*public ImageDisplayPageDataModel getUserImages(String ownerId, int pageIdx)
    {
       int itemsCount = getConfigValue_ImagesPerPage();
       
@@ -74,7 +75,7 @@ public class UserImageGalleryServiceImpl
       }
       
       return retVal;
-   }
+   }*/
    
    @Override
    public GalleryDisplayPageDataModel getUserGalleries(String ownerId, int pageIdx)
@@ -101,6 +102,29 @@ public class UserImageGalleryServiceImpl
          retVal.setListItems(listOfGalleriesDisplay);
          ItemListPageDataModel.<GalleryDisplayPageDataModel>createPageModel(
             retVal, galleryList.size(), galleriesCount, pageIdx, itemsCount);
+      }
+      
+      return retVal;
+   }
+   
+   @Override
+   public GalleyImagesPageDisplayDataModel getUserGalleryImages(String ownerId, String galleryId, int pageIdx)
+   {
+      GalleyImagesPageDisplayDataModel retVal = null;
+      
+      int itemsCount = getConfigValue_ImagesPerPage();
+      
+      Gallery gallery = this._imageGalleryRepo.getUserGallery(ownerId, galleryId);
+      if (gallery != null)
+      {
+         List<Image> galleryImages
+            = this._imageGalleryRepo.getGalleryImages(ownerId, galleryId, pageIdx, itemsCount);
+         
+         if (galleryImages != null && galleryImages.size() > 0)
+         {
+            retVal = new GalleyImagesPageDisplayDataModel();
+            
+         }
       }
       
       return retVal;
@@ -219,33 +243,6 @@ public class UserImageGalleryServiceImpl
             String.format("Unable to add new image [%s] to gallery with id [%s]", image.getId(), galleryId),
             WebAppException.ErrorType.FUNCTIONAL); 
       }
-   }
-   
-   @Override
-   public boolean imageSnapshotAvailable(String imageId)
-   {
-      String imagePath =imageFilePath(imageId, false);
-      String tempFileName = imageId.toLowerCase() + "-snap.";
-
-      final String fileToSearch = tempFileName;
-      
-      File dirFile = new File(imagePath);
-      if (dirFile.exists())
-      {
-         File[] filesFound = dirFile.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-               return name.contains(fileToSearch);
-            }
-         });
-         
-         if (filesFound.length > 0)
-         {
-            return true;
-         }
-      }
-
-      return false;
    }
    
    @Override

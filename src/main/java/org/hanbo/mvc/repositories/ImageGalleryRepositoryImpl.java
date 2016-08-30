@@ -1,5 +1,6 @@
 package org.hanbo.mvc.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Gallery;
@@ -241,5 +242,55 @@ public class ImageGalleryRepositoryImpl
       }
       
       return null;
+   }
+
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public long getGalleryImagesCount(String ownerId, String galleryId)
+   {
+      Session session = this._sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select count(image) from Gallery gallery join gallery.galleyImages image"
+         + " where gallery.id = :galleryId and gallery.owner.id = :ownerId order by image.uploadDate desc"
+      ).setParameter("ownerId", ownerId)
+      .setParameter("galleryId", galleryId)
+      .setMaxResults(1)
+      .setFirstResult(0);
+      
+      List<Long> imagesCount = query.list();
+      if (imagesCount != null && imagesCount.size() > 0)
+      {
+         return imagesCount.get(0);
+      }
+      
+      return 0L;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<Image> getGalleryImages(String ownerId, String galleryId, int pageIdx, int itemsCount)
+   {
+      Session session = this._sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select image from Gallery gallery join gallery.galleyImages image"
+         + " where gallery.id = :galleryId and gallery.owner.id = :ownerId order by image.uploadDate desc"
+      ).setParameter("ownerId", ownerId)
+      .setParameter("galleryId", galleryId)
+      .setMaxResults(itemsCount)
+      .setFirstResult(pageIdx * itemsCount);
+      
+      List<Image> foundImages = query.list();
+      if (foundImages != null && foundImages.size() > 0)
+      {
+         return foundImages;
+      }
+      
+      return new ArrayList<Image>();
    }
 }

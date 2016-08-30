@@ -10,6 +10,10 @@ public class ImageDisplayDetail
    
    private String imageFilePath;
    
+   private String imageTitle;
+   
+   private String imageKeywords;
+   
    private String imageThumbFilePath;
    
    private Date uploadDate;
@@ -24,6 +28,25 @@ public class ImageDisplayDetail
    public void setImageId(String imageId)
    {
       this.imageId = imageId;
+   }
+   
+   public String getImageTitle() {
+      return imageTitle;
+   }
+
+   public void setImageTitle(String imageTitle)
+   {
+      this.imageTitle = imageTitle;
+   }
+
+   public String getImageKeywords()
+   {
+      return imageKeywords;
+   }
+
+   public void setImageKeywords(String imageKeywords)
+   {
+      this.imageKeywords = imageKeywords;
    }
 
    public String getImageFilePath()

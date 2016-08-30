@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
-import org.hanbo.mvc.models.ImageDisplayPageDataModel;
+import org.hanbo.mvc.models.GalleyImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.json.GenericJsonResponse;
@@ -34,32 +34,7 @@ public class UserImageGalleryActions
    
    @Autowired
    private UserImageGalleryService _imageGalleryService;
-   
-   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-   @RequestMapping(value = "/admin/images/allMyImages", method=RequestMethod.GET)
-   public ModelAndView allMyImages()
-   {
-      UserPrincipalDataModel loginUser = this._util.getLoginUser();
-      if (loginUser == null)
-      {
-         return _util.createErorrPageViewModel(
-            "User Authorization Failure", "User cannot be found.");
-      }
 
-      ImageDisplayPageDataModel pageDataModel =
-      _imageGalleryService.getUserImages(loginUser.getUserId(), 0);
-      
-      PageMetadata pageMetadata
-         = _util.creatPageMetadata("All My Images");
-      ModelAndView retVal
-         = _util.getDefaultModelAndView(
-              "userImageList", pageMetadata
-           );
-      retVal.addObject("userImagesListPageModel", pageDataModel);
-      
-      return retVal;
-   }
-   
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/galleries/allMyGalleries/{pageIdx}", method=RequestMethod.GET)
    public ModelAndView allMyGalleries(
@@ -87,6 +62,35 @@ public class UserImageGalleryActions
          = _util.getDefaultModelAndView(
               "userGalleriesList", pageMetadata);
       retVal.addObject("userGalleriesListPageModel", pageDataModel);
+      
+      return retVal;
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/gallery/{galleryId}/page/{pageIdx}", method=RequestMethod.GET)
+   public ModelAndView galleryImagesPage(
+      @PathVariable("galleryId")
+      String galleryId,
+      @PathVariable("pageIdx")
+      int pageIdx
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+      
+      GalleyImagesPageDisplayDataModel pageDisplayData
+         = _imageGalleryService.getUserGalleryImages(loginUser.getUserId(), galleryId, pageIdx);
+      
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata("All My Galleries");
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+              "userGalleriesList", pageMetadata);
+      retVal.addObject("userGalleryImagesListPageModel", pageDisplayData);
       
       return retVal;
    }
@@ -218,35 +222,6 @@ public class UserImageGalleryActions
       );
    }
    
-   /*
-   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-   @RequestMapping(value = "/admin/images/addImage", method=RequestMethod.POST)
-   public ModelAndView addImage(
-      @RequestParam("imageTitle")
-      String imageTitle,
-      @RequestParam("imageKeywords")
-      String imageKeywords,
-      @RequestParam("imageToUpload")
-      MultipartFile imageToUpload,
-      @RequestParam("snapshotToUpload")
-      MultipartFile snapshotToUpload
-   )
-   {
-      UserPrincipalDataModel loginUser = this._util.getLoginUser();
-      if (loginUser == null)
-      {
-         return _util.createErorrPageViewModel(
-            "User Authorization Failure", "User cannot be found.");
-      }
-      
-      String userId = loginUser.getUserId();
-      
-      _imageGalleryService.uploadImage(userId, imageTitle, imageKeywords,
-         imageToUpload, snapshotToUpload);
-      
-      return _util.createRedirectPageView("redirect:/admin/images/allMyImages");
-   }*/
-   
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/secure/image-thumb/{imageId}", method=RequestMethod.GET)
    public void secureImageThumb(
@@ -255,14 +230,7 @@ public class UserImageGalleryActions
       HttpServletResponse response
    )
    {
-      if (_imageGalleryService.imageSnapshotAvailable(imageId))
-      {
-         downloadImage(imageId, "snap", response);
-      }
-      else
-      {
-         downloadImage(imageId, "thumb", response);
-      }
+      downloadImage(imageId, "thumb", response);
    }
 
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")

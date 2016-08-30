@@ -8,7 +8,7 @@
   </tiles:putAttribute>
 
   <tiles:putAttribute name="body">
-    <h3>Manage my Galleries/Images</h3>
+    <h3>Gallery: [galleryName]</h3>
     <hr>
     
     <div class="row">
