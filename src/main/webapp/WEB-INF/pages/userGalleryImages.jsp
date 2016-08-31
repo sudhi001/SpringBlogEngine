@@ -8,23 +8,25 @@
   </tiles:putAttribute>
 
   <tiles:putAttribute name="body">
-    <h3>Gallery: [galleryName]</h3>
+    <h3>Gallery: ${userGalleryImagesPageModel.getGalleryDetail().getGalleryTitle()}</h3>
     <hr>
     
     <div class="row">
        <div class="col-md-8">
-          <span class="label label-info">You have [] image(s) in this gallery.</span>
+          <span class="label label-info">You have ${userGalleryImagesPageModel.getTotalElementsCount()} image(s) in this gallery.</span>
        </div>
        <div class="col-md-4 text-right">
+          <button class="btn btn-default">Add Image</button>
        </div>
     </div>
     
-    <!--<c:choose>
-      <c:when test="${!userImagesListPageModel.isDataModelEmpty()}">
+    <c:choose>
+      <c:when test="${!userGalleryImagesPageModel.isDataModelEmpty()}">
         <div class="row">
-          <c:forEach  items="${userImagesListPageModel.getListItems()}" var="imageItem">
-          <div class="col-md-3">
-            <a class="img-popup" href="${pageContext.request.contextPath}/secure/image-full/${imageItem.getImageId()}">
+          <c:forEach  items="${userGalleryImagesPageModel.getImagesPageList()}" var="imageItem">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <!-- <a  href="${pageContext.request.contextPath}/secure/image-full/${imageItem.getImageId()}"> -->
+            <a href="${pageContext.request.contextPath}/admin/image/${imageItem.getImageId()}">
               <img src="${pageContext.request.contextPath}/secure/image-thumb/${imageItem.getImageId()}" width="100%" height="100%">
             </a>
           </div>
@@ -38,7 +40,7 @@
           </div>
         </div>
       </c:otherwise>
-    </c:choose>-->
+    </c:choose>
     
     <div id="uploadImageDlg" class="modal fade" tabindex="-1" role="dialog">
        <div class="modal-dialog">

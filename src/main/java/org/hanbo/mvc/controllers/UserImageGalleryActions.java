@@ -86,11 +86,11 @@ public class UserImageGalleryActions
          = _imageGalleryService.getUserGalleryImages(loginUser.getUserId(), galleryId, pageIdx);
       
       PageMetadata pageMetadata
-         = _util.creatPageMetadata("All My Galleries");
+         = _util.creatPageMetadata("Gallery Images");
       ModelAndView retVal
          = _util.getDefaultModelAndView(
-              "userGalleriesList", pageMetadata);
-      retVal.addObject("userGalleryImagesListPageModel", pageDisplayData);
+              "userGalleryImages", pageMetadata);
+      retVal.addObject("userGalleryImagesPageModel", pageDisplayData);
       
       return retVal;
    }
