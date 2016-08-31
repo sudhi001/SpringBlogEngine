@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
-import org.hanbo.mvc.models.GalleyImagesPageDisplayDataModel;
+import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.json.GenericJsonResponse;
@@ -82,7 +82,7 @@ public class UserImageGalleryActions
             "User Authorization Failure", "User cannot be found.");
       }
       
-      GalleyImagesPageDisplayDataModel pageDisplayData
+      GalleryImagesPageDisplayDataModel pageDisplayData
          = _imageGalleryService.getUserGalleryImages(loginUser.getUserId(), galleryId, pageIdx);
       
       PageMetadata pageMetadata

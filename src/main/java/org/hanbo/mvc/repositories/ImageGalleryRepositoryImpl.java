@@ -238,6 +238,8 @@ public class ImageGalleryRepositoryImpl
       if (foundObjs.size() > 0)
       {
          Gallery gallery = foundObjs.get(0);
+         gallery.getOwner().getId();
+         gallery.getOwner().getUserName();
          return gallery;
       }
       
@@ -253,7 +255,7 @@ public class ImageGalleryRepositoryImpl
    {
       Session session = this._sessionFactory.getCurrentSession();
       Query query = session.createQuery(
-         "select count(image) from Gallery gallery join gallery.galleyImages image"
+         "select count(image) from Gallery gallery join gallery.galleryImages image"
          + " where gallery.id = :galleryId and gallery.owner.id = :ownerId order by image.uploadDate desc"
       ).setParameter("ownerId", ownerId)
       .setParameter("galleryId", galleryId)
@@ -278,7 +280,7 @@ public class ImageGalleryRepositoryImpl
    {
       Session session = this._sessionFactory.getCurrentSession();
       Query query = session.createQuery(
-         "select image from Gallery gallery join gallery.galleyImages image"
+         "select image from Gallery gallery join gallery.galleryImages image"
          + " where gallery.id = :galleryId and gallery.owner.id = :ownerId order by image.uploadDate desc"
       ).setParameter("ownerId", ownerId)
       .setParameter("galleryId", galleryId)
@@ -288,6 +290,11 @@ public class ImageGalleryRepositoryImpl
       List<Image> foundImages = query.list();
       if (foundImages != null && foundImages.size() > 0)
       {
+         for (Image img : foundImages)
+         {
+            img.getOwner().getId();
+            img.getOwner().getUserName();
+         }
          return foundImages;
       }
       

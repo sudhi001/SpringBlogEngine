@@ -36,7 +36,7 @@
             </td>
             <td>
                <p>
-                  <a href="${pageContext.request.contextPath}/admin/gallery/${galleryDetail.getGalleryId()}">${galleryDetail.getGalleryTitle()}</a>
+                  <a href="${pageContext.request.contextPath}/admin/gallery/${galleryDetail.getGalleryId()}/page/0">${galleryDetail.getGalleryTitle()}</a>
                </p>
             </td>
             <td>

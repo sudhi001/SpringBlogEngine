@@ -37,7 +37,7 @@ public class ImageDataModelEntityMapping
       return retVal;
    }
    
-   public static GalleryDisplayDetail entityToImageDisplayDetail(Gallery gallery)
+   public static GalleryDisplayDetail entityToGalleryDisplayDetail(Gallery gallery)
    {
       GalleryDisplayDetail retVal = new GalleryDisplayDetail();
       
@@ -60,7 +60,7 @@ public class ImageDataModelEntityMapping
       List<GalleryDisplayDetail> retVal = new ArrayList<GalleryDisplayDetail>();
       for (Gallery gal : entities)
       {
-         GalleryDisplayDetail obj = entityToImageDisplayDetail(gal);
+         GalleryDisplayDetail obj = entityToGalleryDisplayDetail(gal);
          retVal.add(obj);
       }
       

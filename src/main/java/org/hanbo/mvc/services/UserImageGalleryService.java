@@ -3,14 +3,14 @@ package org.hanbo.mvc.services;
 import java.io.OutputStream;
 
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
-import org.hanbo.mvc.models.GalleyImagesPageDisplayDataModel;
+import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserImageGalleryService
 {
    GalleryDisplayPageDataModel getUserGalleries(String ownerId, int pageIdx);
 
-   GalleyImagesPageDisplayDataModel getUserGalleryImages(String ownerId, String galleryId, int pageIdx);
+   GalleryImagesPageDisplayDataModel getUserGalleryImages(String ownerId, String galleryId, int pageIdx);
    
    void uploadImage(String userId, String galleryId, String imageTitle,
       String imageKeywords, MultipartFile imageToUpload);

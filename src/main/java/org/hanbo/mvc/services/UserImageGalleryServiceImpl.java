@@ -3,6 +3,7 @@ package org.hanbo.mvc.services;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,9 +14,8 @@ import org.hanbo.mvc.entities.LoginUser;
 import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.GalleryDisplayDetail;
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
-import org.hanbo.mvc.models.GalleyImagesPageDisplayDataModel;
+import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.ImageDisplayDetail;
-import org.hanbo.mvc.models.ImageDisplayPageDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.repositories.ImageGalleryRepository;
 import org.hanbo.mvc.repositories.UsersRepository;
@@ -48,35 +48,6 @@ public class UserImageGalleryServiceImpl
    @Autowired
    private Environment configValues;
    
-   /*public ImageDisplayPageDataModel getUserImages(String ownerId, int pageIdx)
-   {
-      int itemsCount = getConfigValue_ImagesPerPage();
-      
-      List<Image> imageList = 
-      _imageGalleryRepo.getUserImages(ownerId, pageIdx, itemsCount);
-      
-      List<ImageDisplayDetail> listOfImageDisplay = 
-      ImageDataModelEntityMapping.entitiesToImageDisplayDetailList(imageList);
-      
-      ImageDisplayPageDataModel retVal = new ImageDisplayPageDataModel();
-      
-      if (imageList.size() <= 0)
-      {
-         ItemListPageDataModel.createEmptyPageDataModel(retVal);
-         return retVal;
-      }
-      else
-      {
-         int imagesCount = (int)_imageGalleryRepo.getUserImagesCount(ownerId);
-         
-         retVal.setListItems(listOfImageDisplay);
-         ItemListPageDataModel.<ImageDisplayPageDataModel>createPageModel(
-            retVal, imageList.size(), imagesCount, pageIdx, itemsCount);
-      }
-      
-      return retVal;
-   }*/
-   
    @Override
    public GalleryDisplayPageDataModel getUserGalleries(String ownerId, int pageIdx)
    {
@@ -108,22 +79,39 @@ public class UserImageGalleryServiceImpl
    }
    
    @Override
-   public GalleyImagesPageDisplayDataModel getUserGalleryImages(String ownerId, String galleryId, int pageIdx)
+   public GalleryImagesPageDisplayDataModel getUserGalleryImages(String ownerId, String galleryId, int pageIdx)
    {
-      GalleyImagesPageDisplayDataModel retVal = null;
+      GalleryImagesPageDisplayDataModel retVal = null;
       
       int itemsCount = getConfigValue_ImagesPerPage();
-      
+            
       Gallery gallery = this._imageGalleryRepo.getUserGallery(ownerId, galleryId);
       if (gallery != null)
       {
+         retVal = new GalleryImagesPageDisplayDataModel();
+         
+         GalleryDisplayDetail galleryDisplayDetail =
+         ImageDataModelEntityMapping.entityToGalleryDisplayDetail(gallery);
+         retVal.setGalleryDetail(galleryDisplayDetail);
+
+         int totalImagesCount
+            =  (int)this._imageGalleryRepo.getGalleryImagesCount(ownerId, galleryId);
+         
          List<Image> galleryImages
             = this._imageGalleryRepo.getGalleryImages(ownerId, galleryId, pageIdx, itemsCount);
          
          if (galleryImages != null && galleryImages.size() > 0)
          {
-            retVal = new GalleyImagesPageDisplayDataModel();
+            List<ImageDisplayDetail> imageDisplayDetails = 
+               ImageDataModelEntityMapping.entitiesToImageDisplayDetailList(galleryImages);
             
+            ItemListPageDataModel.createPageModel(retVal, imageDisplayDetails.size(), totalImagesCount, pageIdx, itemsCount);
+            retVal.setImagesPageList(imageDisplayDetails);
+         }
+         else
+         {
+            ItemListPageDataModel.createEmptyPageDataModel(retVal);
+            retVal.setImagesPageList(new ArrayList<ImageDisplayDetail>());
          }
       }
       

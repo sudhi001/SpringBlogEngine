@@ -3,14 +3,14 @@ package org.hanbo.mvc.models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleyImagesPageDisplayDataModel
+public class GalleryImagesPageDisplayDataModel
    extends ItemListPageDataModel
 {
    private GalleryDisplayDetail galleryDetail;
    
    private List<ImageDisplayDetail> imagesPageList;
    
-   public GalleyImagesPageDisplayDataModel()
+   public GalleryImagesPageDisplayDataModel()
    {
       setImagesPageList(new ArrayList<ImageDisplayDetail>());
    }
@@ -24,7 +24,7 @@ public class GalleyImagesPageDisplayDataModel
    {
       this.galleryDetail = galleryDetail;
    }
-
+   
    public List<ImageDisplayDetail> getImagesPageList()
    {
       return imagesPageList;
