@@ -2,12 +2,9 @@ package org.hanbo.mvc.repositories;
 
 import java.util.List;
 
-import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.entities.FileResource;
 import org.hanbo.mvc.entities.Resource;
 import org.hanbo.mvc.entities.TextResource;
-import org.hanbo.mvc.exceptions.WebAppException;
-import org.hanbo.mvc.utilities.IdUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
