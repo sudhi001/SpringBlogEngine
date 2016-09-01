@@ -18,7 +18,11 @@ public class ImageDisplayDetail
    
    private Date uploadDate;
    
-   private boolean imageActive; 
+   private boolean imageActive;
+   
+   private String ownerId;
+   
+   private String ownerUserName;
 
    public String getImageId()
    {
@@ -93,5 +97,25 @@ public class ImageDisplayDetail
    public void setImageActive(boolean imageActive)
    {
       this.imageActive = imageActive;
+   }
+
+   public String getOwnerId()
+   {
+      return ownerId;
+   }
+
+   public void setOwnerId(String ownerId)
+   {
+      this.ownerId = ownerId;
+   }
+
+   public String getOwnerUserName()
+   {
+      return ownerUserName;
+   }
+
+   public void setOwnerUserName(String ownerUserName)
+   {
+      this.ownerUserName = ownerUserName;
    }
 }

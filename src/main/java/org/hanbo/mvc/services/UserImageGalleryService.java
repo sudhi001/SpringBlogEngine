@@ -4,6 +4,7 @@ import java.io.OutputStream;
 
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
 import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
+import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserImageGalleryService
@@ -24,4 +25,6 @@ public interface UserImageGalleryService
    void setGalleryVisibility(String ownerId, String galleryId, boolean showGallery);
 
    void enableGallery(String ownerId, String galleryId, boolean enableGallery);
+   
+   ImageDisplayDetail getUserImageDetail(String imageId, String ownerId);
 }

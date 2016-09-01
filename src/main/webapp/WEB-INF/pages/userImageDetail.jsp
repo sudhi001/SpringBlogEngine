@@ -7,7 +7,7 @@
 
   <tiles:putAttribute name="body">
      <div class="content-box">
-        <p>This is the Index Page.</p>
+        <p>This is the image detail page.</p>
      </div>
      
      <!-- 

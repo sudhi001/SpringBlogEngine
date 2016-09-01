@@ -12,10 +12,10 @@
     <hr>
     
     <div class="row">
-       <div class="col-md-8">
+       <div class="col-sm-12 col-md-6 col-lg-8">
           <span class="label label-info">You have ${userGalleryImagesPageModel.getTotalElementsCount()} image(s) in this gallery.</span>
        </div>
-       <div class="col-md-4 text-right">
+       <div class="col-sm-12 col-md-6 col-lg-4 text-right">
           <button class="btn btn-default">Add Image</button>
        </div>
     </div>

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
 import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
+import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.json.GenericJsonResponse;
@@ -85,12 +86,50 @@ public class UserImageGalleryActions
       GalleryImagesPageDisplayDataModel pageDisplayData
          = _imageGalleryService.getUserGalleryImages(loginUser.getUserId(), galleryId, pageIdx);
       
+      if (pageDisplayData == null)
+      {
+         return _util.createErorrPageViewModel(
+            "Not Found", "The gallery is not found.");
+      }
+      
       PageMetadata pageMetadata
          = _util.creatPageMetadata("Gallery Images");
       ModelAndView retVal
          = _util.getDefaultModelAndView(
               "userGalleryImages", pageMetadata);
       retVal.addObject("userGalleryImagesPageModel", pageDisplayData);
+      
+      return retVal;
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/image/{imageId}", method=RequestMethod.GET)
+   public ModelAndView showImageDetail(
+      @PathVariable("imageId")
+      String imageId
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+      
+      ImageDisplayDetail imageDetail
+         = _imageGalleryService.getUserImageDetail(imageId, loginUser.getUserId());
+      if (imageDetail == null)
+      {
+         return _util.createErorrPageViewModel(
+            "Not Found", "The image is not found.");
+      }
+      
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata("");
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+              "userImageDetail", pageMetadata);
+      retVal.addObject("imageDetail", imageDetail);
       
       return retVal;
    }
@@ -114,7 +153,7 @@ public class UserImageGalleryActions
       }
 
       _imageGalleryService.addGallery(loginUser.getUserId(),
-            galleryTitle, galleryKeywords, galleryDesc);
+         galleryTitle, galleryKeywords, galleryDesc);
       
       return _util.createRedirectPageView("redirect:/admin/galleries/allMyGalleries/0");
    }

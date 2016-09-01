@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -299,5 +298,34 @@ public class ImageGalleryRepositoryImpl
       }
       
       return new ArrayList<Image>();
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public Image getUserImage(String imageId, String ownerId)
+   {
+      Session session = this._sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select image from Image image where image.id = :imageId "
+         + "and image.owner.id = :ownerId"
+      ).setParameter("ownerId", ownerId)
+       .setParameter("imageId", imageId)
+       .setMaxResults(1)
+       .setFirstResult(0);
+
+      List<Image> foundImages = query.list();
+      if (foundImages != null && foundImages.size() > 0)
+      {
+         Image retImg = foundImages.get(0);
+         retImg.getOwner().getId();
+         retImg.getOwner().getUserName();
+         
+         return retImg;
+      }
+      
+      return null;
    }
 }

@@ -206,20 +206,6 @@ public class UserImageGalleryServiceImpl
       
       _logger.info(galleryId);
       
-      /*Gallery galleryToAttach = 
-      _imageGalleryRepo.getUserGallery(imageOwner.getId(), galleryId);
-      if (galleryToAttach != null)
-      {
-         _logger.info("gallery is not null");
-         image.getAssociatedGalleries().add(galleryToAttach);
-      }
-      else
-      {
-         throw new WebAppException(
-            String.format("Unable to find gallery with id [%s]", galleryId),
-            WebAppException.ErrorType.FUNCTIONAL); 
-      }*/
-      
       try
       {
          // save it to DB.
@@ -331,6 +317,36 @@ public class UserImageGalleryServiceImpl
       }
       
       this._imageGalleryRepo.enableGallery(ownerId, galleryId, enableGallery);
+   }
+   
+   public ImageDisplayDetail getUserImageDetail(String imageId, String ownerId)
+   {
+      if (StringUtils.isEmpty(ownerId))
+      {
+         throw new WebAppException(
+            "the gallery owner id is null or empty",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(imageId))
+      {
+         throw new WebAppException(
+            "the image id is null or empty",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      Image imageFound = 
+      this._imageGalleryRepo.getUserImage(imageId, ownerId);
+      
+      if (imageFound != null)
+      {
+         ImageDisplayDetail retVal = 
+         ImageDataModelEntityMapping.entityToImageDisplayDetail(imageFound);
+         
+         return retVal;
+      }
+      
+      return null;
    }
    
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)

@@ -15,10 +15,14 @@ public class ImageDataModelEntityMapping
       ImageDisplayDetail retVal = new  ImageDisplayDetail();
       
       retVal.setImageId(img.getId());
+      retVal.setImageTitle(img.getTitle());
+      retVal.setImageKeywords(img.getKeywords());
       retVal.setUpdloadDate(img.getUploadDate());
       retVal.setImageActive(img.isActive());
       retVal.setImageFilePath(img.getFilePath());
-      retVal.setImageThumbFilePath(img.getThumbnailFilePath()); 
+      retVal.setImageThumbFilePath(img.getThumbnailFilePath());
+      retVal.setOwnerId(img.getOwner().getId());
+      retVal.setOwnerUserName(img.getOwner().getUserName());
       
       return retVal;
    }
