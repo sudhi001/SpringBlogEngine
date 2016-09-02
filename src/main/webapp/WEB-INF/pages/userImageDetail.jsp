@@ -7,7 +7,19 @@
 
   <tiles:putAttribute name="body">
      <div class="content-box">
-        <p>This is the image detail page.</p>
+       <div class="box-header with-border">
+         <div class="user-block">
+           <span class="username">${imageDetail.getImageTitle()}</span>
+           <span class="description">Shared publicly - 7:30 PM Today</span>
+         </div>
+       </div>
+       <div class="box-body" style="display: block;">
+            <img class="img-responsive pad" style="text-align: center;" width="100%" height="100%" src="${pageContext.request.contextPath}/secure/image-full/${imageDetail.getImageId()}" alt="Photo">
+         <p>I took this photo this morning. What do you guys think?</p>
+         <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> Share</button>
+         <button type="button" class="btn btn-default btn-xs"><i class="fa fa-thumbs-o-up"></i> Like</button>
+         <span class="pull-right text-muted">127 likes - 3 comments</span>
+       </div>
      </div>
      
      <!-- 

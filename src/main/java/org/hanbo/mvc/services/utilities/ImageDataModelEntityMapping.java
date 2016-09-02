@@ -23,6 +23,10 @@ public class ImageDataModelEntityMapping
       retVal.setImageThumbFilePath(img.getThumbnailFilePath());
       retVal.setOwnerId(img.getOwner().getId());
       retVal.setOwnerUserName(img.getOwner().getUserName());
+      retVal.setImageWidth(img.getFileSizeX());
+      retVal.setImageHeight(img.getFileSizeY());
+      retVal.setImageDisplayWidth(0);
+      retVal.setImageDisplayHeight(0);
       
       return retVal;
    }

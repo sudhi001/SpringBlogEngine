@@ -145,6 +145,7 @@ public class UserImageGalleryServiceImpl
 	   
 	   Image image = new Image();
 	   image.setId(imageId);
+	   image.setTitle(imageTitle);
 	   image.setFilePath(fileShortName);
 	   image.setImageName(imageId + fileExt);
 	   image.setKeywords(imageKeywords);
@@ -342,7 +343,7 @@ public class UserImageGalleryServiceImpl
       {
          ImageDisplayDetail retVal = 
          ImageDataModelEntityMapping.entityToImageDisplayDetail(imageFound);
-         
+                  
          return retVal;
       }
       
@@ -444,7 +445,7 @@ public class UserImageGalleryServiceImpl
    
    private int getConfigValue_ImagesPerPage()
    {
-      String itemsCount = configValues.getProperty("OwnerImagesPerPage");  
+      String itemsCount = configValues.getProperty("OwnerImagesPerPage");
       int itemsCountVal = Integer.parseInt(itemsCount);
 
       return itemsCountVal;

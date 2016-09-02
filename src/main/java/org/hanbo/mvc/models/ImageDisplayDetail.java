@@ -18,6 +18,14 @@ public class ImageDisplayDetail
    
    private Date uploadDate;
    
+   private int imageWidth;
+   
+   private int imageHeight;
+   
+   private int imageDisplayWidth;
+   
+   private int imageDisplayHeight;
+   
    private boolean imageActive;
    
    private String ownerId;
@@ -117,5 +125,45 @@ public class ImageDisplayDetail
    public void setOwnerUserName(String ownerUserName)
    {
       this.ownerUserName = ownerUserName;
+   }
+
+   public int getImageWidth()
+   {
+      return imageWidth;
+   }
+
+   public void setImageWidth(int imageWidth)
+   {
+      this.imageWidth = imageWidth;
+   }
+
+   public int getImageHeight()
+   {
+      return imageHeight;
+   }
+
+   public void setImageHeight(int imageHeight)
+   {
+      this.imageHeight = imageHeight;
+   }
+
+   public int getImageDisplayWidth()
+   {
+      return imageDisplayWidth;
+   }
+
+   public void setImageDisplayWidth(int imageDisplayWidth)
+   {
+      this.imageDisplayWidth = imageDisplayWidth;
+   }
+
+   public int getImageDisplayHeight()
+   {
+      return imageDisplayHeight;
+   }
+
+   public void setImageDisplayHeight(int imageDisplayHeight)
+   {
+      this.imageDisplayHeight = imageDisplayHeight;
    }
 }
