@@ -24,7 +24,7 @@
       <c:when test="${!userGalleryImagesPageModel.isDataModelEmpty()}">
         <div class="row">
           <c:forEach  items="${userGalleryImagesPageModel.getImagesPageList()}" var="imageItem">
-          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="thumbnail col-xs-12 col-sm-6 col-md-4 col-lg-3">
             <!-- <a  href="${pageContext.request.contextPath}/secure/image-full/${imageItem.getImageId()}"> -->
             <a href="${pageContext.request.contextPath}/admin/image/${imageItem.getImageId()}">
               <img src="${pageContext.request.contextPath}/secure/image-thumb/${imageItem.getImageId()}" width="100%" height="100%">
@@ -41,6 +41,22 @@
         </div>
       </c:otherwise>
     </c:choose>
+    
+    <hr>
+    <div class="row">
+       <div class="col-xs-12 text-center">
+          <nav aria-label="page-nav">
+             <ul class="pager">
+                <li>
+                   <c:if test="${userGalleryImagesPageModel.isCanGoBack()}"><a href="${pageContext.request.contextPath}/admin/gallery/${userGalleryImagesPageModel.getGalleryDetail().getGalleryId()}/page/${userGalleryImagesPageModel.getPreviousPageIdx()}">Prev</a></c:if>
+                </li>
+                <li>
+                   <c:if test="${userGalleryImagesPageModel.isHasMoreElement()}"><a href="${pageContext.request.contextPath}/admin/gallery/${userGalleryImagesPageModel.getGalleryDetail().getGalleryId()}/page/${userGalleryImagesPageModel.getNextPageIdx()}">Next</a></c:if>
+                </li>
+             </ul>
+          </nav>
+       </div>
+    </div>
     
     <div id="uploadImageDlg" class="modal fade" tabindex="-1" role="dialog">
        <div class="modal-dialog">

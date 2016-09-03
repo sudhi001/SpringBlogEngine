@@ -257,7 +257,7 @@ public class UserImageGalleryActions
             imageToUpload);
       
       return _util.createRedirectPageView(
-         String.format("redirect:/admin/gallery/%s", galleryId)
+         String.format("redirect:/admin/gallery/%s/page/0", galleryId)
       );
    }
    
