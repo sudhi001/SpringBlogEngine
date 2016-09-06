@@ -132,6 +132,8 @@ public class UserImageGalleryServiceImpl
             WebAppException.ErrorType.SECURITY);
       }
       
+      validateImageData(imageTitle, imageKeywords);
+      
       String imageId = IdUtil.generateUuid();
       
       String fileExt
@@ -279,9 +281,10 @@ public class UserImageGalleryServiceImpl
       gallery.setOwner(galleryOwner);
       gallery.setCreateDate(new Date());
       
-      this._imageGalleryRepo.addGallery(gallery);
+      this._imageGalleryRepo.saveGallery(gallery);
    }
    
+   @Override
    public void setGalleryVisibility(String ownerId, String galleryId, boolean showGallery)
    {
       if (StringUtils.isEmpty(ownerId))
@@ -301,6 +304,7 @@ public class UserImageGalleryServiceImpl
       this._imageGalleryRepo.setGalleryVisibility(ownerId, galleryId, showGallery);
    }
    
+   @Override
    public void enableGallery(String ownerId, String galleryId, boolean enableGallery)
    {
       if (StringUtils.isEmpty(ownerId))
@@ -320,6 +324,7 @@ public class UserImageGalleryServiceImpl
       this._imageGalleryRepo.enableGallery(ownerId, galleryId, enableGallery);
    }
    
+   @Override
    public ImageDisplayDetail getUserImageDetail(String imageId, String ownerId)
    {
       if (StringUtils.isEmpty(ownerId))
@@ -350,6 +355,74 @@ public class UserImageGalleryServiceImpl
       return null;
    }
    
+   @Override
+   public void editImageDetails(String userId, String imageId,
+      String imageTitle, String imageKeywords,
+      boolean imageActive)
+   {
+      if (StringUtils.isEmpty(userId))
+      {
+         throw new WebAppException(
+            "User id cannot be null or empty string",
+            WebAppException.ErrorType.SECURITY);
+      }
+      
+      if (StringUtils.isEmpty(imageId))
+      {
+         throw new WebAppException(
+            "Gallery id cannot be null or empty string",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      this.validateImageData(imageTitle, imageKeywords);
+      
+      Image imageFound = 
+         this._imageGalleryRepo.getUserImage(imageId, userId);
+      if (imageFound != null)
+      {
+         imageFound.setActive(imageActive);
+         imageFound.setTitle(imageTitle);
+         imageFound.setKeywords(imageKeywords);
+         
+         this._imageGalleryRepo.saveImage(imageFound);
+      }
+   }
+
+   @Override
+   public void editGalleryDetails(String userId, String galleryId,
+      String galleryTitle, String galleryKeywords,
+      String galleryDesc, boolean galleryActive, boolean galleryVisible)
+   {
+      if (StringUtils.isEmpty(userId))
+      {
+         throw new WebAppException(
+            "User id cannot be null or empty string",
+            WebAppException.ErrorType.SECURITY);
+      }
+      
+      if (StringUtils.isEmpty(galleryId))
+      {
+         throw new WebAppException(
+            "Gallery id cannot be null or empty string",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      validateGalleryData(galleryTitle, galleryKeywords, galleryDesc);
+      
+      Gallery galleryFound =
+         this._imageGalleryRepo.getUserGallery(userId, galleryId);
+      if (galleryFound != null)
+      {
+         galleryFound.setActive(galleryActive);
+         galleryFound.setDescription(galleryDesc);
+         galleryFound.setKeywords(galleryKeywords);
+         galleryFound.setTitle(galleryTitle);
+         galleryFound.setVisible(galleryVisible);
+         
+         this._imageGalleryRepo.saveGallery(galleryFound);
+      }
+   }
+   
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
    {
       if (StringUtils.isEmpty(galleryTitle))
@@ -376,6 +449,29 @@ public class UserImageGalleryServiceImpl
       {
          throw new WebAppException(
             "Gallery description can only have max 3027 characters",
+            WebAppException.ErrorType.DATA);
+      }
+   }
+   
+   private void validateImageData(String imageTitle, String imageKeywords)
+   {
+      if (StringUtils.isEmpty(imageTitle))
+      {
+         throw new WebAppException(
+            "Image title cannot be null or empty string",
+            WebAppException.ErrorType.DATA);
+      }
+      else if (imageTitle.length() > 96)
+      {
+         throw new WebAppException(
+            "Image title can only have max 96 characters",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (!StringUtils.isEmpty(imageKeywords) && imageKeywords.length() > 128)
+      {
+         throw new WebAppException(
+            "Image keywords can only have max 128 characters",
             WebAppException.ErrorType.DATA);
       }
    }

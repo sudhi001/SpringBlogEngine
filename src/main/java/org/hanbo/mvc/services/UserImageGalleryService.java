@@ -27,4 +27,10 @@ public interface UserImageGalleryService
    void enableGallery(String ownerId, String galleryId, boolean enableGallery);
    
    ImageDisplayDetail getUserImageDetail(String imageId, String ownerId);
+   
+   void editImageDetails(String userId, String imageId, String imageTitle,
+      String imageKeywords, boolean imageActive);
+
+   void editGalleryDetails(String userId, String galleryId, String galleryTitle,
+      String galleryKeywords, String galleryDesc, boolean galleryActive, boolean galleryVisible);
 }

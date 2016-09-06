@@ -262,6 +262,49 @@ public class UserImageGalleryActions
    }
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/image/editDetails",
+      method=RequestMethod.POST)
+   public ModelAndView editImageDetails(String imageId, String imageTitle,
+      String imageKeywords, boolean imageActive)
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+      
+      String userId = loginUser.getUserId();
+      _imageGalleryService.editImageDetails(userId, imageId,
+         imageTitle, imageKeywords, imageActive);
+      
+      return _util.createRedirectPageView(
+         String.format("redirect:/admin/image/%s", imageId)
+      );
+   }
+
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/gallery/editDetails",
+      method=RequestMethod.POST)
+   public ModelAndView editGalleryDetails(String galleryId, String galleryTitle,
+      String galleyDesc, String galleryKeywords,
+      boolean galleryActive, boolean galleryVisible)
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+      
+      String userId = loginUser.getUserId();
+      
+      return _util.createRedirectPageView(
+         String.format("redirect:/admin/gallery/%s", galleryId)
+      );
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/secure/image-thumb/{imageId}", method=RequestMethod.GET)
    public void secureImageThumb(
       @PathVariable("imageId")

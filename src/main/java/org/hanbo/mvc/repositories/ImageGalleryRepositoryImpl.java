@@ -47,6 +47,18 @@ public class ImageGalleryRepositoryImpl
       propagation = Propagation.REQUIRED,
       isolation = Isolation.READ_COMMITTED
    )
+   public void saveImage(Image image)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      session.saveOrUpdate(image);
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public long getUserImagesCount(String ownerId)
    {
       Session session = _sessionFactory.getCurrentSession();
@@ -150,7 +162,7 @@ public class ImageGalleryRepositoryImpl
       propagation = Propagation.REQUIRED,
       isolation = Isolation.READ_COMMITTED
    )
-   public void addGallery(Gallery gallery)
+   public void saveGallery(Gallery gallery)
    {
       Session session = _sessionFactory.getCurrentSession();
       session.saveOrUpdate(gallery);

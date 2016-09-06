@@ -8,7 +8,9 @@ import org.hanbo.mvc.entities.Image;
 public interface ImageGalleryRepository
 {
    void saveImage(Image image, String galleryId, String ownerId);
- 
+
+   void saveImage(Image image);
+
    long getUserImagesCount(String ownerId);
    
    List<Image> getUserImages(String ownerId, int pageIdx, int itemsCount);
@@ -17,7 +19,7 @@ public interface ImageGalleryRepository
    
    List<Gallery> getUserGalleries(String ownerId, int pageIdx, int itemsCount);
    
-   void addGallery(Gallery gallery);
+   void saveGallery(Gallery gallery);
    
    Gallery getUserGallery(String ownerId, String galleryId);
 
