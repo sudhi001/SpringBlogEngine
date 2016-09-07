@@ -12,11 +12,8 @@
     <hr>
     
     <div class="row">
-       <div class="col-sm-12 col-md-6 col-lg-8">
+       <div class="col-xs-12">
           <span class="label label-info">You have ${userGalleryImagesPageModel.getTotalElementsCount()} image(s) in this gallery.</span>
-       </div>
-       <div class="col-sm-12 col-md-6 col-lg-4 text-right">
-          <button class="btn btn-default" onclick="openImageUploadDlg('${userGalleryImagesPageModel.getGalleryDetail().getGalleryId()}')">Add Image</button>
        </div>
     </div>
 
@@ -37,7 +34,77 @@
           <h4>Description:</h4>
           <p>${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}</p>
        </div>
+       <div class="col-xs-12">
+          <button class="btn btn-default" onclick="openImageUploadDlg('${userGalleryImagesPageModel.getGalleryDetail().getGalleryId()}')">Add Image</button>&nbsp;
+          <button class="btn btn-default">Edit Detail</button>
+       </div>
     </div>
+    <div class="panel panel-default margin-updown" id="editGalleryDetailsDlg" style="display: block;">
+       <div class="panel-body">
+          <form class="form" id="editGalleryDetailsForm" action="${pageContext.request.contextPath}/admin/gallery/editDetails" method="POST">
+             <legend>Edit Gallery Detail</legend>
+             <input type="hidden" id="galleryId" name="galleryId" value="${userGalleryImagesPageModel.getGalleryDetail().getGalleryId()}" >
+             <div class="form-group">
+                <label class="col-xs-12 control-label">Title</label>
+	            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+	               <input id="galleryTitle" name="galleryTitle" class="form-control" value="${userGalleryImagesPageModel.getGalleryDetail().getGalleryTitle()}" />
+	            </div>
+             </div>
+             <div class="form-group">
+                <label class="col-xs-12 control-label">Keywords</label>
+	            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+	               <input id="galleryKeywords" name="galleryKeywords" class="form-control" value="${userGalleryImagesPageModel.getGalleryDetail().getGalleryKeywords()}" />
+	            </div>
+             </div>
+             <div class="form-group">
+                <label class="col-xs-12 control-label">Description</label>
+	            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+<textarea id="galleryDesc" name="galleryDesc" class="form-control">
+${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}
+</textarea>
+	            </div>
+             </div>
+             <div class="checkbox col-xs-6">
+                <label>
+                   <c:choose>
+                      <c:when test="${imageDetail.isImageActive()}">
+                         <input type="checkbox" id="galleryActive" name="galleryActive" checked/> Active
+                      </c:when>
+                      <c:otherwise>
+                         <input type="checkbox" id="galleryActive" name="galleryActive" /> Active
+                      </c:otherwise>
+                   </c:choose>
+                </label>
+             </div>
+             <div class="checkbox col-xs-6">
+                <label>
+                   <c:choose>
+                      <c:when test="${imageDetail.isImageActive()}">
+                         <input type="checkbox" id="galleryVisible" name="galleryVisible" checked/> Visible
+                      </c:when>
+                      <c:otherwise>
+                         <input type="checkbox" id="galleryVisible" name="galleryVisible" /> Visible
+                      </c:otherwise>
+                   </c:choose>
+                </label>
+             </div>
+             <div class="row margin-updown" id="editGalleryDetailsError" style="display: none;">
+                <div class="col-xs-12">
+                   <div class="warning-block" id="editGalleryDetailsErrorMsg">
+                      test test
+                   </div>
+                </div>
+             </div>
+             <div class="row">
+                <div class="col-xs-12 text-center">
+                   <button type="submit" class="btn btn-default">Save</button>
+                   <button type="reset" class="btn btn-default">Reset</button>
+                </div>
+             </div>
+          </form>
+       </div>
+    </div>
+    <hr>
     
     <c:choose>
       <c:when test="${!userGalleryImagesPageModel.isDataModelEmpty()}">
@@ -75,6 +142,8 @@
           </nav>
        </div>
     </div>
+    
+    
     
     <div id="uploadImageDlg" class="modal fade" tabindex="-1" role="dialog">
        <div class="modal-dialog">
