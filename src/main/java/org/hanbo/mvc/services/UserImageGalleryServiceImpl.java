@@ -273,13 +273,16 @@ public class UserImageGalleryServiceImpl
             WebAppException.ErrorType.SECURITY);
       }
       
+      Date dateNow = new Date();
+      
       Gallery gallery = new Gallery();
       gallery.setTitle(galleryTitle);
       gallery.setKeywords(galleryKeywords);
       gallery.setDescription(galleryDesc);
       gallery.setId(IdUtil.generateUuid());
       gallery.setOwner(galleryOwner);
-      gallery.setCreateDate(new Date());
+      gallery.setCreateDate(dateNow);
+      gallery.setUpdateDate(dateNow);
       
       this._imageGalleryRepo.saveGallery(gallery);
    }

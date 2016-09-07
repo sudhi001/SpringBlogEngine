@@ -19,6 +19,25 @@
           <button class="btn btn-default" onclick="openImageUploadDlg('${userGalleryImagesPageModel.getGalleryDetail().getGalleryId()}')">Add Image</button>
        </div>
     </div>
+
+    <div class="row">
+       <div class="col-xs-12">
+          <p><strong>Uploaded:</strong> ${userGalleryImagesPageModel.getGalleryDetail().getOwnerName()}</p>
+          <p><strong>Modified Date:</strong> ${userGalleryImagesPageModel.getGalleryDetail().getUpdateDateString()}</p>
+          <p><strong>Keywords:</strong> ${userGalleryImagesPageModel.getGalleryDetail().getGalleryKeywords()};</p>
+          <p><strong>Status:</strong> <c:choose>
+             <c:when test="${userGalleryImagesPageModel.getGalleryDetail().isGalleryActive()}">Active;</c:when>
+             <c:otherwise>Inactive;</c:otherwise>
+          </c:choose></p>
+          <p><strong>Visible:</strong> <c:choose>
+             <c:when test="${userGalleryImagesPageModel.getGalleryDetail().isGalleryVisible()}">Visible;</c:when>
+             <c:otherwise>Invisible;</c:otherwise>
+          </c:choose></p>
+          
+          <h4>Description:</h4>
+          <p>${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}</p>
+       </div>
+    </div>
     
     <c:choose>
       <c:when test="${!userGalleryImagesPageModel.isDataModelEmpty()}">

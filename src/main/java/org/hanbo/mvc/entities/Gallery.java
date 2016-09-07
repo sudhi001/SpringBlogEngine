@@ -54,6 +54,10 @@ public class Gallery
    @Temporal(TemporalType.TIMESTAMP)
    private Date createDate;
    
+   @Column(name = "updatedate", nullable = false)
+   @Temporal(TemporalType.TIMESTAMP)
+   private Date updateDate;
+   
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "ownerid")
    private LoginUser owner;
@@ -120,6 +124,16 @@ public class Gallery
    public void setCreateDate(Date createDate)
    {
       this.createDate = createDate;
+   }
+   
+   public Date getUpdateDate()
+   {
+      return this.updateDate;
+   }
+
+   public void setUpdateDate(Date updateDate)
+   {
+      this.updateDate = updateDate;
    }
    
    public LoginUser getOwner()

@@ -19,7 +19,9 @@ public class GalleryDisplayDetail
    private boolean galleryVisible;
    
    private Date createDate;
-   
+
+   private Date updateDate;
+
    private String ownerName;
    
    private String ownerId;
@@ -77,6 +79,21 @@ public class GalleryDisplayDetail
    public void setCreateDate(Date createDate)
    {
       this.createDate = createDate;
+   }
+   
+   public Date getUpdateDate()
+   {
+      return updateDate;
+   }
+
+   public String getUpdateDateString()
+   {
+      return DateToString.dateStringForDisplay(updateDate);
+   }
+
+   public void setUpdateDate(Date updateDate)
+   {
+      this.updateDate = updateDate;
    }
 
    public String getOwnerName()

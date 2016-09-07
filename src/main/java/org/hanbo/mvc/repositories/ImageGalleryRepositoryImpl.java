@@ -1,6 +1,7 @@
 package org.hanbo.mvc.repositories;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Gallery;
@@ -36,6 +37,7 @@ public class ImageGalleryRepositoryImpl
       Gallery associatedGallery = getUserGallery(session, galleryId, ownerId);
       if (associatedGallery != null)
       {
+         associatedGallery.setUpdateDate(image.getUploadDate());
          associatedGallery.getAssociatedImages().add(image);
       }
       
@@ -202,6 +204,7 @@ public class ImageGalleryRepositoryImpl
          Gallery gallery = foundObjs.get(0);
                   
          gallery.setVisible(showGallery);
+         gallery.setUpdateDate(new Date());
          
          session.update(gallery);
       }
@@ -230,6 +233,7 @@ public class ImageGalleryRepositoryImpl
          Gallery gallery = foundObjs.get(0);
          
          gallery.setActive(enableGallery);
+         gallery.setUpdateDate(new Date());
          
          session.update(gallery);
       }
