@@ -421,6 +421,7 @@ public class UserImageGalleryServiceImpl
          galleryFound.setKeywords(galleryKeywords);
          galleryFound.setTitle(galleryTitle);
          galleryFound.setVisible(galleryVisible);
+         galleryFound.setUpdateDate(new Date());
          
          this._imageGalleryRepo.saveGallery(galleryFound);
       }
