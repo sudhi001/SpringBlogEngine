@@ -287,7 +287,7 @@ public class UserImageGalleryActions
    @RequestMapping(value="/admin/gallery/editDetails",
       method=RequestMethod.POST)
    public ModelAndView editGalleryDetails(String galleryId, String galleryTitle,
-      String galleyDesc, String galleryKeywords,
+      String galleryDesc, String galleryKeywords,
       boolean galleryActive, boolean galleryVisible)
    {
       UserPrincipalDataModel loginUser = this._util.getLoginUser();
@@ -298,9 +298,11 @@ public class UserImageGalleryActions
       }
       
       String userId = loginUser.getUserId();
+      _imageGalleryService.editGalleryDetails(userId, galleryId, galleryTitle,
+         galleryKeywords, galleryDesc, galleryActive, galleryVisible);
       
       return _util.createRedirectPageView(
-         String.format("redirect:/admin/gallery/%s", galleryId)
+         String.format("redirect:/admin/gallery/%s/page/0", galleryId)
       );
    }
    

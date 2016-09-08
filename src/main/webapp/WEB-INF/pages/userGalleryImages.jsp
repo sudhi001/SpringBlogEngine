@@ -36,12 +36,15 @@
        </div>
        <div class="col-xs-12">
           <button class="btn btn-default" onclick="openImageUploadDlg('${userGalleryImagesPageModel.getGalleryDetail().getGalleryId()}')">Add Image</button>&nbsp;
-          <button class="btn btn-default">Edit Detail</button>
+          <button class="btn btn-default" id="editDetailsBtn" onclick="editGalleryDetails()">Edit Detail</button>&nbsp;
+          <button class="btn btn-default" id="cancelEditDetailsBtn" onclick="cancelEditingGalleryDetails('${userGalleryImagesPageModel.getGalleryDetail().getGalleryTitle()}', '${userGalleryImagesPageModel.getGalleryDetail().getGalleryKeywords()}', '${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}', ${userGalleryImagesPageModel.getGalleryDetail().isGalleryActive()}, ${userGalleryImagesPageModel.getGalleryDetail().isGalleryVisible()})" style="display: none;">Cancel Editing</button>
        </div>
     </div>
-    <div class="panel panel-default margin-updown" id="editGalleryDetailsDlg" style="display: block;">
+    <div class="panel panel-default margin-updown" id="editGalleryDetailsDlg" style="display: none;">
        <div class="panel-body">
-          <form class="form" id="editGalleryDetailsForm" action="${pageContext.request.contextPath}/admin/gallery/editDetails" method="POST">
+          <form class="form" id="editGalleryDetailsForm" action="${pageContext.request.contextPath}/admin/gallery/editDetails" method="POST"
+                onsubmit="return validateEditingGalleryDetailsAndSubmit()"
+                onreset="cancelEditingGalleryDetails('${userGalleryImagesPageModel.getGalleryDetail().getGalleryTitle()}', '${userGalleryImagesPageModel.getGalleryDetail().getGalleryKeywords()}', '${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}', ${userGalleryImagesPageModel.getGalleryDetail().isGalleryActive()}, ${userGalleryImagesPageModel.getGalleryDetail().isGalleryVisible()})">
              <legend>Edit Gallery Detail</legend>
              <input type="hidden" id="galleryId" name="galleryId" value="${userGalleryImagesPageModel.getGalleryDetail().getGalleryId()}" >
              <div class="form-group">
@@ -67,7 +70,7 @@ ${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}
              <div class="checkbox col-xs-6">
                 <label>
                    <c:choose>
-                      <c:when test="${imageDetail.isImageActive()}">
+                      <c:when test="${userGalleryImagesPageModel.getGalleryDetail().isGalleryActive()}">
                          <input type="checkbox" id="galleryActive" name="galleryActive" checked/> Active
                       </c:when>
                       <c:otherwise>
@@ -79,7 +82,7 @@ ${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}
              <div class="checkbox col-xs-6">
                 <label>
                    <c:choose>
-                      <c:when test="${imageDetail.isImageActive()}">
+                      <c:when test="${userGalleryImagesPageModel.getGalleryDetail().isGalleryVisible()}">
                          <input type="checkbox" id="galleryVisible" name="galleryVisible" checked/> Visible
                       </c:when>
                       <c:otherwise>
@@ -143,8 +146,6 @@ ${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}
        </div>
     </div>
     
-    
-    
     <div id="uploadImageDlg" class="modal fade" tabindex="-1" role="dialog">
        <div class="modal-dialog">
           <div class="modal-content">
@@ -204,6 +205,7 @@ ${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/jasny/js/jasny-bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/custom/js/uploadModal.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/editGalleryDetails.js"></script>
   </tiles:putAttribute>
 
 </tiles:insertDefinition>
