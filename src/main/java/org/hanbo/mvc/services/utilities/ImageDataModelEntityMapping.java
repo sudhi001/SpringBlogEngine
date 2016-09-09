@@ -53,8 +53,6 @@ public class ImageDataModelEntityMapping
       retVal.setGalleryDescription(gallery.getDescription());
       retVal.setCreateDate(gallery.getCreateDate());
       retVal.setUpdateDate(gallery.getUpdateDate());
-      System.out.println(retVal.getUpdateDate());
-      System.out.println(retVal.getUpdateDateString());
       retVal.setGalleryKeywords(gallery.getKeywords());
       retVal.setGalleryTitle(gallery.getTitle());
       retVal.setGalleryActive(gallery.isActive());
