@@ -31,7 +31,7 @@
          <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
             <div class="col-xs-12">
                <button class="btn btn-default" id="editImageDetailsBtn" onclick="editImageDetails()">Edit Detail</button>&nbsp;
-               <button class="btn btn-default" id="cancelEditDetailsBtn" style="display: none;" onclick="cancelEditDetails()">Cancel Editing</button>&nbsp;
+               <button class="btn btn-default" id="cancelEditDetailsBtn" style="display: none;" onclick="cancelEditDetails('${imageDetail.getImageTitle()}', '${imageDetail.getImageKeywords()}')">Cancel Editing</button>&nbsp;
                <button class="btn btn-default">Write Blog Post</button>
             </div>
          </div>
@@ -39,7 +39,7 @@
             <div class="panel-body">
                <form id="editImageDetailsDlg" class="form" action="${pageContext.request.contextPath}/admin/image/editDetails"
                      method="POST" onsubmit="return validateEditImageDetails()"
-                     onreset="resetEditImageDetailsDlg()">
+                     onreset="resetEditImageDetailsDlg('${imageDetail.getImageTitle()}', '${imageDetail.getImageKeywords()}')">
                   <legend>Edit Image Detail</legend>
                   <input type="hidden" id="imageId" name="imageId" value="${imageDetail.getImageId()}" >
                   <div class="form-group">
@@ -90,80 +90,8 @@
   <tiles:putAttribute name="javascriptContent">
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-        var editImageDetails = function()
-        {
-           $("#editImageDetailsPanel").show();
-           $("#editImageDetailsBtn").hide();
-           $("#cancelEditDetailsBtn").show();
-        }
-        
-        var cancelEditDetails = function()
-        {
-           $("#editImageDetailsPanel").hide();
-           $("#editImageDetailsBtn").show();
-           $("#cancelEditDetailsBtn").hide();
-           resetEditImageDetailsDlg();
-        }
-        
-        var resetEditImageDetailsDlg = function()
-        {
-           $("#editImageDetailsDlg #imageTitle").val("${imageDetail.getImageTitle()}");
-           $("#editImageDetailsDlg #imageKeywords").val("${imageDetail.getImageKeywords()}");
-           
-           displayError(null);
-        }
-        
-        var validateEditImageDetails = function() 
-        {
-           var imageTitle = $("#editImageDetailsDlg #imageTitle").val();
-           var imageKeywords = $("#editImageDetailsDlg #imageKeywords").val();    	
-           var errorMsg = null;
-           var dataInvalid = false;
-           
-           if (imageTitle == null || imageTitle.length <= 0)
-           {
-              dataInvalid = true;
-        	  errorMsg = "Image title is null or empty string.";
-           }
-           else if (imageTitle.length > 96)
-           {
-              dataInvalid = true;
-              errorMsg = "Image title exceeds 96 characters";
-           }
-           
-           if (imageKeywords != null && imageKeywords.length > 128)
-           {
-        	  dataInvalid = true;
-              errorMsg = "Image keywords exceeds 128 characters";
-           }
-           
-           if (!dataInvalid)
-           {
-        	   $("#editImageDetailsDlg")[0].submit();
-        	   return true;
-           }
-           else
-           {
-              displayError(errorMsg);
-              return false;
-           }
-        }
-        
-        var displayError = function(errorMsg)
-        {
-           if (errorMsg == null || errorMsg.length <= 0)
-           {
-        	   $("#editImageDetailsDlg #editImageDetailsError #editImageDetailsErrorMsg").html("");
-        	   $("#editImageDetailsDlg #editImageDetailsError").hide();
-           }
-           else
-           {
-               $("#editImageDetailsDlg #editImageDetailsError #editImageDetailsErrorMsg").html(errorMsg);
-        	   $("#editImageDetailsDlg #editImageDetailsError").show();
-           }
-        }
-     </script>
-    
+    <script src="${pageContext.request.contextPath}/assets/custom/js/editImageDetails.js"></script>
+    <script>
+    </script>
   </tiles:putAttribute>
 </tiles:insertDefinition>
