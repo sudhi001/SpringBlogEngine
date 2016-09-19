@@ -36,6 +36,7 @@
        </div>
        <div class="col-xs-12">
           <button class="btn btn-default" onclick="openImageUploadDlg('${userGalleryImagesPageModel.getGalleryDetail().getGalleryId()}')">Add Image</button>&nbsp;
+          <button class="btn btn-default" onclick="openImagesUploadDlg('${userGalleryImagesPageModel.getGalleryDetail().getGalleryId()}')">Add Images</button>&nbsp;
           <button class="btn btn-default" id="editDetailsBtn" onclick="editGalleryDetails()">Edit Detail</button>&nbsp;
           <button class="btn btn-default" id="cancelEditDetailsBtn" onclick="cancelEditingGalleryDetails('${userGalleryImagesPageModel.getGalleryDetail().getGalleryTitle()}', '${userGalleryImagesPageModel.getGalleryDetail().getGalleryKeywords()}', '${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}', ${userGalleryImagesPageModel.getGalleryDetail().isGalleryActive()}, ${userGalleryImagesPageModel.getGalleryDetail().isGalleryVisible()})" style="display: none;">Cancel Editing</button>
        </div>
@@ -191,6 +192,79 @@ ${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}
                 </div>
                 <div class="modal-footer">
                    <button type="button" class="btn btn-primary" onclick="validateUploadAndSubmit()">Add</button>
+                   <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+             </form>
+          </div>
+       </div>
+    </div>
+    
+    <div id="uploadImagesDlg" class="modal fade" tabindex="-1" role="dialog">
+       <div class="modal-dialog">
+          <div class="modal-content">
+             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Upload Image</h4>
+             </div>
+             <form id="uploadImagesForm" class="form" name="uploadImagesForm" method="POST"
+                   enctype="multipart/form-data" action="${pageContext.request.contextPath}/admin/images/uploadImages"
+                   onsubmit="validateUploadsAndSubmit()" onreset="resetAddImagesDlg()">
+                <input type="hidden" id="uploadImagesGalleryId" name="uploadImagesGalleryId" value="dummyValue" >
+                <div class="modal-body">
+                   <div class="row">
+		              <div class="col-md-12">
+			            <div class="form-group">
+                          <label class="col-md-12 control-label">Image File</label>
+			              <div class="col-md-12">
+                             <div id="image1UploadControl" class="fileinput fileinput-new input-group" data-provides="fileinput">
+                             <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="imageToUpload" id="image1ToUpload"></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                             </div>
+			              </div>
+                          <label class="col-md-12 control-label">Image File</label>
+			              <div class="col-md-12">
+                             <div id="image2UploadControl" class="fileinput fileinput-new input-group" data-provides="fileinput">
+                             <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="imageToUpload" id="image2ToUpload"></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                             </div>
+			              </div>
+                          <label class="col-md-12 control-label">Image File</label>
+			              <div class="col-md-12">
+                             <div id="image3UploadControl" class="fileinput fileinput-new input-group" data-provides="fileinput">
+                             <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="imageToUpload" id="image3ToUpload"></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                             </div>
+			              </div>
+                          <label class="col-md-12 control-label">Image File</label>
+			              <div class="col-md-12">
+                             <div id="image4UploadControl" class="fileinput fileinput-new input-group" data-provides="fileinput">
+                             <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="imageToUpload" id="image4ToUpload"></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                             </div>
+			              </div>
+                          <label class="col-md-12 control-label">Image File</label>
+			              <div class="col-md-12">
+                             <div id="image5UploadControl" class="fileinput fileinput-new input-group" data-provides="fileinput">
+                             <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                                <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="imageToUpload" id="image5ToUpload"></span>
+                                <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                             </div>
+			              </div>
+			              <div class="form-group row">
+			                 <div class="col-xs-12">
+                                <div class="alert alert-danger" id="uploadImagesError" style="visible: hidden"></div>
+			                 </div>
+			              </div>
+			            </div>
+		              </div>
+	               </div>
+                </div>
+                <div class="modal-footer">
+                   <button type="submit" class="btn btn-primary">Add</button>
                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
              </form>
