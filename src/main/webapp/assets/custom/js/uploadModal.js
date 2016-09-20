@@ -76,7 +76,7 @@ $('#uploadImagesDlg').on('hidden.bs.modal', function () {
 
 var resetAddImagesDlg = function ()
 {
-   $("#uploadImagesDlg #uploadImagesError").html("");
+   $("#uploadImagesDlg #uploadImagesError #uploadImagesErrorMsg").html("");
    $("#uploadImagesDlg #uploadImagesError").hide();
       
    $("#uploadImagesDlg #uploadImagesGalleryId").val("");
@@ -94,8 +94,8 @@ var validateUploadsAndSubmit = function()
    var fileUploadValidCount = 0;
    for (var i = 1; i <= 5; i++)
    {
-      var fileUploadId = "#uploadImageDlg #image" + i + "ToUpload";
-	  var imageToUpload = $("#uploadImageDlg #imageToUpload").val();
+      var fileUploadId = "#uploadImagesDlg #image" + i + "ToUpload";
+	  var imageToUpload = $(fileUploadId).val();
 	  
       if (imageToUpload != null && imageToUpload.length > 0)
       {
@@ -106,12 +106,14 @@ var validateUploadsAndSubmit = function()
    if (fileUploadValidCount <= 0)
    {
       errorMsg = "You must enter at least one file for upload.";
-      $("#uploadImageDlg #uploadError").html(errorMsg);
-      $("#uploadImageDlg #uploadError").show();
+      $("#uploadImagesDlg #uploadImagesError #uploadImagesErrorMsg").html(errorMsg);
+      $("#uploadImagesDlg #uploadImagesError").show();
+      return false;
    }
    else
    {
 	  $("#uploadImagesDlg #uploadImagesForm")[0].submit();
+	  return true;
    }
 };
 

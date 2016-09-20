@@ -208,7 +208,7 @@ ${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}
              </div>
              <form id="uploadImagesForm" class="form" name="uploadImagesForm" method="POST"
                    enctype="multipart/form-data" action="${pageContext.request.contextPath}/admin/images/uploadImages"
-                   onsubmit="validateUploadsAndSubmit()" onreset="resetAddImagesDlg()">
+                   onsubmit="return validateUploadsAndSubmit();" onreset="resetAddImagesDlg()">
                 <input type="hidden" id="uploadImagesGalleryId" name="uploadImagesGalleryId" value="dummyValue" >
                 <div class="modal-body">
                    <div class="row">
@@ -254,11 +254,13 @@ ${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}
                                 <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
                              </div>
 			              </div>
-			              <div class="form-group row">
-			                 <div class="col-xs-12">
-                                <div class="alert alert-danger" id="uploadImagesError" style="visible: hidden"></div>
-			                 </div>
-			              </div>
+                          <div class="row margin-updown" id="uploadImagesError" style="display: none;">
+                             <div class="col-xs-12">
+                                <div class="warning-block" id="uploadImagesErrorMsg">
+                                   test test
+                                </div>
+                             </div>
+                          </div>
 			            </div>
 		              </div>
 	               </div>

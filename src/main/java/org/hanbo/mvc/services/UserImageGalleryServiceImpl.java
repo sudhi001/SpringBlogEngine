@@ -223,6 +223,13 @@ public class UserImageGalleryServiceImpl
    }
    
    @Override
+   public void uploadImages(String userId, String galleryId, MultipartFile[] imagesToUpload)
+   {
+      
+   }
+
+   
+   @Override
    public boolean downloadImage(
       String imageId, String type, OutputStream outputStream
    ) throws Exception

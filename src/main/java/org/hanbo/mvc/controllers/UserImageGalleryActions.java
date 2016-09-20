@@ -27,9 +27,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import org.apache.log4j.*;
+
 @Controller
 public class UserImageGalleryActions
 {
+   private static Logger _logger = LogManager.getLogger(UserImageGalleryActions.class);
+   
    @Autowired
    private ActionsUtil _util;
    
@@ -251,14 +255,61 @@ public class UserImageGalleryActions
             "User Authorization Failure", "User cannot be found.");
       }
       
-      String userId = loginUser.getUserId();
-      _imageGalleryService.uploadImage(userId, galleryId,
-            imageTitle, imageKeywords,
-            imageToUpload);
+      try
+      {
+         String userId = loginUser.getUserId();
+         _imageGalleryService.uploadImage(userId, galleryId,
+               imageTitle, imageKeywords,
+               imageToUpload);
+         
+         return _util.createRedirectPageView(
+            String.format("redirect:/admin/gallery/%s/page/0", galleryId)
+         );
+      }
+      catch(Exception e)
+      {
+         return _util.createErorrPageViewModel("Upload Error", "Error occurred when attempt to upload one image file.");
+      }
+   }
+
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/images/uploadImages", method=RequestMethod.POST)
+   public ModelAndView addImages(
+      @RequestParam("uploadImagesGalleryId")
+      String galleryId,
+      @RequestParam("imageToUpload")
+      MultipartFile[] imagesToUpload)
+   {
+      // debug
+      _logger.debug(String.format("gallery id: %s", galleryId));
       
-      return _util.createRedirectPageView(
-         String.format("redirect:/admin/gallery/%s/page/0", galleryId)
-      );
+      for (MultipartFile file : imagesToUpload)
+      {
+         _logger.debug(String.format("filename: %s", file.getName()));
+         _logger.debug(String.format("original filename: %s", file.getOriginalFilename()));
+      }
+      
+      
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+      
+      try
+      {
+         String userId = loginUser.getUserId();
+         _imageGalleryService.uploadImages(userId, galleryId,
+            imagesToUpload);
+         return _util.createRedirectPageView(
+            String.format("redirect:/admin/gallery/%s/page/0", galleryId)
+         );
+      }
+      catch(Exception e)
+      {
+         return _util.createErorrPageViewModel("Upload Error", "Error occurred when attempt to upload multiple image files.");
+      }
    }
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
