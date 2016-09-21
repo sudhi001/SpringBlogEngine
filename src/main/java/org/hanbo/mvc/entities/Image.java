@@ -51,6 +51,9 @@ public class Image
    @Column(name = "active", nullable = false)
    private boolean active;
    
+   @Column(name = "isnsfw", nullable = false)
+   private boolean notSafeForWork;
+   
    @Column(name = "uploaddate", nullable = false)
    @Temporal(TemporalType.TIMESTAMP)
    private Date uploadDate;
@@ -244,5 +247,15 @@ public class Image
    public void setActive(boolean active)
    {
       this.active = active;
+   }
+   
+   public boolean isNotSafeForWork()
+   {
+      return notSafeForWork;
+   }
+
+   public void setNotSafeForWork(boolean notSafeForWork)
+   {
+      this.notSafeForWork = notSafeForWork;
    }
 }

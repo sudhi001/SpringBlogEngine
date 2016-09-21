@@ -115,6 +115,7 @@ CREATE TABLE image (
    filepath VARCHAR(256) NOT NULL, 
    thumbnailfilepath VARCHAR(256) NOT NULL,
    active BIT(1) NOT NULL DEFAULT 1,
+   isnsfw BIT(1) NOT NULL DEFAULT 0,
    uploaddate DATETIME NOT NULL,
    sizex INT NOT NULL,
    sizey INT NOT NULL,

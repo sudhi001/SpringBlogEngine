@@ -28,6 +28,8 @@ public class ImageDisplayDetail
    
    private boolean imageActive;
    
+   private boolean imageNotSafeForWork;
+   
    private String ownerId;
    
    private String ownerUserName;
@@ -105,6 +107,16 @@ public class ImageDisplayDetail
    public void setImageActive(boolean imageActive)
    {
       this.imageActive = imageActive;
+   }
+   
+   public boolean isImageNotSafeForWork()
+   {
+      return imageNotSafeForWork;
+   }
+
+   public void setImageNotSafeForWork(boolean notSafeForWork)
+   {
+      this.imageNotSafeForWork = notSafeForWork;
    }
 
    public String getOwnerId()

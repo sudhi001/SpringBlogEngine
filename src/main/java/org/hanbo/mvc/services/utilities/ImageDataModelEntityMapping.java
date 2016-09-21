@@ -19,6 +19,7 @@ public class ImageDataModelEntityMapping
       retVal.setImageKeywords(img.getKeywords());
       retVal.setUpdloadDate(img.getUploadDate());
       retVal.setImageActive(img.isActive());
+      retVal.setImageNotSafeForWork(img.isNotSafeForWork());
       retVal.setImageFilePath(img.getFilePath());
       retVal.setImageThumbFilePath(img.getThumbnailFilePath());
       retVal.setOwnerId(img.getOwner().getId());
