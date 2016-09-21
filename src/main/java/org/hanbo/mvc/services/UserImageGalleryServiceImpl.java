@@ -225,7 +225,119 @@ public class UserImageGalleryServiceImpl
    @Override
    public void uploadImages(String userId, String galleryId, MultipartFile[] imagesToUpload)
    {
+      LoginUser imageOwner = _usersRepo.getUserById(userId);
+      if (imageOwner == null)
+      {
+         throw new WebAppException(
+            String.format("Unable to find user with id [%s]", userId),
+            WebAppException.ErrorType.SECURITY);
+      }
       
+      if (StringUtils.isEmpty(galleryId))
+      {
+         throw new WebAppException(
+            "Gallery Id is empty",
+            WebAppException.ErrorType.SECURITY);
+      }
+      
+      Date dateNow = new Date();
+      List<Image> imagesToSave = new ArrayList<Image>();
+      for (MultipartFile imgFile : imagesToUpload)
+      {
+         if (imgFile != null && !imgFile.isEmpty())
+         {
+            String imageId = IdUtil.generateUuid();
+            
+            String fileExt
+               = getFileNameExtension(imgFile.getOriginalFilename());
+            
+            // Save the image file to disk
+            String filePath = imageFilePath(imageId, true);
+            String fileShortPath = partialImageFilePath(imageId);
+            String fileName = filePath + imageId + fileExt;
+            String fileShortName = fileShortPath + imageId + fileExt;
+            String fileNameAsTitle = imageId + fileExt;
+
+            Image image = new Image();
+            image.setId(imageId);
+            image.setTitle(fileNameAsTitle);
+            image.setFilePath(fileShortName);
+            image.setImageName(imageId + fileExt);
+            image.setKeywords("");
+            image.setUploadDate(dateNow);
+            image.setOwner(imageOwner);
+                        
+            try
+            {
+               FileStreamUtil.saveFileToServer(fileName, imgFile.getInputStream());
+            }
+            catch(Exception e)
+            {
+               throw new WebAppException(
+                  String.format("Unexpected error when save file [%s]", fileName),
+                  WebAppException.ErrorType.FUNCTIONAL, e);
+            }
+            
+            int imgWidth = 0;
+            int imgHeight = 0;
+            int newImgWidth = 0;
+            int newImgHeight = 0;
+            
+            try
+            {
+               String imageMagickFilePath = this.configValues.getProperty("ImageMagickFilePath");
+               // create the thumbnail of the image
+               ImageFile imgFileUtil = new ImageFile(new ImageFileProcessingUtil(imageMagickFilePath));
+               imgFileUtil.setOriginalFile(fileName);
+               imgFileUtil.imageFileDimensions();
+               
+               imgWidth = imgFileUtil.getOriginalImageFileSizeX();
+               imgHeight = imgFileUtil.getOriginalImageFileSizeY();
+               
+               imgFileUtil.determineAspectRatio();
+               imgFileUtil.setResizedImageWidth(250);
+               imgFileUtil.calculateNewFileDimensions(false);
+               
+               String resizedFileName = filePath + imageId + "-thumb" + fileExt;
+               String resizedFileShortName = fileShortPath + imageId + "-thumb" + fileExt;
+               imgFileUtil.setResizeFile(resizedFileName);
+               imgFileUtil.resizeImageFile();
+               
+               newImgWidth = imgFileUtil.getResizedFileSizeX();
+               newImgHeight = imgFileUtil.getResizedFileSizeY();
+               
+               image.setFileSizeX(imgWidth);
+               image.setFileSizeY(imgHeight);
+               
+               image.setThumbnailFilePath(resizedFileShortName);
+               image.setThumbnailSizeX(newImgWidth);
+               image.setThumbnailSizeY(newImgHeight);
+               
+               imagesToSave.add(image);
+            }
+            catch(Exception e)
+            {
+               throw new WebAppException(
+                  String.format("Unexpected error when trying to resize file [%s]", fileName),
+                  WebAppException.ErrorType.FUNCTIONAL, e);       
+            }
+         }
+      }
+      
+      if (imagesToSave != null && imagesToSave.size() > 0)
+      {
+         try
+         {
+            // save it to DB.
+            _imageGalleryRepo.saveImages(imagesToSave, galleryId, imageOwner.getId(), dateNow);
+         }
+         catch(Exception e)
+         {
+            throw new WebAppException(
+               String.format("Unable to add [%d] new images to gallery with id [%s]", imagesToSave.size(), galleryId),
+               WebAppException.ErrorType.FUNCTIONAL); 
+         }
+      }
    }
 
    

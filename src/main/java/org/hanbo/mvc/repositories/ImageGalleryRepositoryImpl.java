@@ -61,6 +61,32 @@ public class ImageGalleryRepositoryImpl
       propagation = Propagation.REQUIRED,
       isolation = Isolation.READ_COMMITTED
    )
+   public void saveImages(List<Image> imagesToSave, String galleryId, String ownerId, Date updateDate)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Gallery associatedGallery = getUserGallery(session, galleryId, ownerId);
+      if (associatedGallery != null)
+      {
+         for (Image img : imagesToSave)
+         {
+            if (img != null)
+            {
+               session.saveOrUpdate(img);
+               associatedGallery.getAssociatedImages().add(img);
+            }
+         }
+         
+         associatedGallery.setUpdateDate(updateDate);
+         session.update(associatedGallery);         
+      }
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public long getUserImagesCount(String ownerId)
    {
       Session session = _sessionFactory.getCurrentSession();

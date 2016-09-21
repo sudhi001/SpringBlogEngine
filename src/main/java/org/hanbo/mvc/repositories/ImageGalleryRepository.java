@@ -1,5 +1,6 @@
 package org.hanbo.mvc.repositories;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Gallery;
@@ -10,6 +11,8 @@ public interface ImageGalleryRepository
    void saveImage(Image image, String galleryId, String ownerId);
 
    void saveImage(Image image);
+   
+   void saveImages(List<Image> imagesToSave, String galleryId, String ownerId, Date updateDate);
 
    long getUserImagesCount(String ownerId);
    

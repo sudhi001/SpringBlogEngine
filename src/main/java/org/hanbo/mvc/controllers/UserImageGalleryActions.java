@@ -308,6 +308,7 @@ public class UserImageGalleryActions
       }
       catch(Exception e)
       {
+         _logger.debug(e.getMessage());
          return _util.createErorrPageViewModel("Upload Error", "Error occurred when attempt to upload multiple image files.");
       }
    }
