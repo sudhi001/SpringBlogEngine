@@ -17,6 +17,7 @@ var resetAddImageDlg = function ()
    $("#uploadImageDlg #uploadImageGalleryId").val("");
    $("#uploadImageDlg #imageTitle").val("");
    $("#uploadImageDlg #imageKeywords").val("");
+   $("#uploadImageDlg #imageNotSafeForWork").prop('checked', false);
    $("#uploadImageDlg #imageUploadControl").fileinput("clear");
 };
    

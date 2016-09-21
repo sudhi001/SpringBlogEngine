@@ -18,10 +18,19 @@
          <p><strong>Keywords:</strong> ${imageDetail.getImageKeywords()}; <strong>Status:</strong>
             <c:choose>
                <c:when test="${imageDetail.isImageActive()}">
-                  Active
+                  Active;
                </c:when>
                <c:otherwise>
-                  Inactive
+                  Inactive;
+               </c:otherwise>
+            </c:choose>
+         <strong>NSFW:</strong>
+            <c:choose>
+               <c:when test="${imageDetail.isImageNotSafeForWork()}">
+                  Yes;
+               </c:when>
+               <c:otherwise>
+                  No;
                </c:otherwise>
             </c:choose>
          </p>
@@ -54,7 +63,7 @@
 			            <input id="imageKeywords" name="imageKeywords" class="form-control" value="${imageDetail.getImageKeywords()}" />
 			         </div>
                   </div>
-                  <div class="checkbox col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                  <div class="checkbox col-xs-12">
                      <label>
                         <c:choose>
                            <c:when test="${imageDetail.isImageActive()}">
@@ -62,6 +71,18 @@
                            </c:when>
                            <c:otherwise>
                               <input type="checkbox" id="imageActive" name="imageActive" /> Active
+                           </c:otherwise>
+                        </c:choose>
+                     </label>
+                  </div>
+                  <div class="checkbox col-xs-12">
+                     <label>
+                        <c:choose>
+                           <c:when test="${imageDetail.isImageNotSafeForWork()}">
+                              <input type="checkbox" id="imageNotSafeForWork" name="imageNotSafeForWork" checked/> Image NSFW
+                           </c:when>
+                           <c:otherwise>
+                              <input type="checkbox" id="imageNotSafeForWork" name="imageNotSafeForWork" /> Image NSFW
                            </c:otherwise>
                         </c:choose>
                      </label>
