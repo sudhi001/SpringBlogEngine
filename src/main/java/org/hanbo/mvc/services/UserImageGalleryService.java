@@ -14,7 +14,7 @@ public interface UserImageGalleryService
    GalleryImagesPageDisplayDataModel getUserGalleryImages(String ownerId, String galleryId, int pageIdx);
    
    void uploadImage(String userId, String galleryId, String imageTitle,
-      String imageKeywords, MultipartFile imageToUpload);
+      String imageKeywords, MultipartFile imageToUpload, boolean imageNotSafeForWork);
       
    void uploadImages(String userId, String galleryId, MultipartFile[] imagesToUpload);
 
@@ -31,7 +31,7 @@ public interface UserImageGalleryService
    ImageDisplayDetail getUserImageDetail(String imageId, String ownerId);
    
    void editImageDetails(String userId, String imageId, String imageTitle,
-      String imageKeywords, boolean imageActive);
+      String imageKeywords, boolean imageActive, boolean imageNotSafeForWork);
 
    void editGalleryDetails(String userId, String galleryId, String galleryTitle,
       String galleryKeywords, String galleryDesc, boolean galleryActive, boolean galleryVisible);

@@ -185,6 +185,11 @@
                                 <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
                              </div>
 			              </div>
+                          <div class="checkbox col-md-12">
+                             <label>
+                                <input id="imageNotSafeForWork" name="imageNotSafeForWork" type="checkbox"> Image NSFW
+                             </label>
+                          </div>
 			              <div class="form-group row">
 			                 <div class="col-xs-12">
                                 <div class="alert alert-danger" id="uploadError" style="visible: hidden"></div>

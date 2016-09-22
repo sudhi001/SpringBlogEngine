@@ -245,7 +245,9 @@ public class UserImageGalleryActions
       @RequestParam("imageKeywords")
       String imageKeywords,
       @RequestParam("imageToUpload")
-      MultipartFile imageToUpload
+      MultipartFile imageToUpload,
+      @RequestParam(value="imageNotSafeForWork", defaultValue="false")
+      boolean imageNotSafeForWork
    )
    {
       UserPrincipalDataModel loginUser = this._util.getLoginUser();
@@ -260,7 +262,7 @@ public class UserImageGalleryActions
          String userId = loginUser.getUserId();
          _imageGalleryService.uploadImage(userId, galleryId,
                imageTitle, imageKeywords,
-               imageToUpload);
+               imageToUpload, imageNotSafeForWork);
          
          return _util.createRedirectPageView(
             String.format("redirect:/admin/gallery/%s/page/0", galleryId)
@@ -316,8 +318,17 @@ public class UserImageGalleryActions
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value="/admin/image/editDetails",
       method=RequestMethod.POST)
-   public ModelAndView editImageDetails(String imageId, String imageTitle,
-      String imageKeywords, boolean imageActive)
+   public ModelAndView editImageDetails(
+      @RequestParam("imageId")
+      String imageId,
+      @RequestParam("imageTitle")
+      String imageTitle,
+      @RequestParam("imageKeywords")
+      String imageKeywords,
+      @RequestParam(value="imageActive", defaultValue="false")
+      boolean imageActive,
+      @RequestParam(value="imageNotSafeForWork", defaultValue="false")
+      boolean imageNotSafeForWork)
    {
       UserPrincipalDataModel loginUser = this._util.getLoginUser();
       if (loginUser == null)
@@ -328,7 +339,7 @@ public class UserImageGalleryActions
       
       String userId = loginUser.getUserId();
       _imageGalleryService.editImageDetails(userId, imageId,
-         imageTitle, imageKeywords, imageActive);
+         imageTitle, imageKeywords, imageActive, imageNotSafeForWork);
       
       return _util.createRedirectPageView(
          String.format("redirect:/admin/image/%s", imageId)

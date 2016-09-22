@@ -120,7 +120,7 @@ public class UserImageGalleryServiceImpl
    
    @Override
    public void uploadImage(String userId, String galleryId,
-      String imageTitle, String imageKeywords, MultipartFile imageToUpload)
+      String imageTitle, String imageKeywords, MultipartFile imageToUpload, boolean imageNotSafeForWork)
    {
       validateUploadedImage(imageToUpload);
       
@@ -153,6 +153,7 @@ public class UserImageGalleryServiceImpl
 	   image.setKeywords(imageKeywords);
 	   image.setUploadDate(new Date());
 	   image.setOwner(imageOwner);
+	   image.setNotSafeForWork(imageNotSafeForWork);
 	   
 	   try
 	   {
@@ -480,7 +481,7 @@ public class UserImageGalleryServiceImpl
    @Override
    public void editImageDetails(String userId, String imageId,
       String imageTitle, String imageKeywords,
-      boolean imageActive)
+      boolean imageActive, boolean imageNotSafeForWork)
    {
       if (StringUtils.isEmpty(userId))
       {
@@ -505,6 +506,7 @@ public class UserImageGalleryServiceImpl
          imageFound.setActive(imageActive);
          imageFound.setTitle(imageTitle);
          imageFound.setKeywords(imageKeywords);
+         imageFound.setNotSafeForWork(imageNotSafeForWork);
          
          this._imageGalleryRepo.saveImage(imageFound);
       }
