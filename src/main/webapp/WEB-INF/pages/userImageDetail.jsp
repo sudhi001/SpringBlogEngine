@@ -106,8 +106,8 @@
          <div class="panel panel-default" id="imageBlogPostPanel" style="display: none;">
             <div class="panel-body">
                <form id="imageBlogPostForm" class="form" action="${pageContext.request.contextPath}/admin/image/postForBlog"
-                     method="POST" onsubmit="return validateBlogImagePost('${imageDetail.getImageId()}')"
-                     onreset="resetForPostBlog()">
+                     method="POST" onsubmit="return validateBlogImagePost()"
+                     onreset="resetForPostBlog('${imageDetail.getImageId()}')">
                   <legend>Create Blog Post</legend>
                   <input type="hidden" id="postImageId" name="postImageId" value="${imageDetail.getImageId()}" >
                   <div class="form-group">
