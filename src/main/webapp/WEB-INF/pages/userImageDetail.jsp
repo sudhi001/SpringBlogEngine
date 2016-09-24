@@ -41,7 +41,7 @@
             <div class="col-xs-12">
                <button class="btn btn-default" id="editImageDetailsBtn" onclick="editImageDetails()">Edit Detail</button>&nbsp;
                <button class="btn btn-default" id="cancelEditDetailsBtn" style="display: none;" onclick="cancelEditDetails('${imageDetail.getImageTitle()}', '${imageDetail.getImageKeywords()}')">Cancel Editing</button>&nbsp;
-               <button class="btn btn-default">Write Blog Post</button>
+               <button class="btn btn-default" id="ceateBlogForImageBtn" onclick="showPostBlogForImage()">Write Blog Post</button>
             </div>
          </div>
          <div class="panel panel-default" id="editImageDetailsPanel" style="display: none;">
@@ -97,7 +97,49 @@
                   <div class="form-group">
 			         <div class="col-xs-12 text-center">
 			            <button type="submit" class="btn btn-default">Save</button>&nbsp;
-			            <button type="reset" class="btn btn-default">Reset</button>&nbsp;			            
+			            <button type="reset" class="btn btn-default">Clear</button>&nbsp;			            
+			         </div>
+                  </div>
+               </form>
+            </div>
+         </div>
+         <div class="panel panel-default" id="imageBlogPostPanel" style="display: none;">
+            <div class="panel-body">
+               <form id="imageBlogPostForm" class="form" action="${pageContext.request.contextPath}/admin/image/postForBlog"
+                     method="POST" onsubmit="return validateBlogImagePost('${imageDetail.getImageId()}')"
+                     onreset="resetForPostBlog()">
+                  <legend>Create Blog Post</legend>
+                  <input type="hidden" id="postImageId" name="postImageId" value="${imageDetail.getImageId()}" >
+                  <div class="form-group">
+                     <label class="col-xs-12 control-label">Post Title</label>
+			         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+			            <input id="blogTitle" name="blogTitle" class="form-control" value="" />
+			         </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="col-xs-12 control-label">Post Keywords</label>
+			         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+			            <input id="blogKeywords" name="blogKeywords" class="form-control" value="" />
+			         </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="col-xs-12 control-label">Post Content</label>
+			         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+<textarea id="blogContent" name="blogContent" class="form-control">
+</textarea>
+			         </div>
+                  </div>
+                  <div class="row margin-updown" id="imageBlogPostError" style="display: none;">
+                     <div class="col-xs-12">
+                        <div class="warning-block" id="imageBlogPostErrorMsg">
+                           test test
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group">
+			         <div class="col-xs-12 text-center">
+			            <button type="submit" class="btn btn-default">Post</button>&nbsp;
+			            <button type="reset" class="btn btn-default">Clear</button>&nbsp;			            
 			         </div>
                   </div>
                </form>
@@ -105,13 +147,13 @@
          </div>
        </div>
      </div>
-          
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/custom/js/editImageDetails.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/imageBlogPost.js"></script>
     <script>
     </script>
   </tiles:putAttribute>
