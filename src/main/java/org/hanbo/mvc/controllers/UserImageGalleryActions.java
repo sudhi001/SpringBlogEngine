@@ -390,7 +390,32 @@ public class UserImageGalleryActions
    {
       downloadImage(imageId, "", response);
    }
+   
+   @RequestMapping(value = "/public/image-thumb/{imageId}", method=RequestMethod.GET)
+   public void publicImageThumb(
+      @PathVariable("imageId")
+      String imageId,
+      HttpServletResponse response
+   )
+   {
+      downloadImage(imageId, "thumb", response);
+   }
+   
+   @RequestMapping(value = "/public/image/{imageId}", method=RequestMethod.GET)
+   public void publicImageDownload(
+      @PathVariable("imageId")
+      String imageId,
+      HttpServletResponse response
+   )
+   {
+      downloadImage(imageId, "thumb", response);
+   }
 
+   private void publicAccessImage(String imageId, String type, HttpServletResponse response)
+   {
+      
+   }
+   
    private void downloadImage(String imageId, String type, HttpServletResponse response)
    {
       try

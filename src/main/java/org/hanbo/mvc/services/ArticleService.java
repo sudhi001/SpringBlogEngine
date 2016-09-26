@@ -22,4 +22,7 @@ public interface ArticleService
    void publishOwnerArticle(String articleId, String ownerId, boolean articleToPublish);
    
    ArticleListPageDataModel getAllViewablePosts(int pageIdx);
+   
+   String createBlogPostFromImage(String imageId, String postTitle,
+      String postKeywords, String postContent);
 }

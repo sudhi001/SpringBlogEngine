@@ -188,6 +188,16 @@ public class ArticleServiceImpl implements ArticleService
       
       return retVal;
    }
+   
+   public String createBlogPostFromImage(String imageId, String postTitle,
+      String postKeywords, String postContent)
+   {
+      //StringBuilder sb = new StringBuilder();
+     // sb.append("<p>");
+     // sb.append("<img src=\"");
+      
+      return "";
+   }
 
    private void validateArticleOwnership(String articleId, String ownerId)
    {

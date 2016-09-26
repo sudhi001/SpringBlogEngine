@@ -342,6 +342,8 @@ public class UserImageGalleryServiceImpl
    }
 
    
+   
+   
    @Override
    public boolean downloadImage(
       String imageId, String type, OutputStream outputStream

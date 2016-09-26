@@ -3,6 +3,7 @@ package org.hanbo.mvc.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ArticleDataModel;
@@ -197,6 +198,31 @@ public class BlogPostActions
       retVal.addObject("articleListPageModel", articleListPage);
       
       return retVal;
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/image/postForBlog", method=RequestMethod.POST)
+   public ModelAndView imagePostForBlog(
+      @RequestParam("blogImageId")
+      String blogImageId,
+      @RequestParam("blogTitle")
+      String blogTitle,
+      @RequestParam("blogKeywords")
+      String blogKeywords,
+      @RequestParam("blogContent")
+      String blogContent)
+   {
+      String articleId = this._articleService.createBlogPostFromImage(blogImageId, blogTitle,
+         blogKeywords, blogContent);
+      if (StringUtils.isEmpty(articleId))
+      {
+         String toEditPostPage = String.format("redirect:/admin/blog/editPost/%s", articleId);
+         return _util.createRedirectPageView(toEditPostPage);
+      }
+      else
+      {
+         return _util.createErorrPageViewModel("Failed with error", "Unable to create blog post from the image.");
+      }
    }
    
    @RequestMapping(value = "/blog/allPosts/{pageIdx}", method=RequestMethod.GET)
