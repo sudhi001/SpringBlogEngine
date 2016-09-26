@@ -9,6 +9,7 @@ import org.hanbo.mvc.entities.LoginUser;
 import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ArticleDataModel;
 import org.hanbo.mvc.models.ArticleListPageDataModel;
+import org.hanbo.mvc.models.ImageSizeDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.SimplifiedArticleDataModel;
 import org.hanbo.mvc.repositories.ArticlesRepository;
@@ -32,6 +33,9 @@ public class ArticleServiceImpl implements ArticleService
    
    @Autowired
    private Environment configValues;
+   
+   @Autowired
+   private UserImageGalleryService userImageGalleryService;
    
    @Override
    public ArticleDataModel saveArticle(ArticleDataModel articleDataModel)
@@ -189,12 +193,56 @@ public class ArticleServiceImpl implements ArticleService
       return retVal;
    }
    
-   public String createBlogPostFromImage(String imageId, String postTitle,
+   public String createBlogPostFromImage(String ownerId, String imageId, String postTitle,
       String postKeywords, String postContent)
    {
-      //StringBuilder sb = new StringBuilder();
-     // sb.append("<p>");
-     // sb.append("<img src=\"");
+      LoginUser user = 
+      userRepo.getUserById(ownerId);
+      if (user == null)
+      {
+         throw new WebAppException(
+            String.format("User with id [%s] cannot be found.", ownerId)
+            , WebAppException.ErrorType.DATA);
+      }
+      
+      ImageSizeDataModel imageSizeInfo = 
+      userImageGalleryService.getImageDimension(imageId);
+      if (imageSizeInfo != null)
+      {
+         StringBuilder sb = new StringBuilder();
+         sb.append("<!-- Image size: ");
+         sb.append(imageSizeInfo.getImageSizeX());
+         sb.append("x");
+         sb.append(imageSizeInfo.getImageSizeY());
+         sb.append("; ratio: ");
+         sb.append(String.format("%.2f", imageSizeInfo.getWidthToHeightRatio()));
+         sb.append(" -->");
+         sb.append(System.lineSeparator());
+         sb.append("<p>");
+         sb.append("<img src=\"");
+         sb.append("public/image/");
+         sb.append(imageId);
+         sb.append("\"></p>");
+         
+         Date dateNow = new Date();
+         
+         Article article = new Article();
+         String articleId = IdUtil.generateUuid();
+         article.setId(articleId);
+         article.setAuthor(user);
+         article.setArticleType("Blog");
+         article.setCategory("");
+         article.setKeywords(postKeywords);
+         article.setContent(postContent);
+         article.setSummary("");
+         article.setTitle(postTitle);
+         article.setCreateDate(dateNow);
+         article.setUpdateDate(dateNow);
+         
+         this.articlesRepo.saveArticle(article);
+         
+         return articleId;
+      }
       
       return "";
    }

@@ -23,6 +23,6 @@ public interface ArticleService
    
    ArticleListPageDataModel getAllViewablePosts(int pageIdx);
    
-   String createBlogPostFromImage(String imageId, String postTitle,
-      String postKeywords, String postContent);
+   String createBlogPostFromImage(String ownerId, String imageId,
+      String postTitle, String postKeywords, String postContent);
 }

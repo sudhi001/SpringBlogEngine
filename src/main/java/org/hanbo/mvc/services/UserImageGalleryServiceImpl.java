@@ -16,6 +16,7 @@ import org.hanbo.mvc.models.GalleryDisplayDetail;
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
 import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.ImageDisplayDetail;
+import org.hanbo.mvc.models.ImageSizeDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.repositories.ImageGalleryRepository;
 import org.hanbo.mvc.repositories.UsersRepository;
@@ -549,6 +550,33 @@ public class UserImageGalleryServiceImpl
          this._imageGalleryRepo.saveGallery(galleryFound);
       }
    }
+   
+   @Override
+   public ImageSizeDataModel getImageDimension(String imageId)
+   {
+      Image imageFound = 
+      this._imageGalleryRepo.getImage(imageId);
+      if (imageFound != null)
+      {
+         int sizeX = imageFound.getFileSizeX();
+         int sizeY = imageFound.getFileSizeY();
+         if (sizeX > 0 && sizeY > 0)
+         {
+            ImageSizeDataModel retVal = new ImageSizeDataModel();
+            retVal.setImageId(imageId);
+            retVal.setImageSizeX(sizeX);
+            retVal.setImageSizeY(sizeY);
+
+            float widthToHeightRatio = ((float)sizeX) / ((float)sizeY);
+            retVal.setWidthToHeightRatio(widthToHeightRatio);
+            
+            return retVal;
+         }
+      }
+      
+      return null;
+   }
+
    
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
    {

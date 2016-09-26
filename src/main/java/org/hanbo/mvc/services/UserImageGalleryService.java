@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
 import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.ImageDisplayDetail;
+import org.hanbo.mvc.models.ImageSizeDataModel;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserImageGalleryService
@@ -35,4 +36,6 @@ public interface UserImageGalleryService
 
    void editGalleryDetails(String userId, String galleryId, String galleryTitle,
       String galleryKeywords, String galleryDesc, boolean galleryActive, boolean galleryVisible);
+   
+   ImageSizeDataModel getImageDimension(String imageId);
 }

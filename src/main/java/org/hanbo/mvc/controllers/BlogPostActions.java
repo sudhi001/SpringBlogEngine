@@ -212,7 +212,14 @@ public class BlogPostActions
       @RequestParam("blogContent")
       String blogContent)
    {
-      String articleId = this._articleService.createBlogPostFromImage(blogImageId, blogTitle,
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel("User Authorization Failure", "User cannot be found.");
+      }
+      
+      String articleId = this._articleService.createBlogPostFromImage(loginUser.getUserId(),
+            blogImageId, blogTitle,
          blogKeywords, blogContent);
       if (StringUtils.isEmpty(articleId))
       {

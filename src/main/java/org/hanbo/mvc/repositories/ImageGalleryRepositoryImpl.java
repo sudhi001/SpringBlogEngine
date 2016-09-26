@@ -370,4 +370,27 @@ public class ImageGalleryRepositoryImpl
       
       return null;
    }
+
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public Image getImage(String imageId)
+   {
+      Session session = this._sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select image from Image image where image.id = :imageId"
+      ).setParameter("imageId", imageId)
+       .setMaxResults(1)
+       .setFirstResult(0);
+
+      List<Image> imagesFound = query.list();
+      if (imagesFound.size() > 0)
+      {
+         return imagesFound.get(0);
+      }
+      
+      return null;
+   }
 }

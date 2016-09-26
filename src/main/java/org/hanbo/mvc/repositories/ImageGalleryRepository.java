@@ -35,4 +35,6 @@ public interface ImageGalleryRepository
    void enableGallery(String ownerId, String galleryId, boolean enableGallery);
    
    Image getUserImage(String imageId, String ownerId);
+   
+   Image getImage(String imageId);
 }
