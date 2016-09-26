@@ -230,7 +230,7 @@ public class ArticleServiceImpl implements ArticleService
          String articleId = IdUtil.generateUuid();
          article.setId(articleId);
          article.setAuthor(user);
-         article.setArticleType("Blog");
+         article.setArticleType("post");
          article.setCategory("");
          article.setKeywords(postKeywords);
          article.setContent(postContent);
