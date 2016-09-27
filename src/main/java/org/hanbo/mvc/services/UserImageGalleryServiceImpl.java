@@ -560,6 +560,7 @@ public class UserImageGalleryServiceImpl
       {
          int sizeX = imageFound.getFileSizeX();
          int sizeY = imageFound.getFileSizeY();
+
          if (sizeX > 0 && sizeY > 0)
          {
             ImageSizeDataModel retVal = new ImageSizeDataModel();

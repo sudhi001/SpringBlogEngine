@@ -408,7 +408,7 @@ public class UserImageGalleryActions
       HttpServletResponse response
    )
    {
-      downloadImage(imageId, "thumb", response);
+      downloadImage(imageId, "", response);
    }
 
    private void publicAccessImage(String imageId, String type, HttpServletResponse response)

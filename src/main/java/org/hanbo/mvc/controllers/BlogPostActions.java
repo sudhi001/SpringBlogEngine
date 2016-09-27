@@ -203,7 +203,7 @@ public class BlogPostActions
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/image/postForBlog", method=RequestMethod.POST)
    public ModelAndView imagePostForBlog(
-      @RequestParam("blogImageId")
+      @RequestParam("postImageId")
       String blogImageId,
       @RequestParam("blogTitle")
       String blogTitle,
@@ -219,9 +219,8 @@ public class BlogPostActions
       }
       
       String articleId = this._articleService.createBlogPostFromImage(loginUser.getUserId(),
-            blogImageId, blogTitle,
-         blogKeywords, blogContent);
-      if (StringUtils.isEmpty(articleId))
+         blogImageId, blogTitle, blogKeywords, blogContent);
+      if (!StringUtils.isEmpty(articleId))
       {
          String toEditPostPage = String.format("redirect:/admin/blog/editPost/%s", articleId);
          return _util.createRedirectPageView(toEditPostPage);

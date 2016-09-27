@@ -21,10 +21,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import org.apache.log4j.*;
+
 @Service
 @PropertySource("classpath:/site.properties")
 public class ArticleServiceImpl implements ArticleService
 {
+   private static Logger _logger = LogManager.getLogger(ArticleServiceImpl.class);
+   
    @Autowired
    private UsersRepository userRepo;
    
@@ -206,9 +210,10 @@ public class ArticleServiceImpl implements ArticleService
       }
       
       ImageSizeDataModel imageSizeInfo = 
-      userImageGalleryService.getImageDimension(imageId);
+         userImageGalleryService.getImageDimension(imageId);
       if (imageSizeInfo != null)
       {
+         _logger.debug("imageSizeInfo is not null");
          StringBuilder sb = new StringBuilder();
          sb.append("<!-- Image size: ");
          sb.append(imageSizeInfo.getImageSizeX());
@@ -219,10 +224,35 @@ public class ArticleServiceImpl implements ArticleService
          sb.append(" -->");
          sb.append(System.lineSeparator());
          sb.append("<p>");
-         sb.append("<img src=\"");
-         sb.append("public/image/");
-         sb.append(imageId);
-         sb.append("\"></p>");
+         if (imageSizeInfo.getImageSizeX() > imageSizeInfo.getImageSizeY())
+         {
+            sb.append("<div class=\"row\">");
+            sb.append("<div class=\"col-xs-12 thumbnail\">");
+            sb.append("<img src=\"");
+            sb.append("/public/image/");
+            sb.append(imageId);
+            sb.append("\" class=\"img-responsive\" width=\"100%\">");
+            sb.append("</div>");
+            sb.append("</div>");
+         }
+         else
+         {
+            sb.append("<div class=\"row\">");
+            sb.append("<div class=\"col-xs-8 col-xs-offset-2\">");
+            sb.append("<img src=\"");
+            sb.append("/public/image/");
+            sb.append(imageId);
+            sb.append("\" class=\"img-responsive\" width=\"100%\">");
+            sb.append("</div>");
+            sb.append("</div>");
+         }
+         sb.append("</p>");
+         sb.append(System.lineSeparator());
+         sb.append("<p>");
+         sb.append(postContent);
+         sb.append("</p>");
+       
+         _logger.debug(sb.toString());
          
          Date dateNow = new Date();
          
@@ -233,7 +263,7 @@ public class ArticleServiceImpl implements ArticleService
          article.setArticleType("post");
          article.setCategory("");
          article.setKeywords(postKeywords);
-         article.setContent(postContent);
+         article.setContent(sb.toString());
          article.setSummary("");
          article.setTitle(postTitle);
          article.setCreateDate(dateNow);
@@ -241,7 +271,12 @@ public class ArticleServiceImpl implements ArticleService
          
          this.articlesRepo.saveArticle(article);
          
+         _logger.debug(articleId);
          return articleId;
+      }
+      else
+      {
+         _logger.debug("imageSizeInfo is null");
       }
       
       return "";
