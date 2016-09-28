@@ -55,6 +55,7 @@
             <div class="col-md-10">
               <p><button type="button" class="btn btn-default" onclick="handleClickResDlg('addTextResDlg')">Insert Text Resource</button> 
               <button type="button" class="btn btn-default" onclick="handleClickResDlg('addImgResDlg')">Insert Image Resource</button>
+              <button type="button" class="btn btn-default" onclick="handleClickResDlg('addPhotosDlg')">Insert My Photos</button>              
               </p>
               <form:textarea path="articleContent" id="articleContent" class="form-control" rows="18"/>
             </div>
@@ -71,7 +72,6 @@
         </form:form>
       </div>
     </div>
-    
     
     <div id="addTextResDlg" class="modal fade">
       <div class="modal-dialog">
@@ -108,6 +108,62 @@
         </div>
       </div>
     </div>
+    
+    <div id="addPhotosDlg" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Insert My Photos</h4>
+          </div>
+          <div class="modal-body">
+             <form id="searchMyPhotosForm" class="form-inline">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="searchPhotoWords" name="searchPhotoWords" placeholder="Enter Keywords">
+   	            </div>
+   	            <button class="btn btn-default" onclick="">Search</button>
+             </form>
+             <hr>
+             <div id="photosList" class="row">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                   <div class="thumbnail gallery-image">
+                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
+                   </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                   <div class="thumbnail gallery-image">
+                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
+                   </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                   <div class="thumbnail gallery-image">
+                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
+                   </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                   <div class="thumbnail gallery-image">
+                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
+                   </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                   <div class="thumbnail gallery-image">
+                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
+                   </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                   <div class="thumbnail gallery-image">
+                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
+                   </div>
+                </div>
+             </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="handleClickFindPhoto()">Find</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">
@@ -124,9 +180,9 @@
        {
          var existingTable = $("#addTextResDlg #txtResTable");
          if (existingTable !== null)
-          {
+         {
            existingTable.remove();
-          }
+         }
          var tableToAdd = createEmptyTable('txtResTable');
          
          $.ajax({
@@ -177,7 +233,6 @@
            
           $("#addImgResDlg #imgResDlgBody").append(tableToAdd);
        });
-
        
        var createEmptyTable = function (tableId)
        {
@@ -312,6 +367,11 @@
                }
             });
          };
+         
+         $('#addPhotosDlg').on('show.bs.modal', function (e) {
+            $("#addPhotosDlg #searchMyPhotosForm #searchPhotoWords").val("");
+            $("#addPhotosDlg #photosList").empty();
+         });
     </script>
   </tiles:putAttribute>
 </tiles:insertDefinition>
