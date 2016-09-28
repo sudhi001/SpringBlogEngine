@@ -335,6 +335,11 @@ body {
    padding: 5px;
 }
 
+.gallery-image {
+   max-width: 260px;
+   max-height: 260px;
+}
+
 .margin-updown {
    margin-top: 12px;
    margin-bottom: 12px;

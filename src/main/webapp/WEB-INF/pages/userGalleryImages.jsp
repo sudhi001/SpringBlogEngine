@@ -114,10 +114,12 @@ ${userGalleryImagesPageModel.getGalleryDetail().getGalleryDescription()}
       <c:when test="${!userGalleryImagesPageModel.isDataModelEmpty()}">
         <div class="row">
           <c:forEach  items="${userGalleryImagesPageModel.getImagesPageList()}" var="imageItem">
-          <div class="thumbnail col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="${pageContext.request.contextPath}/admin/image/${imageItem.getImageId()}">
-              <img src="${pageContext.request.contextPath}/secure/image-thumb/${imageItem.getImageId()}" width="100%" height="100%">
-            </a>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center">
+            <div class="thumbnail gallery-image">
+               <a href="${pageContext.request.contextPath}/admin/image/${imageItem.getImageId()}">
+                  <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/${imageItem.getImageId()}" width="100%">
+               </a>
+            </div>
           </div>
           </c:forEach>
         </div>

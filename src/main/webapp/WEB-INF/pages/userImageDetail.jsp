@@ -34,8 +34,23 @@
                </c:otherwise>
             </c:choose>
          </p>
-       
-         <img class="img-responsive pad" style="text-align: center;" width="100%" height="100%" src="${pageContext.request.contextPath}/secure/image-full/${imageDetail.getImageId()}" alt="Photo">
+
+         <c:choose>
+            <c:when test="${imageDetail.getImageWidth() > imageDetail.getImageHeight()}">
+              <div class="row">
+                 <div class="col-xs-12 thumbnail">
+                    <img class="img-responsive pad" style="text-align: center;" width="100%" src="${pageContext.request.contextPath}/secure/image-full/${imageDetail.getImageId()}" alt="Photo">
+                 </div>
+              </div>
+            </c:when>
+            <c:otherwise>
+              <div class="row">
+                 <div class="col-xs-8 col-xs-offset-2 thumbnail">
+                    <img class="img-responsive pad" style="text-align: center;" width="100%" src="${pageContext.request.contextPath}/secure/image-full/${imageDetail.getImageId()}" alt="Photo">
+                 </div>
+              </div>
+            </c:otherwise>
+         </c:choose>       
          
          <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
             <div class="col-xs-12">
