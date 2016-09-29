@@ -37,4 +37,6 @@ public interface ImageGalleryRepository
    Image getUserImage(String imageId, String ownerId);
    
    Image getImage(String imageId);
+   
+   List<Image> findUserImages(String ownerId, List<String> searchWord);
 }

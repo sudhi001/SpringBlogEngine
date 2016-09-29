@@ -1,6 +1,7 @@
 package org.hanbo.mvc.controllers;
 
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,6 +12,7 @@ import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.json.GenericJsonResponse;
+import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 import org.hanbo.mvc.services.UserImageGalleryService;
 import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -390,6 +392,39 @@ public class UserImageGalleryActions
    {
       downloadImage(imageId, "", response);
    }
+
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/images/findImages", method=RequestMethod.POST)
+   @ResponseBody
+   public ResponseEntity<String> adminFindImages(
+      @RequestParam("searchWords")
+      String searchWords
+   )
+   {
+      _logger.info(String.format("searchWords: %s", searchWords));
+      
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         _logger.info(String.format("searchWords: %s", searchWords));
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+      
+      List<SearchUserPhotoResponse> foundPhotos =
+      this._imageGalleryService.findUserImages(loginUser.getUserId(), searchWords);
+      if (foundPhotos != null && foundPhotos.size() > 0)
+      {
+         String responseBody = JsonUtil.convertObjectToJson(foundPhotos);
+         ResponseEntity<String> retVal = new ResponseEntity<String>(responseBody, HttpStatus.OK);
+         return retVal;
+      }
+      
+      return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+   }
+
    
    @RequestMapping(value = "/public/image-thumb/{imageId}", method=RequestMethod.GET)
    public void publicImageThumb(

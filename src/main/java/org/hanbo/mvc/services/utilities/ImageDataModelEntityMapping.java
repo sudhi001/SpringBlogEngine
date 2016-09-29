@@ -7,6 +7,7 @@ import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
 import org.hanbo.mvc.models.GalleryDisplayDetail;
 import org.hanbo.mvc.models.ImageDisplayDetail;
+import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 
 public class ImageDataModelEntityMapping
 {
@@ -75,5 +76,45 @@ public class ImageDataModelEntityMapping
       }
       
       return retVal;
+   }
+   
+   public static List<SearchUserPhotoResponse> entitiesToSearchUserPhotoResponses(List<Image> userImagesFound)
+   {
+      List<SearchUserPhotoResponse> retVals = new ArrayList<SearchUserPhotoResponse>();
+      
+      if (userImagesFound != null && userImagesFound.size() > 0)
+      {
+         for (Image imageToConvert : userImagesFound)
+         {
+            SearchUserPhotoResponse response
+               = entityToSearchUserPhotoResponse(imageToConvert);
+            
+            if (response != null)
+            {
+               retVals.add(response);
+            }
+         }
+      }
+      
+      return retVals;
+   }
+
+   public static SearchUserPhotoResponse entityToSearchUserPhotoResponse(Image userImageFound)
+   {
+      if (userImageFound != null)
+      {
+         SearchUserPhotoResponse retVal = new SearchUserPhotoResponse();
+         retVal.setImageId(userImageFound.getId());
+         retVal.setImageSizeX(userImageFound.getFileSizeX());
+         retVal.setImageSizeY(userImageFound.getFileSizeY());
+         retVal.setImageTitle(userImageFound.getTitle());
+         
+         float wtohRatio = ((float)userImageFound.getFileSizeX()) / ((float)userImageFound.getFileSizeY());
+         retVal.setWidthToHeightRatio(wtohRatio);
+         
+         return retVal;
+      }
+      
+      return null;
    }
 }

@@ -18,6 +18,7 @@ import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.hanbo.mvc.models.ImageSizeDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
+import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 import org.hanbo.mvc.repositories.ImageGalleryRepository;
 import org.hanbo.mvc.repositories.UsersRepository;
 import org.hanbo.mvc.services.utilities.ImageDataModelEntityMapping;
@@ -577,7 +578,15 @@ public class UserImageGalleryServiceImpl
       
       return null;
    }
-
+   
+   @Override
+   public List<SearchUserPhotoResponse> findUserPhotos(String ownerId, String searchWords)
+   {
+      List<Image> userImagesFound = 
+      this._imageGalleryRepo.findUserImages(ownerId, searchWords);
+      
+      return ImageDataModelEntityMapping.entitiesToSearchUserPhotoResponses(userImagesFound);
+   }
    
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
    {

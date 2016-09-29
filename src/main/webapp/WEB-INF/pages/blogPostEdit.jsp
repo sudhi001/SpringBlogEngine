@@ -119,7 +119,7 @@
           <div class="modal-body">
              <form id="searchMyPhotosForm" class="form-inline">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="searchPhotoWords" name="searchPhotoWords" placeholder="Enter Keywords">
+                   <input type="text" class="form-control" id="searchPhotoWords" name="searchPhotoWords" placeholder="Enter Keywords">
    	            </div>
    	            <button class="btn btn-default" onclick="">Search</button>
              </form>
@@ -372,6 +372,35 @@
             $("#addPhotosDlg #searchMyPhotosForm #searchPhotoWords").val("");
             $("#addPhotosDlg #photosList").empty();
          });
+         
+         var handleClickFindPhoto = function () {
+        	var searchWords = $("#addPhotosDlg #searchMyPhotosForm #searchPhotoWords").val();
+        	if (searchWords != null && searchWords.length > 0)
+            {
+               var jsonUrl = "${pageContext.request.contextPath}/admin/images/findImage";
+                
+               $.ajax({
+            	  type: "GET",
+            	  url: jsonUrl,
+                  xhrFields: {
+                     withCredentials: true
+                  },
+                  data: "searchWords=" + searchWords,
+                  success: function(data) {
+                     alert(JSON.stringify(data));   
+                       
+                     var divPhotosList = $("#addPhotosDlg #photosList");
+                     if (divPhotosList)
+                     {
+                        
+                     }
+                  },
+                  error: function() {
+                  }
+               });
+            };
+         }
+         
     </script>
   </tiles:putAttribute>
 </tiles:insertDefinition>

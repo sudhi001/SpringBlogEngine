@@ -1,11 +1,13 @@
 package org.hanbo.mvc.services;
 
 import java.io.OutputStream;
+import java.util.List;
 
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
 import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.hanbo.mvc.models.ImageSizeDataModel;
+import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserImageGalleryService
@@ -38,4 +40,6 @@ public interface UserImageGalleryService
       String galleryKeywords, String galleryDesc, boolean galleryActive, boolean galleryVisible);
    
    ImageSizeDataModel getImageDimension(String imageId);
+   
+   List<SearchUserPhotoResponse> findUserPhotos(String ownerId, String searchWords);
 }

@@ -4,11 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.search.FullTextQuery;
+import org.hibernate.search.FullTextSession;
+import org.hibernate.search.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
@@ -392,5 +400,45 @@ public class ImageGalleryRepositoryImpl
       }
       
       return null;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<Image> findUserImages(String ownerId, List<String> searchWords)
+   {
+      try
+      {
+         Session session = this._sessionFactory.getCurrentSession();
+         
+         FullTextSession fullTextSession = Search.getFullTextSession(session);
+         
+         QueryBuilder qb = fullTextSession.getSearchFactory()
+            .buildQueryBuilder().forEntity(Image.class).get();
+
+         org.apache.lucene.search.BooleanQuery finalQuery = new BooleanQuery();
+         for (String keyword : searchWords)
+         {
+            org.apache.lucene.search.Query query = qb
+               .keyword().onFields("title", "keywords")
+               .matching(keyword)
+               .createQuery();
+            finalQuery.add(query, Occur.SHOULD);
+         }
+         
+         FullTextQuery fullTextQuery = fullTextSession.createFullTextQuery(finalQuery);
+         Sort sortField = new Sort();
+         sortField.setSort(new SortField("uploadDate", SortField.LONG));
+         fullTextQuery.setSort(sortField);
+         List<Image> retVals = fullTextQuery.list();
+         
+         return retVals;
+      }
+      catch(Exception e)
+      {
+        throw e; 
+      }
    }
 }
