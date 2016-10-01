@@ -409,6 +409,11 @@ public class ImageGalleryRepositoryImpl
    )
    public List<Image> findUserImages(String ownerId, String[] searchWords)
    {
+      for (String imgKeyword : searchWords)
+      {
+         System.out.println(imgKeyword);
+      }
+      
       try
       {
          List<Image> retVals = new ArrayList<Image>();

@@ -394,7 +394,7 @@ public class UserImageGalleryActions
    }
 
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-   @RequestMapping(value = "/admin/images/findImages", method=RequestMethod.POST)
+   @RequestMapping(value = "/admin/images/findImages", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
    @ResponseBody
    public ResponseEntity<String> adminFindImages(
       @RequestParam("searchWords")
