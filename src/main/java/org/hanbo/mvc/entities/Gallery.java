@@ -32,17 +32,17 @@ public class Gallery
    @Column(name = "id", nullable = false, length = 45)
    private String id;
 
-   @Column(name = "title", nullable = false, length = 96)
+   @Column(name = "gallerytitle", nullable = false, length = 96)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-   private String title;
+   private String galleryTitle;
    
-   @Column(name = "description", nullable = true, length = 3072)
+   @Column(name = "gallerydescription", nullable = true, length = 3072)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-   private String description;
+   private String galleryDescription;
 
-   @Column(name = "keywords", nullable = true, length = 128)
+   @Column(name = "gallerykeywords", nullable = true, length = 128)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-   private String keywords;
+   private String galleryKeywords;
    
    @Column(name = "active", nullable = false)
    private boolean active;
@@ -64,9 +64,9 @@ public class Gallery
    
    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    @JoinTable(name = "imagetogallery", joinColumns = { 
-         @JoinColumn(name = "galleryid", nullable = false, updatable = false) }, 
-         inverseJoinColumns = { @JoinColumn(name = "imageid", 
-               nullable = false, updatable = false) })
+      @JoinColumn(name = "galleryid", nullable = false, updatable = false) }, 
+      inverseJoinColumns = { @JoinColumn(name = "imageid", 
+         nullable = false, updatable = false) })
    private Set<Image> galleryImages;
 
    public Gallery()
@@ -86,34 +86,34 @@ public class Gallery
       this.id = id;
    }
 
-   public String getTitle()
+   public String getGalleryTitle()
    {
-      return title;
+      return galleryTitle;
    }
 
-   public void setTitle(String title)
+   public void setGalleryTitle(String title)
    {
-      this.title = title;
+      this.galleryTitle = title;
    }
 
-   public String getDescription()
+   public String getGalleryDescription()
    {
-      return description;
+      return galleryDescription;
    }
 
-   public void setDescription(String description)
+   public void setGalleryDescription(String description)
    {
-      this.description = description;
+      this.galleryDescription = description;
    }
 
-   public String getKeywords()
+   public String getGalleryKeywords()
    {
-      return keywords;
+      return galleryKeywords;
    }
 
-   public void setKeywords(String keywords)
+   public void setGalleryKeywords(String keywords)
    {
-      this.keywords = keywords;
+      this.galleryKeywords = keywords;
    }
    
    public Date getCreateDate()

@@ -16,8 +16,8 @@ public class ImageDataModelEntityMapping
       ImageDisplayDetail retVal = new  ImageDisplayDetail();
       
       retVal.setImageId(img.getId());
-      retVal.setImageTitle(img.getTitle());
-      retVal.setImageKeywords(img.getKeywords());
+      retVal.setImageTitle(img.getImageTitle());
+      retVal.setImageKeywords(img.getImageKeywords());
       retVal.setUpdloadDate(img.getUploadDate());
       retVal.setImageActive(img.isActive());
       retVal.setImageNotSafeForWork(img.isNotSafeForWork());
@@ -52,11 +52,11 @@ public class ImageDataModelEntityMapping
       GalleryDisplayDetail retVal = new GalleryDisplayDetail();
       
       retVal.setGalleryId(gallery.getId());
-      retVal.setGalleryDescription(gallery.getDescription());
+      retVal.setGalleryDescription(gallery.getGalleryDescription());
       retVal.setCreateDate(gallery.getCreateDate());
       retVal.setUpdateDate(gallery.getUpdateDate());
-      retVal.setGalleryKeywords(gallery.getKeywords());
-      retVal.setGalleryTitle(gallery.getTitle());
+      retVal.setGalleryKeywords(gallery.getGalleryKeywords());
+      retVal.setGalleryTitle(gallery.getGalleryTitle());
       retVal.setGalleryActive(gallery.isActive());
       retVal.setGalleryVisible(gallery.isVisible());
       retVal.setOwnerId(gallery.getOwner().getId());
@@ -107,7 +107,7 @@ public class ImageDataModelEntityMapping
          retVal.setImageId(userImageFound.getId());
          retVal.setImageSizeX(userImageFound.getFileSizeX());
          retVal.setImageSizeY(userImageFound.getFileSizeY());
-         retVal.setImageTitle(userImageFound.getTitle());
+         retVal.setImageTitle(userImageFound.getImageTitle());
          
          float wtohRatio = ((float)userImageFound.getFileSizeX()) / ((float)userImageFound.getFileSizeY());
          retVal.setWidthToHeightRatio(wtohRatio);

@@ -53,8 +53,9 @@
      <property name="url" value="jdbc:mysql://127.0.0.1:3306/OldBlogEngine?autoReconnect=true"/>
      <property name="username" value="dbuser"/>
      <property name="password" value="123test321"/>
-     <property name="maxActive" value="8"/>
-     <property name="maxIdle" value="4"/>
+     <property name="maxActive" value="100"/>
+     <property name="maxIdle" value="10"/>
+     <property name="initialSize" value="3"/> 
      <property name="maxWait" value="900000"/>
      <property name="validationQuery" value="SELECT 1" />
      <property name="testOnBorrow" value="true" />

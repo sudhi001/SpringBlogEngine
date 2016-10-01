@@ -29,25 +29,25 @@ public class Article
    @Column(name = "id", nullable = false, length = 45)
    private String id;
    
-   @Column(name = "title", nullable = false, length = 128)
+   @Column(name = "articletitle", nullable = false, length = 128)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-   private String title;
+   private String articleTitle;
    
-   @Column(name = "keywords", nullable = true, length = 128)
+   @Column(name = "articlekeywords", nullable = true, length = 128)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-   private String keywords;
+   private String articleKeywords;
    
-   @Column(name = "category", nullable = true, length = 64)
+   @Column(name = "articlecategory", nullable = true, length = 64)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-   private String category;
+   private String articleCategory;
 
-   @Column(name = "summary", nullable = true, length = 512)
+   @Column(name = "articlesummary", nullable = true, length = 512)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-   private String summary;
+   private String articleSummary;
 
-   @Column(name = "content", nullable = true)
+   @Column(name = "articlecontent", nullable = true)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-   private String content;
+   private String articleContent;
    
    @Column(name = "createdate", nullable = false)
    @Temporal(TemporalType.TIMESTAMP)
@@ -80,54 +80,54 @@ public class Article
       this.id = id;
    }
 
-   public String getTitle()
+   public String getArticleTitle()
    {
-      return title;
+      return articleTitle;
    }
 
-   public void setTitle(String title)
+   public void setArticleTitle(String title)
    {
-      this.title = title;
+      this.articleTitle = title;
    }
 
-   public String getKeywords()
+   public String getArticleKeywords()
    {
-      return keywords;
+      return articleKeywords;
    }
 
-   public void setKeywords(String keywords)
+   public void setArticleKeywords(String keywords)
    {
-      this.keywords = keywords;
+      this.articleKeywords = keywords;
    }
 
-   public String getCategory()
+   public String getArticleCategory()
    {
-      return category;
+      return articleCategory;
    }
 
-   public void setCategory(String category)
+   public void setArticleCategory(String category)
    {
-      this.category = category;
+      this.articleCategory = category;
    }
 
-   public String getSummary()
+   public String getArticleSummary()
    {
-      return summary;
+      return articleSummary;
    }
 
-   public void setSummary(String summary)
+   public void setArticleSummary(String summary)
    {
-      this.summary = summary;
+      this.articleSummary = summary;
    }
 
-   public String getContent()
+   public String getArticleContent()
    {
-      return content;
+      return articleContent;
    }
 
-   public void setContent(String content)
+   public void setArticleContent(String content)
    {
-      this.content = content;
+      this.articleContent = content;
    }
 
    public Date getCreateDate()

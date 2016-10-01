@@ -30,15 +30,15 @@ public class Image
    @Column(name = "id", nullable = false, length = 45)
    private String id;
    
-   @Column(name = "title", nullable = true, length = 96)
+   @Column(name = "imagetitle", nullable = true, length = 96)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-   private String title;
+   private String imageTitle;
    
-   @Column(name = "keywords", nullable = true, length = 128)
+   @Column(name = "imagekeywords", nullable = true, length = 128)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
-   private String keywords;
+   private String imageKeywords;
 
-   @Column(name = "imgname", unique = true, nullable = false, length = 64)
+   @Column(name = "imagename", unique = true, nullable = false, length = 64)
    @Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
    private String imageName;
    
@@ -99,24 +99,24 @@ public class Image
       this.id = id;
    }
 
-   public String getTitle()
+   public String getImageTitle()
    {
-      return title;
+      return imageTitle;
    }
 
-   public void setTitle(String title)
+   public void setImageTitle(String title)
    {
-      this.title = title;
+      this.imageTitle = title;
    }
    
-   public String getKeywords()
+   public String getImageKeywords()
    {
-      return keywords;
+      return imageKeywords;
    }
 
-   public void setKeywords(String keywords)
+   public void setImageKeywords(String keywords)
    {
-      this.keywords = keywords;
+      this.imageKeywords = keywords;
    }
 
    public String getImageName()

@@ -406,7 +406,7 @@ public class UserImageGalleryActions
       UserPrincipalDataModel loginUser = this._util.getLoginUser();
       if (loginUser == null)
       {
-         _logger.info(String.format("searchWords: %s", searchWords));
+         _logger.info(String.format("Error: not logged in"));
          return new ResponseEntity<String>(
             JsonUtil.simpleErrorMessage("User not found"),
             HttpStatus.UNAUTHORIZED
@@ -414,7 +414,7 @@ public class UserImageGalleryActions
       }
       
       List<SearchUserPhotoResponse> foundPhotos =
-      this._imageGalleryService.findUserImages(loginUser.getUserId(), searchWords);
+      this._imageGalleryService.findUserPhotos(loginUser.getUserId(), searchWords);
       if (foundPhotos != null && foundPhotos.size() > 0)
       {
          String responseBody = JsonUtil.convertObjectToJson(foundPhotos);

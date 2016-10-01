@@ -44,11 +44,11 @@ CREATE TABLE userrole (
 
 CREATE TABLE article (
    id VARCHAR(45) NOT NULL PRIMARY KEY,
-   title VARCHAR(128) NOT NULL,
-   keywords VARCHAR(128) NULL,
-   category VARCHAR(64) NOT NULL,
-   summary VARCHAR(2048) NULL,
-   content MEDIUMTEXT NULL,
+   articletitle VARCHAR(128) NOT NULL,
+   articlekeywords VARCHAR(128) NULL,
+   articlecategory VARCHAR(64) NOT NULL,
+   articlesummary VARCHAR(2048) NULL,
+   articlecontent MEDIUMTEXT NULL,
    authorid VARCHAR(45) NOT NULL,
    createdate DATETIME NOT NULL,
    updatedate DATETIME NOT NULL,
@@ -109,9 +109,9 @@ CREATE TABLE articleicon (
 
 CREATE TABLE image (
    id VARCHAR(45) NOT NULL PRIMARY KEY,
-   title VARCHAR(96) NULL,
-   keywords VARCHAR(128) NULL, 
-   imgname VARCHAR(64) UNIQUE NOT NULL,
+   imagetitle VARCHAR(96) NULL,
+   imagekeywords VARCHAR(128) NULL, 
+   imagename VARCHAR(64) UNIQUE NOT NULL,
    filepath VARCHAR(256) NOT NULL, 
    thumbnailfilepath VARCHAR(256) NOT NULL,
    active BIT(1) NOT NULL DEFAULT 1,
@@ -131,11 +131,11 @@ CREATE TABLE image (
 
 CREATE TABLE gallery (
    id VARCHAR(45) NOT NULL PRIMARY KEY,
-   title VARCHAR(96) NOT NULL,
-   description VARCHAR(3072) NULL,
+   gallerytitle VARCHAR(96) NOT NULL,
+   gallerydescription VARCHAR(3072) NULL,
    active BIT(1) NOT NULL DEFAULT 1,
    visible BIT(1) NOT NULL DEFAULT 1,
-   keywords VARCHAR(128) NULL,
+   gallerykeywords VARCHAR(128) NULL,
    createdate DATETIME NOT NULL,
    updatedate DATETIME NOT NULL,
 

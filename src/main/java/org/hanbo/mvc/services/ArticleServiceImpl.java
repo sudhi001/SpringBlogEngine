@@ -261,11 +261,11 @@ public class ArticleServiceImpl implements ArticleService
          article.setId(articleId);
          article.setAuthor(user);
          article.setArticleType("post");
-         article.setCategory("");
-         article.setKeywords(postKeywords);
-         article.setContent(sb.toString());
-         article.setSummary("");
-         article.setTitle(postTitle);
+         article.setArticleCategory("");
+         article.setArticleKeywords(postKeywords);
+         article.setArticleContent(sb.toString());
+         article.setArticleSummary("");
+         article.setArticleTitle(postTitle);
          article.setCreateDate(dateNow);
          article.setUpdateDate(dateNow);
          

@@ -14,12 +14,12 @@ public class ArticleDataModelEntityMapping
       Article retVal = new Article();
       
       retVal.setArticleType(articleDataModel.getArticleType());
-      retVal.setCategory(articleDataModel.getArticleCategory());
-      retVal.setContent(articleDataModel.getArticleContent());
-      retVal.setKeywords(articleDataModel.getArticleKeywords());
+      retVal.setArticleCategory(articleDataModel.getArticleCategory());
+      retVal.setArticleContent(articleDataModel.getArticleContent());
+      retVal.setArticleKeywords(articleDataModel.getArticleKeywords());
       retVal.setPublished(articleDataModel.isArticlePublished());
-      retVal.setSummary(articleDataModel.getArticleSummary());
-      retVal.setTitle(articleDataModel.getArticleTitle());
+      retVal.setArticleSummary(articleDataModel.getArticleSummary());
+      retVal.setArticleTitle(articleDataModel.getArticleTitle());
       
       retVal.setCreateDate(articleDataModel.getArticleCreateDate());
       retVal.setUpdateDate(articleDataModel.getArticleUpdateDate());
@@ -31,12 +31,12 @@ public class ArticleDataModelEntityMapping
       ArticleDataModel articleDataModel, Article articleToUpdate)
    {
       articleToUpdate.setArticleType(articleDataModel.getArticleType());
-      articleToUpdate.setCategory(articleDataModel.getArticleCategory());
-      articleToUpdate.setContent(articleDataModel.getArticleContent());
-      articleToUpdate.setKeywords(articleDataModel.getArticleKeywords());
+      articleToUpdate.setArticleCategory(articleDataModel.getArticleCategory());
+      articleToUpdate.setArticleContent(articleDataModel.getArticleContent());
+      articleToUpdate.setArticleKeywords(articleDataModel.getArticleKeywords());
       articleToUpdate.setPublished(articleDataModel.isArticlePublished());
-      articleToUpdate.setSummary(articleDataModel.getArticleSummary());
-      articleToUpdate.setTitle(articleDataModel.getArticleTitle());
+      articleToUpdate.setArticleSummary(articleDataModel.getArticleSummary());
+      articleToUpdate.setArticleTitle(articleDataModel.getArticleTitle());
       
       articleToUpdate.setCreateDate(articleDataModel.getArticleCreateDate());
       articleToUpdate.setUpdateDate(articleDataModel.getArticleUpdateDate());      
@@ -47,14 +47,14 @@ public class ArticleDataModelEntityMapping
    {
       ArticleDataModel retVal = new ArticleDataModel();
       
-      retVal.setArticleCategory(article.getCategory());
-      retVal.setArticleContent(article.getContent());
+      retVal.setArticleCategory(article.getArticleCategory());
+      retVal.setArticleContent(article.getArticleContent());
       retVal.setArticleCreateDate(article.getCreateDate());
       retVal.setArticleId(article.getId());
-      retVal.setArticleKeywords(article.getKeywords());
+      retVal.setArticleKeywords(article.getArticleKeywords());
       retVal.setArticlePublished(article.isPublished());
-      retVal.setArticleSummary(article.getSummary());
-      retVal.setArticleTitle(article.getTitle());
+      retVal.setArticleSummary(article.getArticleSummary());
+      retVal.setArticleTitle(article.getArticleTitle());
       retVal.setArticleType(article.getArticleType());
       retVal.setArticleUpdateDate(article.getUpdateDate());
       retVal.setAuthorId(article.getAuthor().getId());
@@ -84,8 +84,8 @@ public class ArticleDataModelEntityMapping
       SimplifiedArticleDataModel retVal = new SimplifiedArticleDataModel();
       retVal.setArticleId(article.getId());
       retVal.setArticlePublished(article.isPublished());
-      retVal.setArticleSummary(article.getSummary());
-      retVal.setArticleTitle(article.getTitle());
+      retVal.setArticleSummary(article.getArticleSummary());
+      retVal.setArticleTitle(article.getArticleTitle());
       retVal.setArticleType(article.getArticleType());
       retVal.setAuthorId(article.getAuthor().getId());
       retVal.setAuthorName(article.getAuthor().getUserName());

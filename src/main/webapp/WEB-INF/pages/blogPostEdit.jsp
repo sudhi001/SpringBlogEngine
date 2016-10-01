@@ -121,7 +121,7 @@
                 <div class="form-group">
                    <input type="text" class="form-control" id="searchPhotoWords" name="searchPhotoWords" placeholder="Enter Keywords">
    	            </div>
-   	            <button class="btn btn-default" onclick="">Search</button>
+   	            <button class="btn btn-default" onclick="handleClickFindPhotos()">Search</button>
              </form>
              <hr>
              <div id="photosList" class="row">
@@ -373,14 +373,14 @@
             $("#addPhotosDlg #photosList").empty();
          });
          
-         var handleClickFindPhoto = function () {
+         var handleClickFindPhotos = function () {
         	var searchWords = $("#addPhotosDlg #searchMyPhotosForm #searchPhotoWords").val();
         	if (searchWords != null && searchWords.length > 0)
             {
-               var jsonUrl = "${pageContext.request.contextPath}/admin/images/findImage";
+               var jsonUrl = "${pageContext.request.contextPath}/admin/images/findImages";
                 
                $.ajax({
-            	  type: "GET",
+            	  type: "POST",
             	  url: jsonUrl,
                   xhrFields: {
                      withCredentials: true
@@ -396,6 +396,7 @@
                      }
                   },
                   error: function() {
+                	 alert("Error");
                   }
                });
             };

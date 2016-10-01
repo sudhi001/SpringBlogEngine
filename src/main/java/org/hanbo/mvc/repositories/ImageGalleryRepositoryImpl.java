@@ -407,22 +407,28 @@ public class ImageGalleryRepositoryImpl
       propagation = Propagation.REQUIRED,
       isolation = Isolation.READ_COMMITTED
    )
-   public List<Image> findUserImages(String ownerId, List<String> searchWords)
+   public List<Image> findUserImages(String ownerId, String[] searchWords)
    {
       try
       {
+         List<Image> retVals = new ArrayList<Image>();
+         if (searchWords == null || searchWords.length <= 0)
+         {
+            return retVals;
+         }
+         
          Session session = this._sessionFactory.getCurrentSession();
          
          FullTextSession fullTextSession = Search.getFullTextSession(session);
          
          QueryBuilder qb = fullTextSession.getSearchFactory()
             .buildQueryBuilder().forEntity(Image.class).get();
-
+         
          org.apache.lucene.search.BooleanQuery finalQuery = new BooleanQuery();
          for (String keyword : searchWords)
          {
             org.apache.lucene.search.Query query = qb
-               .keyword().onFields("title", "keywords")
+               .keyword().onFields("imageTitle", "imageKeywords")
                .matching(keyword)
                .createQuery();
             finalQuery.add(query, Occur.SHOULD);
@@ -432,13 +438,14 @@ public class ImageGalleryRepositoryImpl
          Sort sortField = new Sort();
          sortField.setSort(new SortField("uploadDate", SortField.LONG));
          fullTextQuery.setSort(sortField);
-         List<Image> retVals = fullTextQuery.list();
          
+         retVals = fullTextQuery.list();
+ 
          return retVals;
       }
       catch(Exception e)
       {
-        throw e; 
+        throw new RuntimeException(e); 
       }
    }
 }

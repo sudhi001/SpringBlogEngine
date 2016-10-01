@@ -149,10 +149,10 @@ public class UserImageGalleryServiceImpl
 	   
 	   Image image = new Image();
 	   image.setId(imageId);
-	   image.setTitle(imageTitle);
+	   image.setImageTitle(imageTitle);
 	   image.setFilePath(fileShortName);
 	   image.setImageName(imageId + fileExt);
-	   image.setKeywords(imageKeywords);
+	   image.setImageKeywords(imageKeywords);
 	   image.setUploadDate(new Date());
 	   image.setOwner(imageOwner);
 	   image.setNotSafeForWork(imageNotSafeForWork);
@@ -263,10 +263,10 @@ public class UserImageGalleryServiceImpl
 
             Image image = new Image();
             image.setId(imageId);
-            image.setTitle(fileNameAsTitle);
+            image.setImageTitle(fileNameAsTitle);
             image.setFilePath(fileShortName);
             image.setImageName(imageId + fileExt);
-            image.setKeywords("");
+            image.setImageKeywords("");
             image.setUploadDate(dateNow);
             image.setOwner(imageOwner);
                         
@@ -400,9 +400,9 @@ public class UserImageGalleryServiceImpl
       Date dateNow = new Date();
       
       Gallery gallery = new Gallery();
-      gallery.setTitle(galleryTitle);
-      gallery.setKeywords(galleryKeywords);
-      gallery.setDescription(galleryDesc);
+      gallery.setGalleryTitle(galleryTitle);
+      gallery.setGalleryKeywords(galleryKeywords);
+      gallery.setGalleryDescription(galleryDesc);
       gallery.setId(IdUtil.generateUuid());
       gallery.setOwner(galleryOwner);
       gallery.setCreateDate(dateNow);
@@ -508,8 +508,8 @@ public class UserImageGalleryServiceImpl
       if (imageFound != null)
       {
          imageFound.setActive(imageActive);
-         imageFound.setTitle(imageTitle);
-         imageFound.setKeywords(imageKeywords);
+         imageFound.setImageTitle(imageTitle);
+         imageFound.setImageKeywords(imageKeywords);
          imageFound.setNotSafeForWork(imageNotSafeForWork);
          
          this._imageGalleryRepo.saveImage(imageFound);
@@ -542,9 +542,9 @@ public class UserImageGalleryServiceImpl
       if (galleryFound != null)
       {
          galleryFound.setActive(galleryActive);
-         galleryFound.setDescription(galleryDesc);
-         galleryFound.setKeywords(galleryKeywords);
-         galleryFound.setTitle(galleryTitle);
+         galleryFound.setGalleryDescription(galleryDesc);
+         galleryFound.setGalleryKeywords(galleryKeywords);
+         galleryFound.setGalleryTitle(galleryTitle);
          galleryFound.setVisible(galleryVisible);
          galleryFound.setUpdateDate(new Date());
          
@@ -582,10 +582,21 @@ public class UserImageGalleryServiceImpl
    @Override
    public List<SearchUserPhotoResponse> findUserPhotos(String ownerId, String searchWords)
    {
-      List<Image> userImagesFound = 
-      this._imageGalleryRepo.findUserImages(ownerId, searchWords);
+      List<SearchUserPhotoResponse> retVals = new ArrayList<SearchUserPhotoResponse>();
+      if (!StringUtils.isEmpty(ownerId) && !StringUtils.isEmpty(searchWords))
+      {
+         System.out.println("Split the keywords by spaces");
+         String[] searchKeyWords = searchWords.split("\\s");
+         if (searchKeyWords != null && searchKeyWords.length > 0)
+         {
+            List<Image> userImagesFound = 
+               this._imageGalleryRepo.findUserImages(ownerId, searchKeyWords);
+            
+            retVals = ImageDataModelEntityMapping.entitiesToSearchUserPhotoResponses(userImagesFound);
+         }
+      }
       
-      return ImageDataModelEntityMapping.entitiesToSearchUserPhotoResponses(userImagesFound);
+      return retVals;
    }
    
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
