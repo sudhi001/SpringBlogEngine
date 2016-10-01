@@ -385,6 +385,7 @@
                   xhrFields: {
                      withCredentials: true
                   },
+                  async:false,
                   data: "searchWords=" + searchWords,
                   success: function(data) {
                      alert(JSON.stringify(data));   
