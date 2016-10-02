@@ -447,7 +447,7 @@
             var currentText = textArea.val();
             textArea.val(currentText + addedText);
          }
-      }
+      };
       </script>
   </tiles:putAttribute>
 </tiles:insertDefinition>
