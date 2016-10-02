@@ -24,5 +24,5 @@ public interface ArticleService
    ArticleListPageDataModel getAllViewablePosts(int pageIdx);
    
    String createBlogPostFromImage(String ownerId, String imageId,
-      String postTitle, String postKeywords, String postContent);
+      String postTitle, String postKeywords, String postContent, String basedUrlPath);
 }

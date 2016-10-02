@@ -413,16 +413,29 @@ public class UserImageGalleryActions
          );
       }
       
-      List<SearchUserPhotoResponse> foundPhotos =
-      this._imageGalleryService.findUserPhotos(loginUser.getUserId(), searchWords);
-      if (foundPhotos != null && foundPhotos.size() > 0)
+      try
       {
-         String responseBody = JsonUtil.convertObjectToJson(foundPhotos);
-         ResponseEntity<String> retVal = new ResponseEntity<String>(responseBody, HttpStatus.OK);
-         return retVal;
-      }
+         List<SearchUserPhotoResponse> foundPhotos =
+         this._imageGalleryService.findUserPhotos(loginUser.getUserId(), searchWords, 0);
+         if (foundPhotos != null && foundPhotos.size() > 0)
+         {
+            String responseBody = JsonUtil.convertObjectToJson(foundPhotos);
+            ResponseEntity<String> retVal = new ResponseEntity<String>(responseBody, HttpStatus.OK);
+            return retVal;
+         }
       
-      return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User photos nou found."),
+            HttpStatus.NOT_FOUND
+         );
+      }
+      catch(Exception e)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("Unknown error has occurred."),
+            HttpStatus.INTERNAL_SERVER_ERROR
+         );
+      }
    }
 
    
@@ -444,11 +457,6 @@ public class UserImageGalleryActions
    )
    {
       downloadImage(imageId, "", response);
-   }
-
-   private void publicAccessImage(String imageId, String type, HttpServletResponse response)
-   {
-      
    }
    
    private void downloadImage(String imageId, String type, HttpServletResponse response)

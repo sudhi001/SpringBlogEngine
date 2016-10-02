@@ -53,7 +53,7 @@ public class UserImageGalleryServiceImpl
    @Override
    public GalleryDisplayPageDataModel getUserGalleries(String ownerId, int pageIdx)
    {
-      int itemsCount = getConfigValue_ImagesPerPage();
+      int itemsCount = getConfigValue_OwnerImagesPerPage();
       
       List<Gallery> galleryList = 
          _imageGalleryRepo.getUserGalleries(ownerId, pageIdx, itemsCount);
@@ -85,7 +85,7 @@ public class UserImageGalleryServiceImpl
    {
       GalleryImagesPageDisplayDataModel retVal = null;
       
-      int itemsCount = getConfigValue_ImagesPerPage();
+      int itemsCount = getConfigValue_OwnerImagesPerPage();
             
       Gallery gallery = this._imageGalleryRepo.getUserGallery(ownerId, galleryId);
       if (gallery != null)
@@ -580,17 +580,18 @@ public class UserImageGalleryServiceImpl
    }
    
    @Override
-   public List<SearchUserPhotoResponse> findUserPhotos(String ownerId, String searchWords)
+   public List<SearchUserPhotoResponse> findUserPhotos(String ownerId, String searchWords, int pageIdx)
    {
+      int imagesCount = getConfigValue_FindOwnerPhotosPerPage();
+      
       List<SearchUserPhotoResponse> retVals = new ArrayList<SearchUserPhotoResponse>();
       if (!StringUtils.isEmpty(ownerId) && !StringUtils.isEmpty(searchWords))
       {
-         System.out.println("Split the keywords by spaces");
          String[] searchKeyWords = searchWords.split("\\s");
          if (searchKeyWords != null && searchKeyWords.length > 0)
          {
             List<Image> userImagesFound = 
-               this._imageGalleryRepo.findUserImages(ownerId, searchKeyWords);
+               this._imageGalleryRepo.findUserImages(ownerId, searchKeyWords, 0, imagesCount);
             
             retVals = ImageDataModelEntityMapping.entitiesToSearchUserPhotoResponses(userImagesFound);
          }
@@ -715,7 +716,7 @@ public class UserImageGalleryServiceImpl
       return "";
    }
    
-   private int getConfigValue_ImagesPerPage()
+   private int getConfigValue_OwnerImagesPerPage()
    {
       String itemsCount = configValues.getProperty("OwnerImagesPerPage");
       int itemsCountVal = Integer.parseInt(itemsCount);
@@ -728,5 +729,13 @@ public class UserImageGalleryServiceImpl
       String imageFileBaseDir = configValues.getProperty("OwnerImagesFileBaseDir");  
 
       return imageFileBaseDir;
+   }
+
+   private int getConfigValue_FindOwnerPhotosPerPage()
+   {
+      String itemsCount = configValues.getProperty("OwnerFindPhotosPerPage");
+      int itemsCountVal = Integer.parseInt(itemsCount);
+
+      return itemsCountVal;
    }
 }

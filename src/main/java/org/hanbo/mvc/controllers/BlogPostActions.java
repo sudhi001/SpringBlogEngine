@@ -3,6 +3,8 @@ package org.hanbo.mvc.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.exceptions.WebAppException;
@@ -210,7 +212,9 @@ public class BlogPostActions
       @RequestParam("blogKeywords")
       String blogKeywords,
       @RequestParam("blogContent")
-      String blogContent)
+      String blogContent,
+      HttpServletRequest postReq
+   )
    {
       UserPrincipalDataModel loginUser = this._util.getLoginUser();
       if (loginUser == null)
@@ -218,8 +222,9 @@ public class BlogPostActions
          return _util.createErorrPageViewModel("User Authorization Failure", "User cannot be found.");
       }
       
+      String basedUrlPath = postReq.getContextPath();
       String articleId = this._articleService.createBlogPostFromImage(loginUser.getUserId(),
-         blogImageId, blogTitle, blogKeywords, blogContent);
+         blogImageId, blogTitle, blogKeywords, blogContent, basedUrlPath);
       if (!StringUtils.isEmpty(articleId))
       {
          String toEditPostPage = String.format("redirect:/admin/blog/editPost/%s", articleId);

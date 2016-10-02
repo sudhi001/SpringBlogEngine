@@ -41,5 +41,5 @@ public interface UserImageGalleryService
    
    ImageSizeDataModel getImageDimension(String imageId);
    
-   List<SearchUserPhotoResponse> findUserPhotos(String ownerId, String searchWords);
+   List<SearchUserPhotoResponse> findUserPhotos(String ownerId, String searchWords, int pageIdx);
 }

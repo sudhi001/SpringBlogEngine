@@ -374,8 +374,8 @@
       });
       
       var handleClickFindPhotos = function () {
-     	var searchWords = $("#addPhotosDlg #searchMyPhotosForm #searchPhotoWords").val();
-     	if (searchWords != null && searchWords.length > 0)
+         var searchWords = $("#addPhotosDlg #searchMyPhotosForm #searchPhotoWords").val();
+         if (searchWords != null && searchWords.length > 0)
          {
             var jsonUrl = "${pageContext.request.contextPath}/admin/images/findImages";
              
@@ -388,26 +388,28 @@
                async:false,
                data: "searchWords=" + searchWords,
                success: function(data) {
-                  console.log(data);   
-                  
                   $("#addPhotosDlg #photosList").empty();
                   if (data && data.length > 0)
                   {
-                     console.log(data.length);   
                      for (var i = 0; i < data.length; i++)
                      {
                         var img = $("<img>", {
                            "src": "${pageContext.request.contextPath}/secure/image-thumb/" + data[i].imageId,
                            "width": "100%",
-                           "style": "img-responsive"
+                           "style": "img-responsive",
+                           "alt":  data[i].imageTitle
                         });
-                        var imgLink = $("<a></a>", {
+                        var btn = $("<button></button>",{
+                           'class': 'btn btn-default',
+                           'onclick': "handleAddPhotoToBlog('" + data[i].imageId + "', " + data[i].imageSizeX + ", " + data[i].imageSizeY + ", " + data[i].widthToHeightRatio + ")"
+                        }).text("Add");
+                        /*var imgLink = $("<a></a>", {
                            "href": "#",
-                           "onclick": "addPhotoToBlog('" + data[i].imageId + "', " + data[i].imageSizeX + ", " + data[i].imageSizeY + ", " + data[i].widthToHeightRatio + ")"
-                        }).append(img);
+                           "onclick": "handleAddPhotoToBlog('" + data[i].imageId + "', " + data[i].imageSizeX + ", " + data[i].imageSizeY + ", " + data[i].widthToHeightRatio + "); return false;"
+                        }).append(img);*/
                         var imgInnerDiv = $("<div></div>",{
                             "class": "thumbnail gallery-image",
-                        }).append(imgLink);
+                        }).append(img).append(btn);
                         var imgOuterDiv = $("<div></div>",{
                             'class': 'col-xs-6',
                         }).append(imgInnerDiv);
@@ -419,7 +421,32 @@
                error: function() {
                }
             });
-         };
+         }
+      };
+         
+      var handleAddPhotoToBlog = function(imgId, imgSizeX, imgSizeY, widthToHeightRatio) {
+         var textArea = $("#articleContent");
+         console.log("here");
+         if (textArea)
+         {
+            var img = $("<img>", {
+               "class": "img-responsive",
+               "src": "${pageContext.request.contextPath}/public/image/" + imgId,
+               "width": "100%"
+            });
+            var imgDivInner = $("<div></div>", {
+               "class": "col-sm-8 col-sm-offset-2 thumbnail",
+            }).append(img);
+            var imgDivOuter = $("<div></div>", {
+               "class": "row"
+            }).append(imgDivInner);
+            var addedText = imgDivOuter.html();
+        		
+            console.log(addedText);
+            
+            var currentText = textArea.val();
+            textArea.val(currentText + addedText);
+         }
       }
       </script>
   </tiles:putAttribute>

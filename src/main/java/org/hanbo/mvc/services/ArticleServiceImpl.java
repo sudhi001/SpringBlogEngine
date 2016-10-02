@@ -3,6 +3,8 @@ package org.hanbo.mvc.services;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.entities.LoginUser;
@@ -198,7 +200,7 @@ public class ArticleServiceImpl implements ArticleService
    }
    
    public String createBlogPostFromImage(String ownerId, String imageId, String postTitle,
-      String postKeywords, String postContent)
+      String postKeywords, String postContent, String basedUrlPath)
    {
       LoginUser user = 
       userRepo.getUserById(ownerId);
@@ -229,6 +231,7 @@ public class ArticleServiceImpl implements ArticleService
             sb.append("<div class=\"row\">");
             sb.append("<div class=\"col-xs-12 thumbnail\">");
             sb.append("<img src=\"");
+            sb.append(basedUrlPath);
             sb.append("/public/image/");
             sb.append(imageId);
             sb.append("\" class=\"img-responsive\" width=\"100%\">");
@@ -240,6 +243,7 @@ public class ArticleServiceImpl implements ArticleService
             sb.append("<div class=\"row\">");
             sb.append("<div class=\"col-xs-8 col-xs-offset-2\">");
             sb.append("<img src=\"");
+            sb.append(basedUrlPath);
             sb.append("/public/image/");
             sb.append(imageId);
             sb.append("\" class=\"img-responsive\" width=\"100%\">");

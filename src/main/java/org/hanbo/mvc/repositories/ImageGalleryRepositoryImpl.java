@@ -407,13 +407,8 @@ public class ImageGalleryRepositoryImpl
       propagation = Propagation.REQUIRED,
       isolation = Isolation.READ_COMMITTED
    )
-   public List<Image> findUserImages(String ownerId, String[] searchWords)
+   public List<Image> findUserImages(String ownerId, String[] searchWords, int pageIdx, int resultsCount)
    {
-      for (String imgKeyword : searchWords)
-      {
-         System.out.println(imgKeyword);
-      }
-      
       try
       {
          List<Image> retVals = new ArrayList<Image>();
@@ -440,9 +435,8 @@ public class ImageGalleryRepositoryImpl
          }
          
          FullTextQuery fullTextQuery = fullTextSession.createFullTextQuery(finalQuery);
-         Sort sortField = new Sort();
-         sortField.setSort(new SortField("uploadDate", SortField.LONG));
-         fullTextQuery.setSort(sortField);
+         fullTextQuery.setMaxResults(resultsCount);
+         fullTextQuery.setFirstResult(pageIdx * resultsCount);
          
          retVals = fullTextQuery.list();
  
