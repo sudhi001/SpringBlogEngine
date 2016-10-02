@@ -3,8 +3,6 @@ package org.hanbo.mvc.services;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.entities.LoginUser;

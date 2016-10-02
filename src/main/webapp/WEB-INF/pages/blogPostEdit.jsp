@@ -399,17 +399,13 @@
                            "style": "img-responsive",
                            "alt":  data[i].imageTitle
                         });
-                        var btn = $("<button></button>",{
-                           'class': 'btn btn-default',
-                           'onclick': "handleAddPhotoToBlog('" + data[i].imageId + "', " + data[i].imageSizeX + ", " + data[i].imageSizeY + ", " + data[i].widthToHeightRatio + ")"
-                        }).text("Add");
-                        /*var imgLink = $("<a></a>", {
+                        var imgLink = $("<a></a>", {
                            "href": "#",
                            "onclick": "handleAddPhotoToBlog('" + data[i].imageId + "', " + data[i].imageSizeX + ", " + data[i].imageSizeY + ", " + data[i].widthToHeightRatio + "); return false;"
-                        }).append(img);*/
+                        }).append(img);
                         var imgInnerDiv = $("<div></div>",{
                             "class": "thumbnail gallery-image",
-                        }).append(img).append(btn);
+                        }).append(imgLink);
                         var imgOuterDiv = $("<div></div>",{
                             'class': 'col-xs-6',
                         }).append(imgInnerDiv);

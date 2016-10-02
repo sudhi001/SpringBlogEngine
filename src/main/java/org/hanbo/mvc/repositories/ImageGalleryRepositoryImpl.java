@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
 import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
 import org.hibernate.Query;
