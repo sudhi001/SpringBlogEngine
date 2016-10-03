@@ -124,38 +124,12 @@
    	            <button class="btn btn-default" onclick="handleClickFindPhotos()">Search</button>
              </div>
              <hr>
-             <div id="photosList" class="row">
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                   <div class="thumbnail gallery-image">
-                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
-                   </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                   <div class="thumbnail gallery-image">
-                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
-                   </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                   <div class="thumbnail gallery-image">
-                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
-                   </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                   <div class="thumbnail gallery-image">
-                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
-                   </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                   <div class="thumbnail gallery-image">
-                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
-                   </div>
-                </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                   <div class="thumbnail gallery-image">
-                      <img style="img-responsive" src="${pageContext.request.contextPath}/secure/image-thumb/f5a4641a-aace-4878-81f8-cfe70a366656" width="100%">
-                   </div>
-                </div>
+             <input type="hidden" id="pageIdx" name="pageIdx" value="">
+             <div class="row">
+                <div class="col-sm-4"><button class="btn btn-default" onclick="handleClickPrevPhotosList()">Previous</button></div>
+                <div class="col-sm-4 col-sm-offset-4 text-right"><button class="btn btn-default" onclick="handleClickNextPhotosList()">Next</button></div>
              </div>
+             <div id="photosList" class="row"></div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" onclick="handleClickFindPhoto()">Find</button>
@@ -389,28 +363,13 @@
                data: "searchWords=" + searchWords,
                success: function(data) {
                   $("#addPhotosDlg #photosList").empty();
+                  $("#addPhotosDlg #pageidx").val(0);
+                  
                   if (data && data.length > 0)
                   {
                      for (var i = 0; i < data.length; i++)
                      {
-                        var img = $("<img>", {
-                           "src": "${pageContext.request.contextPath}/secure/image-thumb/" + data[i].imageId,
-                           "width": "100%",
-                           "style": "img-responsive",
-                           "alt":  data[i].imageTitle
-                        });
-                        var imgLink = $("<a></a>", {
-                           "href": "#",
-                           "onclick": "handleAddPhotoToBlog('" + data[i].imageId + "', " + data[i].imageSizeX + ", " + data[i].imageSizeY + ", " + data[i].widthToHeightRatio + "); return false;"
-                        }).append(img);
-                        var imgInnerDiv = $("<div></div>",{
-                            "class": "thumbnail gallery-image",
-                        }).append(imgLink);
-                        var imgOuterDiv = $("<div></div>",{
-                            'class': 'col-xs-6',
-                        }).append(imgInnerDiv);
-                        
-                        $("#addPhotosDlg #photosList").append(imgOuterDiv);
+                        addPhotoAndDiv(data[i]);
                      }
                   }
                },
@@ -444,6 +403,83 @@
             textArea.val(currentText + addedText);
          }
       };
+      
+      var loadUserPhotosList = function (pageIdx, nextPage) {
+         if (pageIdx >= 0) {
+            var jsnUrl = "${pageContext.request.contextPath}/admin/userPhotos/page/" + pageIdx;
+
+            $.ajax({
+           	  type: "GET",
+           	  url: jsonUrl,
+              xhrFields: {
+                 withCredentials: true
+              },
+              async:false,
+              success: function(data) {
+             	 if (data && data.length > 0)
+                 {
+                    $("#addPhotosDlg #photosList").empty();
+                    for (var i = 0; i < data.length; i++)
+                    {
+                       addPhotoAndDiv(data[i]);
+                    }
+                    $("#addPhotosDlg #pageidx").val(nextPage);
+                 }
+              },
+              error: function() {
+              }
+            });
+         }
+      }
+      
+      var handleClickPrevPhotosList = function () {
+         var currPage = $("#addPhotosDlg #pageidx").val();
+         if (currpage >= 0)
+         {
+            var nextPage = currPage + 1;
+            var onePageAfter = nextPage + 1;
+             
+            loadUserPhotosList(nextPage, onePageAfter);
+         }
+      };
+
+      var handleClickNextPhotosList = function () {
+          var currPage = $("#addPhotosDlg #pageidx").val();
+          if (currpage > 0)
+          {
+             var prevPage = currPage - 1;
+             var onePageBefore = prevPage - 1;
+             if (onePageBefore < 0)
+             {
+                onePageBefore = 0;
+             }
+              
+             loadUserPhotosList(prevPage, onePageBefore);
+          }
+      };
+      
+      var addPhotoAndDiv = function(photoInfo) {
+    	 if (photoInfo != null) {
+    	    var img = $("<img>", {
+   	           "src": "${pageContext.request.contextPath}/secure/image-thumb/" + photoInfo.imageId,
+   	           "width": "100%",
+   	           "style": "img-responsive",
+   	           "alt":  photoInfo.imageTitle
+   	        });
+   	        var imgLink = $("<a></a>", {
+   	           "href": "#",
+   	           "onclick": "handleAddPhotoToBlog('" + photoInfo.imageId + "', " + photoInfo.imageSizeX + ", " + photoInfo.imageSizeY + ", " + photoInfo.widthToHeightRatio + "); return false;"
+   	        }).append(img);
+   	        var imgInnerDiv = $("<div></div>",{
+   	           "class": "thumbnail gallery-image",
+   	        }).append(imgLink);
+   	        var imgOuterDiv = $("<div></div>",{
+   	           "class": "col-xs-6",
+   	        }).append(imgInnerDiv);
+   	          
+   	        $("#addPhotosDlg #photosList").append(imgOuterDiv); 
+         }
+      }
       </script>
   </tiles:putAttribute>
 </tiles:insertDefinition>
