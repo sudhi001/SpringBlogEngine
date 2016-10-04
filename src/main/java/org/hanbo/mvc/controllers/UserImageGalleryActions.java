@@ -392,6 +392,55 @@ public class UserImageGalleryActions
    {
       downloadImage(imageId, "", response);
    }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/images/allUserImages/json/{pageIdx}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> admin(
+      @PathVariable("pageIdx")
+      int pageIdx
+   )
+   {
+      if (pageIdx < 0)
+      {
+         pageIdx = 0;
+      }
+      
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         _logger.info(String.format("Error: not logged in"));
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+      
+      try
+      {
+         List<SearchUserPhotoResponse> foundPhotos =
+         this._imageGalleryService.allUserImagesJson(loginUser.getUserId(), pageIdx);
+         if (foundPhotos != null && foundPhotos.size() > 0)
+         {
+            String responseBody = JsonUtil.convertObjectToJson(foundPhotos);
+            ResponseEntity<String> retVal = new ResponseEntity<String>(responseBody, HttpStatus.OK);
+            return retVal;
+         }
+      
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User photos not found."),
+            HttpStatus.NOT_FOUND
+         );
+      }
+      catch(Exception e)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("Unknown error has occurred."),
+            HttpStatus.INTERNAL_SERVER_ERROR
+         );
+      }
+   }
+   
 
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/images/findImages", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -401,12 +450,12 @@ public class UserImageGalleryActions
       String searchWords
    )
    {
-      _logger.info(String.format("searchWords: %s", searchWords));
+      _logger.debug(String.format("searchWords: %s", searchWords));
       
       UserPrincipalDataModel loginUser = this._util.getLoginUser();
       if (loginUser == null)
       {
-         _logger.info(String.format("Error: not logged in"));
+         _logger.debug(String.format("Error: not logged in"));
          return new ResponseEntity<String>(
             JsonUtil.simpleErrorMessage("User not found"),
             HttpStatus.UNAUTHORIZED
@@ -425,7 +474,7 @@ public class UserImageGalleryActions
          }
       
          return new ResponseEntity<String>(
-            JsonUtil.simpleErrorMessage("User photos nou found."),
+            JsonUtil.simpleErrorMessage("User photos not found."),
             HttpStatus.NOT_FOUND
          );
       }

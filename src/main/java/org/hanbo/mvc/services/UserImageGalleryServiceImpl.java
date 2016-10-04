@@ -600,6 +600,23 @@ public class UserImageGalleryServiceImpl
       return retVals;
    }
    
+   @Override
+   public List<SearchUserPhotoResponse> allUserImagesJson(String ownerId, int pageIdx)
+   {
+      int imagesCount = getConfigValue_OwnerImagesPerPage();
+      
+      List<SearchUserPhotoResponse> retVals = new ArrayList<SearchUserPhotoResponse>();
+      if (!StringUtils.isEmpty(ownerId))
+      {
+         List<Image> userImagesFound = 
+            this._imageGalleryRepo.allUserImages(ownerId, pageIdx, imagesCount);
+         
+         retVals = ImageDataModelEntityMapping.entitiesToSearchUserPhotoResponses(userImagesFound);
+      }
+      
+      return retVals;
+   }
+   
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
    {
       if (StringUtils.isEmpty(galleryTitle))

@@ -124,12 +124,12 @@
    	            <button class="btn btn-default" onclick="handleClickFindPhotos()">Search</button>
              </div>
              <hr>
-             <input type="hidden" id="pageIdx" name="pageIdx" value="">
+             <input type="hidden" id="pageIdx" name="pageIdx" value="0">
              <div class="row">
                 <div class="col-sm-4"><button class="btn btn-default" onclick="handleClickPrevPhotosList()">Previous</button></div>
                 <div class="col-sm-4 col-sm-offset-4 text-right"><button class="btn btn-default" onclick="handleClickNextPhotosList()">Next</button></div>
              </div>
-             <div id="photosList" class="row"></div>
+             <div id="photosList" class="row" style="height: 300px; max-height: 300px; overflow-y: scroll;"></div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" onclick="handleClickFindPhoto()">Find</button>
@@ -345,6 +345,8 @@
       $('#addPhotosDlg').on('show.bs.modal', function (e) {
          $("#addPhotosDlg #searchMyPhotosForm #searchPhotoWords").val("");
          $("#addPhotosDlg #photosList").empty();
+         
+         loadUserPhotosList(0);
       });
       
       var handleClickFindPhotos = function () {
@@ -404,9 +406,9 @@
          }
       };
       
-      var loadUserPhotosList = function (pageIdx, nextPage) {
+      var loadUserPhotosList = function (pageIdx) {
          if (pageIdx >= 0) {
-            var jsnUrl = "${pageContext.request.contextPath}/admin/userPhotos/page/" + pageIdx;
+            var jsonUrl = "${pageContext.request.contextPath}/admin/images/allUserImages/json/" + pageIdx;
 
             $.ajax({
            	  type: "GET",
@@ -423,7 +425,7 @@
                     {
                        addPhotoAndDiv(data[i]);
                     }
-                    $("#addPhotosDlg #pageidx").val(nextPage);
+                    $("#addPhotosDlg #pageIdx").val(pageIdx);
                  }
               },
               error: function() {
@@ -433,28 +435,28 @@
       }
       
       var handleClickPrevPhotosList = function () {
-         var currPage = $("#addPhotosDlg #pageidx").val();
-         if (currpage >= 0)
+         var currPage = $("#addPhotosDlg #pageIdx").val();
+         if (currPage)
          {
-            var nextPage = currPage + 1;
-            var onePageAfter = nextPage + 1;
-             
-            loadUserPhotosList(nextPage, onePageAfter);
+        	var currPageIdx = parseInt(currPage);
+        	if (currPageIdx > 0)
+            {
+               var newPageIdx = currPageIdx - 1;
+               loadUserPhotosList(newPageIdx);
+            }
          }
       };
 
       var handleClickNextPhotosList = function () {
-          var currPage = $("#addPhotosDlg #pageidx").val();
-          if (currpage > 0)
+          var currPage = $("#addPhotosDlg #pageIdx").val();
+          if (currPage)
           {
-             var prevPage = currPage - 1;
-             var onePageBefore = prevPage - 1;
-             if (onePageBefore < 0)
+             var currPageIdx = parseInt(currPage);
+             if (currPageIdx >= 0)
              {
-                onePageBefore = 0;
+                var newPageIdx = currPageIdx + 1;              
+                loadUserPhotosList(newPageIdx);
              }
-              
-             loadUserPhotosList(prevPage, onePageBefore);
           }
       };
       

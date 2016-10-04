@@ -42,4 +42,6 @@ public interface UserImageGalleryService
    ImageSizeDataModel getImageDimension(String imageId);
    
    List<SearchUserPhotoResponse> findUserPhotos(String ownerId, String searchWords, int pageIdx);
+
+   List<SearchUserPhotoResponse> allUserImagesJson(String ownerId, int pageIdx);
 }

@@ -445,4 +445,29 @@ public class ImageGalleryRepositoryImpl
         throw new RuntimeException(e); 
       }
    }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<Image> allUserImages(String ownerId, int pageIdx, int resultsCount)
+   {
+      try
+      {
+         Session session = this._sessionFactory.getCurrentSession();
+         Query query = session.createQuery(
+            "select image from Image image where image.owner.id = :ownerId order by image.uploadDate desc"
+         ).setParameter("ownerId", ownerId)
+          .setMaxResults(resultsCount)
+          .setFirstResult(pageIdx * resultsCount);
+         
+         List<Image> retVal = query.list();
+         return retVal;
+      }
+      catch(Exception e)
+      {
+         throw new RuntimeException(e); 
+      }
+   }
 }
