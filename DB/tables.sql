@@ -6,6 +6,8 @@ DROP TABLE IF EXISTS gallery;
 
 DROP TABLE IF EXISTS image;
 
+DROP TABLE IF EXISTS userprofile;
+
 DROP TABLE IF EXISTS articleicon;
 
 DROP TABLE IF EXISTS fileresource;
@@ -105,6 +107,21 @@ CREATE TABLE articleicon (
    
    FOREIGN KEY (articleid) REFERENCES article(id),
    FOREIGN KEY (resourceid) REFERENCES resource(id)
+);
+
+CREATE TABLE userprofile (
+   id VARCHAR(45) NOT NULL PRIMARY KEY,
+   age int NULL,
+   gender VARCHAR(6) NULL,
+   location VARCHAR(128) NULL,
+   profession VARCHAR(128) NULL,
+   introduction VARCHAR(4096) NULL,
+
+   usericonid VARCHAR(45) NULL,
+   ownerid VARCHAR(45) NOT NULL,
+
+   FOREIGN KEY (ownerid) REFERENCES user(id),
+   FOREIGN KEY (usericonid) REFERENCES fileresource(id)
 );
 
 CREATE TABLE image (

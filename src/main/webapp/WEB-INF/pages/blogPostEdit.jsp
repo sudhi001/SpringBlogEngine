@@ -226,8 +226,8 @@
     var tableHeaderColumn = function (colName, colStyle)
     {
       var headerTh = $("<th></th>", {
-          'class': colStyle,
-          'text': colName
+         'class': colStyle,
+         'text': colName
       });
       return headerTh;
     };
@@ -245,8 +245,20 @@
              var tblRow = $("<tr></tr>");
              var td = $("<td></td>").text(jsonData.resourceList[i].resourceSubType);
              tblRow.append(td);
-             td = $("<td></td>").text(jsonData.resourceList[i].resourceName);
-             tblRow.append(td);
+             if (jsonData.resourceList[i].resourceSubType === "image")
+             {
+                var addLink = $("<a></a>", {
+                   "href": "${pageContext.request.contextPath}/public/imgresource/" + jsonData.resourceList[i].resourceId,
+                   "target": "_blank"
+                }).text(jsonData.resourceList[i].resourceName);
+                td = $("<td></td>").append(addLink)
+                tblRow.append(td);                 
+             }
+             else
+             {
+                td = $("<td></td>").text(jsonData.resourceList[i].resourceName);
+                tblRow.append(td);
+             }
               
              var btn = $("<button></button>",{
                 'class': 'btn btn-default',
