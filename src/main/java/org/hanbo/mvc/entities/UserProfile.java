@@ -16,6 +16,14 @@ public class UserProfile
    @Column(name = "id", nullable = false, length = 45)
    private String id;
    
+   @Id
+   @Column(name = "firstname", nullable = false, length = 64)
+   private String firstName;
+   
+   @Id
+   @Column(name = "lastname", nullable = false, length = 64)
+   private String lastName;
+   
    @Column(name = "age", nullable = true)
    private int age;
 
@@ -117,5 +125,25 @@ public class UserProfile
    public void setUserIcon(FileResource userIcon)
    {
       this.userIcon = userIcon;
+   }
+
+   public String getFirstName()
+   {
+      return firstName;
+   }
+
+   public void setFirstName(String firstName)
+   {
+      this.firstName = firstName;
+   }
+
+   public String getLastName()
+   {
+      return lastName;
+   }
+
+   public void setLastName(String lastName)
+   {
+      this.lastName = lastName;
    }
 }

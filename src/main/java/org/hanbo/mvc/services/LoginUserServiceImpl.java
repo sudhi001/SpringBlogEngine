@@ -6,6 +6,7 @@ import java.util.Set;
 import org.hanbo.mvc.entities.LoginUser;
 import org.hanbo.mvc.entities.UserRole;
 import org.hanbo.mvc.models.UserInfoDataModel;
+import org.hanbo.mvc.models.UserProfileDataModel;
 import org.hanbo.mvc.models.UserSignupDataModel;
 import org.hanbo.mvc.repositories.UsersRepository;
 import org.hanbo.mvc.services.utilities.UserInfoMappingUtil;
@@ -60,5 +61,17 @@ public class LoginUserServiceImpl
    {
       LoginUser user = _usersRepository.getUser(userName);
       return UserInfoMappingUtil.toUserInfoDataModel(user);
+   }
+   
+   @Override
+   public void createUserProfile(UserProfileDataModel userProfile)
+   {
+      
+   }
+   
+   @Override
+   public UserProfileDataModel getUserProfile(String userId)
+   {
+      return null;
    }
 }

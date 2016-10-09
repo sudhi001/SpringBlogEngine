@@ -111,6 +111,8 @@ CREATE TABLE articleicon (
 
 CREATE TABLE userprofile (
    id VARCHAR(45) NOT NULL PRIMARY KEY,
+   firstname VARCHAR(64) NOT NULL,
+   lastname VARCHAR(64) NOT NULL,
    age int NULL,
    gender VARCHAR(6) NULL,
    location VARCHAR(128) NULL,
