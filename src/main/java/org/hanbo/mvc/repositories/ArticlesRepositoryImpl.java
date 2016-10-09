@@ -9,6 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
@@ -18,7 +20,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    @Autowired
    private SessionFactory _sessionFactory;
    
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    @Override
    public void saveArticle(Article article)
    {
@@ -26,7 +31,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       session.saveOrUpdate(article);
    }
 
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    @Override
    public Article getReportById(String articleId)
    {
@@ -41,7 +49,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       return getFirstArticle(foundObjs);
    }
 
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    @Override
    public Article getReportById(String articleId, String authorId)
    {
@@ -72,7 +83,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    }
 
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public long getAllArticlesCountsByUserId(
       String authorId
    )
@@ -98,7 +112,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    }
    
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public List<Article> getAllArticlesByUserId(
       String authorId, int pageIdx,
       int pageItemCount, boolean sortDsc
@@ -135,7 +152,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    }
    
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public String getArticleOwnerId(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();
@@ -154,7 +174,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    }
    
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public void deleteArticle(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();
@@ -168,7 +191,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    }
    
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public void publishArticle(String articleId,
       boolean articleToPublish)
    {
@@ -184,7 +210,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    }
 
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public long getViewableArticlesCount(String articleType)
    {
       Session session = _sessionFactory.getCurrentSession();
@@ -205,7 +234,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    }
 
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public List<Article> getViewableArticles(
       String articleType, int pageIdx, int itemsCount)
    {
@@ -235,7 +267,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    }
    
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public Article findArticleById(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();

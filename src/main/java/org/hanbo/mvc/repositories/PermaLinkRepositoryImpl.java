@@ -9,6 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
@@ -19,7 +21,10 @@ public class PermaLinkRepositoryImpl implements PermaLinkRepository
    private SessionFactory _sessionFactory;
    
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public void savePermaLink(PermaLink linkToSave)
    {
       Session session = _sessionFactory.getCurrentSession();
@@ -27,7 +32,10 @@ public class PermaLinkRepositoryImpl implements PermaLinkRepository
    }
    
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public PermaLink getPermaLinkByArticle(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();
@@ -52,7 +60,10 @@ public class PermaLinkRepositoryImpl implements PermaLinkRepository
    }
    
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public void deletePermaLinkByArticle(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();
@@ -65,7 +76,10 @@ public class PermaLinkRepositoryImpl implements PermaLinkRepository
    }
    
    @Override
-   @Transactional
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public Article getArticleByPermaLink(String permaLinkValue)
    {
       Session session = _sessionFactory.getCurrentSession();
