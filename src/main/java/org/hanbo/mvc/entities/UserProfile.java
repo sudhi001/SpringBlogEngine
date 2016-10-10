@@ -1,5 +1,7 @@
 package org.hanbo.mvc.entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "userprofile")
@@ -16,11 +20,9 @@ public class UserProfile
    @Column(name = "id", nullable = false, length = 45)
    private String id;
    
-   @Id
    @Column(name = "firstname", nullable = false, length = 64)
    private String firstName;
    
-   @Id
    @Column(name = "lastname", nullable = false, length = 64)
    private String lastName;
    
@@ -38,6 +40,14 @@ public class UserProfile
 
    @Column(name = "introduction", nullable = true, length = 4096)
    private String introduction;
+
+   @Column(name = "createdate", nullable = false, columnDefinition="DATETIME")
+   @Temporal(TemporalType.TIMESTAMP)
+   private Date createDate;
+
+   @Column(name = "updatedate", nullable = false, columnDefinition="DATETIME")
+   @Temporal(TemporalType.TIMESTAMP)
+   private Date updateDate;
    
    @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "ownerid")
@@ -145,5 +155,25 @@ public class UserProfile
    public void setLastName(String lastName)
    {
       this.lastName = lastName;
+   }
+
+   public Date getCreateDate()
+   {
+      return createDate;
+   }
+
+   public void setCreateDate(Date createDate)
+   {
+      this.createDate = createDate;
+   }
+
+   public Date getUpdateDate()
+   {
+      return updateDate;
+   }
+
+   public void setUpdateDate(Date updateDate)
+   {
+      this.updateDate = updateDate;
    }
 }

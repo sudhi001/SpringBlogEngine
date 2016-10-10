@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -58,6 +59,9 @@ public class LoginUser
 
    @OneToMany(fetch = FetchType.LAZY, mappedBy="owner")
    private Set<Gallery> userGalleries;
+   
+   @OneToOne(fetch = FetchType.LAZY, mappedBy="owner")
+   private UserProfile userProfile;
 
    public LoginUser()
    {
@@ -193,5 +197,13 @@ public class LoginUser
 
    public void setUserGalleries(Set<Gallery> userGalleries) {
       this.userGalleries = userGalleries;
+   }
+   
+   public UserProfile getUserProfile() {
+      return userProfile;
+   }
+
+   public void setUserProfile(UserProfile userProfile) {
+      this.userProfile = userProfile;
    }
 }

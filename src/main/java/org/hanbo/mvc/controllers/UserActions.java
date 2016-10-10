@@ -3,9 +3,12 @@ package org.hanbo.mvc.controllers;
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserInfoDataModel;
+import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.UserProfileDataModel;
 import org.hanbo.mvc.models.UserSignupDataModel;
 import org.hanbo.mvc.services.LoginUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,6 +61,39 @@ public class UserActions
       return createSignupSuccessPageModelAndView(
           userToAdd
       );
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/editUserProfile")
+   public ModelAndView editUserProfile()
+   {
+      UserPrincipalDataModel loginUser = this._actionUtil.getLoginUser();
+      if (loginUser == null)
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+      
+      UserInfoDataModel userInfo = _userService.getUserById(loginUser.getUserId());
+      if (userInfo == null)
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User cannot be found", "User cannot be found.");
+      }
+      UserProfileDataModel userProfileModel = new UserProfileDataModel();
+      userProfileModel.setUserId(userInfo.getUserId());
+      userProfileModel.setUserName(userInfo.getUserName());
+      userProfileModel.setUserEmail(userInfo.getUserEmail());      
+      
+      
+      
+      PageMetadata pageMetadata
+         = _actionUtil.creatPageMetadata("Create My User Profile");
+      ModelAndView retVal
+         = _actionUtil.getDefaultModelAndView(
+              "editUserProfile", pageMetadata);
+      
+      return retVal;
    }
    
    private ModelAndView createSignupSuccessPageModelAndView(

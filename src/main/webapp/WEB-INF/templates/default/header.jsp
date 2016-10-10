@@ -23,6 +23,7 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
+                  <li><a href="${pageContext.request.contextPath}/admin/editUserProfile">My User Profile</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/blog/allMyPosts">My Posts</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/images/allMyImages">My Images</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/galleries/allMyGalleries/0">My Galleries</a></li>

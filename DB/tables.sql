@@ -121,6 +121,8 @@ CREATE TABLE userprofile (
 
    usericonid VARCHAR(45) NULL,
    ownerid VARCHAR(45) NOT NULL,
+   createdate DATETIME NOT NULL,
+   updatedate DATETIME NOT NULL,
 
    FOREIGN KEY (ownerid) REFERENCES user(id),
    FOREIGN KEY (usericonid) REFERENCES fileresource(id)

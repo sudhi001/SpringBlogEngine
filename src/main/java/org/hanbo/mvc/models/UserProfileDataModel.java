@@ -1,5 +1,8 @@
 package org.hanbo.mvc.models;
 
+import org.hanbo.mvc.exceptions.WebAppException;
+import org.springframework.util.StringUtils;
+
 public class UserProfileDataModel
 {
    private String userId;
@@ -144,5 +147,58 @@ public class UserProfileDataModel
    public void setUserEmail(String userEmail)
    {
       this.userEmail = userEmail;
+   }
+   
+   public void validateUserProfile()
+   {
+      if (StringUtils.isEmpty(userId))
+      {
+         throw new WebAppException("User Id is null or empty.", WebAppException.ErrorType.DATA);
+      }
+
+      if (userId.length() > 45)
+      {
+         throw new WebAppException("User Id contains too many characters.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(userFirstName))
+      {
+         throw new WebAppException("User first name is null or empty.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (userFirstName.length() > 64)
+      {
+         throw new WebAppException("User first name contains too many characters.", WebAppException.ErrorType.DATA);
+      }
+
+      if (StringUtils.isEmpty(userLastName))
+      {
+         throw new WebAppException("User last name is null or empty.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (userLastName.length() > 64)
+      {
+         throw new WebAppException("User last name contains too many characters.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (!StringUtils.isEmpty(userGender) && userGender.length() > 6)
+      {
+         throw new WebAppException("User gender contains too many characters.", WebAppException.ErrorType.DATA);         
+      }
+      
+      if (!StringUtils.isEmpty(userLocation) && userLocation.length() > 128)
+      {
+         throw new WebAppException("User location contains too many characters.", WebAppException.ErrorType.DATA);         
+      }
+      
+      if (!StringUtils.isEmpty(userProfession) && userProfession.length() > 128)
+      {
+         throw new WebAppException("User profession contains too many characters.", WebAppException.ErrorType.DATA);         
+      }
+      
+      if (!StringUtils.isEmpty(userIntroduction) && userIntroduction.length() > 4096)
+      {
+         throw new WebAppException("User introduction contains too many characters.", WebAppException.ErrorType.DATA);         
+      }
    }
 }
