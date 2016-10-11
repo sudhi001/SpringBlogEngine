@@ -109,7 +109,7 @@ public class UserActions
       ModelAndView retVal
          = _actionUtil.getDefaultModelAndView(
               "viewUserProfile", pageMetadata);
-      retVal.addObject("userProfileToView", userProfileModel);
+      //retVal.addObject("userProfileToView", );
       
       return retVal;
    }
