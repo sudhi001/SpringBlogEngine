@@ -85,13 +85,31 @@ public class UserActions
       userProfileModel.setUserName(userInfo.getUserName());
       userProfileModel.setUserEmail(userInfo.getUserEmail());      
       
-      
+      // TODO
       
       PageMetadata pageMetadata
          = _actionUtil.creatPageMetadata("Create My User Profile");
       ModelAndView retVal
          = _actionUtil.getDefaultModelAndView(
               "editUserProfile", pageMetadata);
+      retVal.addObject("editUserProfile", userProfileModel);
+      
+      return retVal;
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/editUserProfile")
+   public ModelAndView saveUserProfile(
+      @ModelAttribute("editUserProfile")
+      UserProfileDataModel userProfileToSave
+   )
+   {
+      PageMetadata pageMetadata
+         = _actionUtil.creatPageMetadata("Create My User Profile");
+      ModelAndView retVal
+         = _actionUtil.getDefaultModelAndView(
+              "viewUserProfile", pageMetadata);
+      retVal.addObject("userProfileToView", userProfileModel);
       
       return retVal;
    }

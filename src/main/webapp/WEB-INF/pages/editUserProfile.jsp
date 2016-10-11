@@ -12,7 +12,7 @@
         <div class="user-block">
           <div class="row">
             <div class="col-xs-12">
-              <span class="username">User Profile: ${userInfo.userName}</span>
+              <span class="username">User Profile: ${editUserProfile.userName}</span>
             </div>
           </div>
         </div>
@@ -21,61 +21,56 @@
       <div class="box-body" style="display: block;">
         <div class="row">
           <div class="col-xs-12">
-             <form id="userProfileEditForm" class="form" action="${pageContext.request.contextPath}/admin/saveUserProfile">
-                <input type="hidden" id="userProfileId" name="userProfileId" value="">
+             <form:form id="userProfileEditForm" class="form" role="form" modelAttribute="editUserProfile" action="${pageContext.request.contextPath}/admin/saveUserProfile">
+                <form:hidden id="userProfileId" path="userProfileId" value="" />
                 <div class="form-group">
-                   <label class="col-md-2 control-label">First Name</label>
-                   <div class="col-md-4">
-                      <input id="userFirstName" name="userFirstName" class="form-control"/>
+                   <label class="col-md-2 control-label">Last Name</label>
+                   <div class="col-md-12">
+                      <form:input class="form-control" id="userLastName" path="userLastName"/>
                    </div>
                 </div>
                 <div class="form-group">
-                   <label class="col-md-2 control-label">Last Name</label>
-                   <div class="col-md-4">
-                      <input id="userLastName" name="userLastName" class="form-control"/>
+                   <label class="col-md-2 control-label">First Name</label>
+                   <div class="col-md-12">
+                      <form:input class="form-control" id="userFirstName" path="userFirstName"/>
                    </div>
                 </div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">User Email</label>
-                   <div class="col-md-8">
-                      <input id="userEmail" name="userEmail" class="form-control"/>
+                   <div class="col-md-12">
+                      <form:input class="form-control" id="userEmail" path="userEmail"/>
                    </div>
                 </div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">Age</label>
-                   <div class="col-md-3">
-                      <input id="userAge" name="userAge" class="form-control"/>
+                   <div class="col-md-12">
+                      <form:input class="form-control" id="userAge" path="userAge"/>
                    </div>
                 </div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">Location</label>
-                   <div class="col-md-6">
-                      <input id="userLocation" name="userLocation" class="form-control"/>
-                   </div>
-                </div>
-                <div class="form-group">
-                   <label class="col-md-2 control-label">Profession</label>
-                   <div class="col-md-6">
-                      <input id="userProfession" name="userProfession" class="form-control"/>
+                   <div class="col-md-12">
+                      <form:input class="form-control" id="userLocation" path="userLocation"/>
                    </div>
                 </div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">Profession</label>
                    <div class="col-md-12">
-<textarea class="form-control" id="userIntroduction" name="userIntroduction"></textarea>
+                      <form:input class="form-control" id="userProfession" path="userProfession"/>
                    </div>
                 </div>
                 <div class="form-group">
-                   <div class="row">
-                      <div class="col-md-3">
-                         <button type="submit" class="form-control">Save</button>
-                      </div>
-                      <div class="col-md-3">
-                         <button type="reset" class="form-control">Clear</button>
-                      </div>
+                   <label class="col-md-2 control-label">Profession</label>
+                   <div class="col-md-12">
+<form:textarea class="form-control" id="userIntroduction" style="height: 120px; max-height: 120px;" path="userIntroduction"></form:textarea>
                    </div>
                 </div>
-             </form>
+                <hr>
+                <div class="row text-center">
+                   <button class="btn btn-default col-md-3" type="submit">Save</button>
+                   <button class="btn btn-default col-md-3" type="reset">Clear</button>
+                </div>
+             </form:form>
           </div>
         </div>
       </div>
