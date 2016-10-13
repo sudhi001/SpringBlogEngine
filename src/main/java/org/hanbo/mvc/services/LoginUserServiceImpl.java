@@ -1,5 +1,6 @@
 package org.hanbo.mvc.services;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -77,8 +78,23 @@ public class LoginUserServiceImpl
             = UserInfoMappingUtil.fromUserProfieModelToEntity(userProfile);
          if (profileEntity != null)
          {
+            Date dateNow = new Date();
+            
             String profileId = IdUtil.generateUuid();
             profileEntity.setId(profileId);
+            profileEntity.setCreateDate(dateNow);
+            profileEntity.setUpdateDate(dateNow);
+            
+            if (StringUtils.isEmpty(userProfile.getUserId()))
+            {
+               LoginUser owner = _usersRepository.getUserById(userProfile.getUserId());
+               profileEntity.setOwner(owner);
+            }
+            else
+            {
+               throw new WebAppException("Cannot find the ower of this profile.",  WebAppException.ErrorType.DATA);
+            }
+            
             this._usersRepository.saveUserProfile(profileEntity);
          }
       }
