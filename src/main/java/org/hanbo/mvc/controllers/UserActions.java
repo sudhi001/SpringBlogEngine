@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -64,8 +66,8 @@ public class UserActions
    }
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-   @RequestMapping(value = "/admin/editUserProfile")
-   public ModelAndView editUserProfile()
+   @RequestMapping(value = "/admin/createUserProfile")
+   public ModelAndView createUserProfile()
    {
       UserPrincipalDataModel loginUser = this._actionUtil.getLoginUser();
       if (loginUser == null)
@@ -99,11 +101,57 @@ public class UserActions
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/editUserProfile")
+   public ModelAndView editUserProfile()
+   {
+      UserPrincipalDataModel loginUser = this._actionUtil.getLoginUser();
+      if (loginUser == null)
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
+      }
+      
+      UserInfoDataModel userInfo = _userService.getUserById(loginUser.getUserId());
+      if (userInfo == null)
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User cannot be found", "User cannot be found.");
+      }
+      
+      UserProfileDataModel profileModel = _userService.getUserProfile(loginUser.getUserId());
+      if (profileModel == null)
+      {
+         ModelAndView retVal = _actionUtil.createRedirectPageView("redirect:/admin/createUserProfile");
+         return retVal;
+      }
+      else
+      {
+         PageMetadata pageMetadata
+            = _actionUtil.creatPageMetadata("Edit My User Profile");
+         ModelAndView retVal
+            = _actionUtil.getDefaultModelAndView(
+                 "editUserProfile", pageMetadata);
+         retVal.addObject("editUserProfile", profileModel);
+         
+         return retVal;
+      }
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/saveUserProfile")
    public ModelAndView saveUserProfile(
       @ModelAttribute("editUserProfile")
-      UserProfileDataModel userProfileToSave
+      UserProfileDataModel userProfileToSave,
+      @RequestParam("userIconToUpload")
+      MultipartFile userIconToUpload
    )
    {
+      
+      if (userIconToUpload != null)
+      {
+         System.out.println(userIconToUpload.getName());
+         System.out.println(userIconToUpload.getOriginalFilename());
+      }
+      
       PageMetadata pageMetadata
          = _actionUtil.creatPageMetadata("Create My User Profile");
       ModelAndView retVal

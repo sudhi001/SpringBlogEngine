@@ -10,6 +10,6 @@ public interface LoginUserService
    void addUser(UserSignupDataModel userToAdd);
    UserInfoDataModel getUserById(String userId);
    UserInfoDataModel getUser(String userName);
-   void createUserProfile(UserProfileDataModel userProfile);
+   void saveUserProfile(UserProfileDataModel userProfile);
    UserProfileDataModel getUserProfile(String userId);
 }

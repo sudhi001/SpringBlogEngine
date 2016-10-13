@@ -18,4 +18,5 @@ public interface UsersRepository
    LoginUser getUserById(String userId);
    
    void saveUserProfile(UserProfile userProfile);
+   UserProfile getUserProfileByUserId(String userId);
 }

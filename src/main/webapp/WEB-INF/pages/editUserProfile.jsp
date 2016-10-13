@@ -3,6 +3,7 @@
  
 <tiles:insertDefinition name="defaultTemplate">
   <tiles:putAttribute name="cssContent">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/jasny/css/jasny-bootstrap.min.css">
      <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/custom/index.css">
   </tiles:putAttribute>
 
@@ -21,54 +22,65 @@
       <div class="box-body" style="display: block;">
         <div class="row">
           <div class="col-xs-12">
-             <form:form id="userProfileEditForm" class="form" role="form" modelAttribute="editUserProfile" action="${pageContext.request.contextPath}/admin/saveUserProfile">
+             <form:form id="userProfileEditForm" class="form-horizontal" role="form" modelAttribute="editUserProfile" enctype="multipart/form-data" action="${pageContext.request.contextPath}/admin/saveUserProfile">
                 <form:hidden id="userProfileId" path="userProfileId" value="" />
                 <div class="form-group">
+                   <label class="col-md-2 control-label">User Icon</label>
+                   <div id="userIconFile" class="fileinput fileinput-new input-group col-md-8" data-provides="fileinput">
+                      <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                      <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="userIconToUpload" id="userIconToUpload"></span>
+                      <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                   </div>
+                </div>                
+                <div class="form-group">
                    <label class="col-md-2 control-label">Last Name</label>
-                   <div class="col-md-12">
+                   <div class="col-md-4">
                       <form:input class="form-control" id="userLastName" path="userLastName"/>
                    </div>
                 </div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">First Name</label>
-                   <div class="col-md-12">
+                   <div class="col-md-4">
                       <form:input class="form-control" id="userFirstName" path="userFirstName"/>
                    </div>
                 </div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">User Email</label>
-                   <div class="col-md-12">
-                      <form:input class="form-control" id="userEmail" path="userEmail"/>
+                   <div class="col-md-6">
+                      <form:input class="form-control" id="userEmail" path="userEmail" readonly="true"/>
                    </div>
                 </div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">Age</label>
-                   <div class="col-md-12">
+                   <div class="col-md-3">
                       <form:input class="form-control" id="userAge" path="userAge"/>
                    </div>
                 </div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">Location</label>
-                   <div class="col-md-12">
+                   <div class="col-md-4">
                       <form:input class="form-control" id="userLocation" path="userLocation"/>
                    </div>
                 </div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">Profession</label>
-                   <div class="col-md-12">
+                   <div class="col-md-8">
                       <form:input class="form-control" id="userProfession" path="userProfession"/>
                    </div>
                 </div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">Profession</label>
-                   <div class="col-md-12">
+                   <div class="col-md-10">
 <form:textarea class="form-control" id="userIntroduction" style="height: 120px; max-height: 120px;" path="userIntroduction"></form:textarea>
                    </div>
                 </div>
-                <hr>
                 <div class="row text-center">
-                   <button class="btn btn-default col-md-3" type="submit">Save</button>
-                   <button class="btn btn-default col-md-3" type="reset">Clear</button>
+                   <div class="col-xs-12 col-sm-6 col-md-3 col-md-offset-3">
+                      <button class="btn btn-default form-control" type="submit">Save</button>
+                   </div>
+                   <div class="col-xs-12 col-sm-6 col-md-3">
+                      <button class="btn btn-default form-control" type="reset">Clear</button>
+                   </div>
                 </div>
              </form:form>
           </div>
@@ -86,7 +98,7 @@
   <tiles:putAttribute name="javascriptContent">
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
+    <script src="${pageContext.request.contextPath}/assets/jasny/js/jasny-bootstrap.min.js"></script>    <script type="text/javascript">
     </script>
   </tiles:putAttribute>
 </tiles:insertDefinition>

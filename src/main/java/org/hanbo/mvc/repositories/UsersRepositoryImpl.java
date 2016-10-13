@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.hanbo.mvc.entities.FileResource;
 import org.hanbo.mvc.entities.LoginUser;
 import org.hanbo.mvc.entities.UserProfile;
 import org.hanbo.mvc.entities.UserRole;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +100,48 @@ public class UsersRepositoryImpl implements UsersRepository
    {
       Session session = _sessionFactory.getCurrentSession();
       session.saveOrUpdate(userProfile);
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public UserProfile getUserProfileByUserId(String userId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query objQuery = session.createQuery(
+         "select userProfile from UserProfile userProfile where userProfile.owner.id = :userId"
+      ).setParameter("userId", userId)
+       .setFirstResult(0)
+       .setMaxResults(1);
+      
+      List<UserProfile> foundProfiles = objQuery.list();
+      if (foundProfiles != null && foundProfiles.size() > 0)
+      {
+         UserProfile retVal = foundProfiles.get(0);
+         if (retVal != null)
+         {
+            LoginUser owner = retVal.getOwner();
+            if (owner != null)
+            {
+               owner.getId();
+               owner.getUserEmail();
+               owner.getUserName();
+            }
+            
+            FileResource userIcon = retVal.getUserIcon();
+            if (userIcon != null)
+            {
+               userIcon.getId();
+            }
+            
+            return retVal;
+         }
+      }
+      
+      return null;
    }
    
    private LoginUser getUserQuery(String queryParam, String paramName, String queryVal)

@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.hanbo.mvc.entities.LoginUser;
+import org.hanbo.mvc.entities.UserProfile;
 import org.hanbo.mvc.entities.UserRole;
+import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.UserInfoDataModel;
 import org.hanbo.mvc.models.UserProfileDataModel;
 import org.hanbo.mvc.models.UserSignupDataModel;
@@ -13,6 +15,7 @@ import org.hanbo.mvc.services.utilities.UserInfoMappingUtil;
 import org.hanbo.mvc.utilities.IdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class LoginUserServiceImpl
@@ -64,14 +67,80 @@ public class LoginUserServiceImpl
    }
    
    @Override
-   public void createUserProfile(UserProfileDataModel userProfile)
+   public void saveUserProfile(UserProfileDataModel userProfile)
    {
-      
+      if (userProfile != null)
+      {
+         validateUserProfileModel(userProfile);
+         
+         UserProfile profileEntity
+            = UserInfoMappingUtil.fromUserProfieModelToEntity(userProfile);
+         if (profileEntity != null)
+         {
+            String profileId = IdUtil.generateUuid();
+            profileEntity.setId(profileId);
+            this._usersRepository.saveUserProfile(profileEntity);
+         }
+      }
    }
    
    @Override
    public UserProfileDataModel getUserProfile(String userId)
    {
+      if (StringUtils.isEmpty(userId))
+      {
+         return null;
+      }
+      
+      UserProfile userProfile = this._usersRepository.getUserProfileByUserId(userId);
+      if (userProfile != null)
+      {
+         return UserInfoMappingUtil.fromEntityToUserProfieModel(userProfile);
+      }
+      
       return null;
+   }
+   
+   private void validateUserProfileModel(UserProfileDataModel userProfileModel)
+   {
+      if (StringUtils.isEmpty(userProfileModel.getUserFirstName()))
+      {
+         throw new WebAppException("User first name cannot be null or empty.",  WebAppException.ErrorType.DATA);
+      }
+
+      if (userProfileModel.getUserFirstName() != null && userProfileModel.getUserFirstName().length() > 64)
+      {
+         throw new WebAppException("User first name is too long, max 64 characters.",  WebAppException.ErrorType.DATA);
+      }
+
+      if (StringUtils.isEmpty(userProfileModel.getUserLastName()))
+      {
+         throw new WebAppException("User last name cannot be null or empty.",  WebAppException.ErrorType.DATA);
+      }
+
+      if (userProfileModel.getUserLastName() != null && userProfileModel.getUserLastName().length() > 64)
+      {
+         throw new WebAppException("User last name is too long, max 64 characters.",  WebAppException.ErrorType.DATA);
+      }
+      
+      if (userProfileModel.getUserAge() < 18 || userProfileModel.getUserAge() > 150)
+      {
+         throw new WebAppException("User age is invalid, must be between 18 and 150.",  WebAppException.ErrorType.DATA);
+      }
+
+      if (!StringUtils.isEmpty(userProfileModel.getUserLocation()) && userProfileModel.getUserLocation().length() > 128)
+      {
+         throw new WebAppException("User location is too long, max 128 characters.",  WebAppException.ErrorType.DATA);
+      }
+
+      if (!StringUtils.isEmpty(userProfileModel.getUserProfession()) && userProfileModel.getUserProfession().length() > 128)
+      {
+         throw new WebAppException("User profession is too long, max 128 characters.",  WebAppException.ErrorType.DATA);
+      }
+      
+      if (!StringUtils.isEmpty(userProfileModel.getUserIntroduction()) && userProfileModel.getUserIntroduction().length() > 4096)
+      {
+         throw new WebAppException("Profile introduction is too long, max 4096 characters.",  WebAppException.ErrorType.DATA);
+      }
    }
 }
