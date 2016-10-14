@@ -85,7 +85,7 @@ public class LoginUserServiceImpl
             profileEntity.setCreateDate(dateNow);
             profileEntity.setUpdateDate(dateNow);
             
-            if (StringUtils.isEmpty(userProfile.getUserId()))
+            if (!StringUtils.isEmpty(userProfile.getUserId()))
             {
                LoginUser owner = _usersRepository.getUserById(userProfile.getUserId());
                profileEntity.setOwner(owner);

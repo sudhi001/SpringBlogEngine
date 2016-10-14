@@ -8,7 +8,7 @@ import org.hanbo.mvc.entities.Resource;
 public interface ResourcesRepository
 {
    void saveResource(Resource resToSave);
-
+   
    List<Resource> getResourcesByOwnerId(
       String ownerId, int pageIdx, int itemsCount);
    

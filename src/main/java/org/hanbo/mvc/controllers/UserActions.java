@@ -7,9 +7,12 @@ import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.UserProfileDataModel;
 import org.hanbo.mvc.models.UserSignupDataModel;
 import org.hanbo.mvc.services.LoginUserService;
+import org.hanbo.mvc.services.ResourceService;
+import org.hanbo.mvc.utilities.DateToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +25,9 @@ public class UserActions
 {
    @Autowired
    private LoginUserService _userService;
+   
+   @Autowired
+   private ResourceService _resourceService;
    
    @Autowired
    private ActionsUtil _actionUtil;
@@ -140,20 +146,21 @@ public class UserActions
    @RequestMapping(value = "/admin/saveUserProfile")
    public ModelAndView saveUserProfile(
       @ModelAttribute("editUserProfile")
-      UserProfileDataModel userProfileToSave,
-      @RequestParam("userIconToUpload")
-      MultipartFile userIconToUpload
+      UserProfileDataModel userProfileToSave
    )
    {
-      
-      if (userIconToUpload != null)
+      UserPrincipalDataModel loginUser = this._actionUtil.getLoginUser();
+      if (loginUser == null)
       {
-         System.out.println(userIconToUpload.getName());
-         System.out.println(userIconToUpload.getOriginalFilename());
+         return _actionUtil.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found.");
       }
       
+      userProfileToSave.setUserId(loginUser.getUserId());
+      this._userService.saveUserProfile(userProfileToSave);
+      
       PageMetadata pageMetadata
-         = _actionUtil.creatPageMetadata("Create My User Profile");
+         = _actionUtil.creatPageMetadata("View My User Profile");
       ModelAndView retVal
          = _actionUtil.getDefaultModelAndView(
               "viewUserProfile", pageMetadata);

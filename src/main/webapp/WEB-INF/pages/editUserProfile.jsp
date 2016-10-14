@@ -22,16 +22,8 @@
       <div class="box-body" style="display: block;">
         <div class="row">
           <div class="col-xs-12">
-             <form:form id="userProfileEditForm" class="form-horizontal" role="form" modelAttribute="editUserProfile" enctype="multipart/form-data" action="${pageContext.request.contextPath}/admin/saveUserProfile">
-                <form:hidden id="userProfileId" path="userProfileId" value="" />
-                <div class="form-group">
-                   <label class="col-md-2 control-label">User Icon</label>
-                   <div id="userIconFile" class="fileinput fileinput-new input-group col-md-8" data-provides="fileinput">
-                      <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
-                      <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="userIconToUpload" id="userIconToUpload"></span>
-                      <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
-                   </div>
-                </div>                
+             <form:form id="userProfileEditForm" class="form-horizontal" role="form" modelAttribute="editUserProfile" method="POST" enctype="multipart/form-data" action="${pageContext.request.contextPath}/admin/saveUserProfile">
+                <form:hidden id="userProfileId" path="userProfileId" value="" />              
                 <div class="form-group">
                    <label class="col-md-2 control-label">Last Name</label>
                    <div class="col-md-4">
@@ -69,7 +61,7 @@
                    </div>
                 </div>
                 <div class="form-group">
-                   <label class="col-md-2 control-label">Profession</label>
+                   <label class="col-md-2 control-label">Introduction</label>
                    <div class="col-md-10">
 <form:textarea class="form-control" id="userIntroduction" style="height: 120px; max-height: 120px;" path="userIntroduction"></form:textarea>
                    </div>

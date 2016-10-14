@@ -121,6 +121,20 @@ public class ResourceServiceImpl implements ResourceService
       String resourceName,
       String subType, MultipartFile fileToSave)
    {
+      saveResourceFileWithId(
+         ownerId,
+         resourceName,
+         subType, fileToSave
+      );
+   }
+   
+   @Override
+   public String saveResourceFileWithId(
+      String ownerId,
+      String resourceName,
+      String subType, MultipartFile fileToSave
+   )
+   {
       validateFileResourceInputs(
          resourceName,
          subType,
@@ -183,6 +197,8 @@ public class ResourceServiceImpl implements ResourceService
       fileResource.setOwner(resourceOwner);
       
       _resRepo.saveResource(fileResource);
+      
+      return resourceId;
    }
 
    @Override

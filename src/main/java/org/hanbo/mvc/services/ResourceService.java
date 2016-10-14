@@ -27,6 +27,12 @@ public interface ResourceService
       String resourceName,
       String subType, MultipartFile fileToSave
    );
+   
+   String saveResourceFileWithId(
+      String ownerId,
+      String resourceName,
+      String subType, MultipartFile fileToSave
+   );
   
    List<ResourceListItemDataModel> getOwnerResources(
       String ownerId, int pageIdx);
