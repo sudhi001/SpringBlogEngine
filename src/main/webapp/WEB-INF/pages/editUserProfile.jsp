@@ -25,15 +25,15 @@
              <form:form id="userProfileEditForm" class="form-horizontal" role="form" modelAttribute="editUserProfile" method="POST" enctype="multipart/form-data" action="${pageContext.request.contextPath}/admin/saveUserProfile">
                 <form:hidden id="userProfileId" path="userProfileId" value="" />              
                 <div class="form-group">
-                   <label class="col-md-2 control-label">Last Name</label>
-                   <div class="col-md-4">
-                      <form:input class="form-control" id="userLastName" path="userLastName"/>
-                   </div>
-                </div>
-                <div class="form-group">
                    <label class="col-md-2 control-label">First Name</label>
                    <div class="col-md-4">
                       <form:input class="form-control" id="userFirstName" path="userFirstName"/>
+                   </div>
+                </div>
+                <div class="form-group">
+                   <label class="col-md-2 control-label">Last Name</label>
+                   <div class="col-md-4">
+                      <form:input class="form-control" id="userLastName" path="userLastName"/>
                    </div>
                 </div>
                 <div class="form-group">
@@ -42,6 +42,17 @@
                       <form:input class="form-control" id="userEmail" path="userEmail" readonly="true"/>
                    </div>
                 </div>
+                <div class="form-group">
+                   <label class="col-md-2 control-label">User Gender</label>
+                   <div class="radio" style="padding-left: 10px;">
+                      <label>
+                         <form:radiobutton path="userGender" id="genderMale" value="male"></form:radiobutton> Male
+                      </label>
+                      <label>
+                         <form:radiobutton path="userGender" id="genderFemale" value="female"></form:radiobutton> Female
+                      </label>
+                    </div>
+				</div>
                 <div class="form-group">
                    <label class="col-md-2 control-label">Age</label>
                    <div class="col-md-3">

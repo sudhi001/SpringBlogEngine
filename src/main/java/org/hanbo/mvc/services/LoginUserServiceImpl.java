@@ -79,12 +79,19 @@ public class LoginUserServiceImpl
          if (profileEntity != null)
          {
             Date dateNow = new Date();
-            
-            String profileId = IdUtil.generateUuid();
-            profileEntity.setId(profileId);
-            profileEntity.setCreateDate(dateNow);
-            profileEntity.setUpdateDate(dateNow);
-            
+            if (!StringUtils.isEmpty(userProfile.getUserProfileId()))
+            {
+               profileEntity.setId(userProfile.getUserProfileId());
+               profileEntity.setCreateDate(dateNow); //TODO this is wrong and must fix.
+               profileEntity.setUpdateDate(dateNow);
+            }
+            else
+            {
+               String profileId = IdUtil.generateUuid();
+               profileEntity.setId(profileId);
+               profileEntity.setCreateDate(dateNow);
+               profileEntity.setUpdateDate(dateNow);
+            }            
             if (!StringUtils.isEmpty(userProfile.getUserId()))
             {
                LoginUser owner = _usersRepository.getUserById(userProfile.getUserId());
