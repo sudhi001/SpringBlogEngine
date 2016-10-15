@@ -1,6 +1,9 @@
 package org.hanbo.mvc.models;
 
+import java.util.Date;
+
 import org.hanbo.mvc.exceptions.WebAppException;
+import org.hanbo.mvc.utilities.DateToString;
 import org.springframework.util.StringUtils;
 
 public class UserProfileDataModel
@@ -28,6 +31,11 @@ public class UserProfileDataModel
    private String userIntroduction;
    
    private String userIconId;
+   
+   private Date profileCreateDate;
+
+   private Date profileUpdateDate;
+   
 
    public String getUserId()
    {
@@ -149,6 +157,36 @@ public class UserProfileDataModel
       this.userEmail = userEmail;
    }
    
+   public Date getProfileCreateDate()
+   {
+      return profileCreateDate;
+   }
+   
+   public String getProfileCreateDateString()
+   {
+      return DateToString.dateStringForDisplay(profileCreateDate);
+   }
+
+   public void setProfileCreateDate(Date profileCreateDate)
+   {
+      this.profileCreateDate = profileCreateDate;
+   }
+
+   public Date getProfileUpdateDate()
+   {
+      return profileUpdateDate;
+   }
+   
+   public String getProfileUpdateDateString()
+   {
+      return DateToString.dateStringForDisplay(profileUpdateDate);
+   }
+
+   public void setProfileUpdateDate(Date profileUpdateDate)
+   {
+      this.profileUpdateDate = profileUpdateDate;
+   }
+   
    public void validateUserProfile()
    {
       if (StringUtils.isEmpty(userId))
@@ -201,4 +239,6 @@ public class UserProfileDataModel
          throw new WebAppException("User introduction contains too many characters.", WebAppException.ErrorType.DATA);         
       }
    }
+
+
 }

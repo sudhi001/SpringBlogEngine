@@ -81,6 +81,7 @@ public class UserInfoMappingUtil
          retVal.setUserName(entity.getOwner().getUserName());
          retVal.setUserEmail(entity.getOwner().getUserEmail());
       }
+      
       retVal.setUserProfileId(entity.getId());
       retVal.setUserFirstName(entity.getFirstName());
       retVal.setUserLastName(entity.getLastName());
@@ -89,6 +90,9 @@ public class UserInfoMappingUtil
       retVal.setUserLocation(entity.getLocation());
       retVal.setUserProfession(entity.getProfession());
       retVal.setUserIntroduction(entity.getIntroduction());
+      retVal.setProfileCreateDate(entity.getCreateDate());
+      retVal.setProfileUpdateDate(entity.getCreateDate());
+      
       if (entity.getUserIcon() != null)
       {
          retVal.setUserIconId(entity.getUserIcon().getId());

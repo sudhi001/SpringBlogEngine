@@ -158,14 +158,42 @@ public class UserActions
       
       userProfileToSave.setUserId(loginUser.getUserId());
       this._userService.saveUserProfile(userProfileToSave);
+
+      return _actionUtil.createRedirectPageView("redirect:/admin/viewUserProfile");
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/viewUserProfile")
+   public ModelAndView viewUserProfile()
+   {
+      UserPrincipalDataModel loginUser = this._actionUtil.getLoginUser();
+      if (loginUser == null)
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found");
+      }
+      
+      if (StringUtils.isEmpty(loginUser.getUserId()))
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User ID is null or empty.", "Invalid User");
+      }
+      
+      UserProfileDataModel userProfile =
+         this._userService.getUserProfile(loginUser.getUserId());
+      if (userProfile == null)
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "Unable to find user profile.", "Profile not found");         
+      }
       
       PageMetadata pageMetadata
          = _actionUtil.creatPageMetadata("View My User Profile");
       ModelAndView retVal
          = _actionUtil.getDefaultModelAndView(
               "viewUserProfile", pageMetadata);
-      //retVal.addObject("userProfileToView", );
-      
+      retVal.addObject("userProfileToView", userProfile);
+   
       return retVal;
    }
    
