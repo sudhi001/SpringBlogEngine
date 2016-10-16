@@ -78,7 +78,7 @@
              <div class="row">
                 <div class="col-md-12" style="padding-top: 25px;">
                    <a href="${pageContext.request.contextPath}/admin/editUserProfile" class="btn btn-default">Edit Profile</a>&nbsp;
-                   <button class="btn btn-default" onclick="">Upload Profile Icon</button>
+                   <button class="btn btn-default" onclick="handleClickChangeUserIconBtn()">Upload Profile Icon</button>
                 </div>
              </div>
           </sec:authorize>
@@ -132,7 +132,6 @@
   <tiles:putAttribute name="javascriptContent">
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/jasny/js/jasny-bootstrap.min.js"></script>    <script type="text/javascript">
-    </script>
-  </tiles:putAttribute>
+    <script src="${pageContext.request.contextPath}/assets/jasny/js/jasny-bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/changeUserIcon.js"></script>  </tiles:putAttribute>
 </tiles:insertDefinition>

@@ -109,7 +109,6 @@
   <tiles:putAttribute name="javascriptContent">
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/custom/js/userProfile.js"></script>
-    <script src="${pageContext.request.contextPath}/"></script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/editUserProfile.js"></script>
   </tiles:putAttribute>
 </tiles:insertDefinition>
