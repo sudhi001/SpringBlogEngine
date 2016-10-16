@@ -183,8 +183,7 @@ public class UserActions
          this._userService.getUserProfile(loginUser.getUserId());
       if (userProfile == null)
       {
-         return _actionUtil.createErorrPageViewModel(
-            "Unable to find user profile.", "Profile not found");         
+         return _actionUtil.createRedirectPageView("redirect:/admin/createUserProfile");
       }
       
       PageMetadata pageMetadata

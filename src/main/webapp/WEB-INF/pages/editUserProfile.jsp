@@ -22,7 +22,8 @@
       <div class="box-body" style="display: block;">
         <div class="row">
           <div class="col-xs-12">
-             <form:form id="userProfileEditForm" class="form-horizontal" role="form" modelAttribute="editUserProfile" method="POST" enctype="multipart/form-data" action="${pageContext.request.contextPath}/admin/saveUserProfile">
+             <form:form id="userProfileEditForm" class="form-horizontal" role="form" modelAttribute="editUserProfile" method="POST" enctype="multipart/form-data" action="${pageContext.request.contextPath}/admin/saveUserProfile"
+                 onsubmit="return validateUserProfileEdit();" onreset="resetUserProfileEdit();">
                 <form:hidden id="userProfileId" path="userProfileId" value="" />              
                 <div class="form-group">
                    <label class="col-md-2 control-label">First Name</label>
@@ -77,6 +78,13 @@
 <form:textarea class="form-control" id="userIntroduction" style="height: 120px; max-height: 120px;" path="userIntroduction"></form:textarea>
                    </div>
                 </div>
+                <div class="row margin-updown" id="editUserProfileError" style="display: none;">
+                   <div class="col-xs-12">
+                      <div class="warning-block" id="editUserProfileErrorMsg">
+                         test test
+                      </div>
+                   </div>
+                </div>
                 <div class="row text-center">
                    <div class="col-xs-12 col-sm-6 col-md-3 col-md-offset-3">
                       <button class="btn btn-default form-control" type="submit">Save</button>
@@ -101,7 +109,7 @@
   <tiles:putAttribute name="javascriptContent">
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/jasny/js/jasny-bootstrap.min.js"></script>    <script type="text/javascript">
-    </script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/userProfile.js"></script>
+    <script src="${pageContext.request.contextPath}/"></script>
   </tiles:putAttribute>
 </tiles:insertDefinition>

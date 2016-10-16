@@ -96,7 +96,37 @@
        </div>
      </div>
      
-     
+     <div id="addUserIconDlg" class="modal fade">
+        <div class="modal-dialog">
+           <div class="modal-content">
+              <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                 <h4 class="modal-title">Add/Change User Icon</h4>
+              </div>
+              <form id="addUserIconForm" action="${pageContext.request.contextPath}/admin/changeUserIcon" enctype="multipart/form-data" method="post">
+              <div class="modal-body">
+                 <div class="form-group">
+                    <label for="resourceName">Icon Name</label>
+                    <input type="text" class="form-control" name="userIconName" id="userIconName" placeholder="Enter name of user's icon">
+                 </div>
+                 <div class="form-group">
+                    <label for="resourceName">Resource File</label>
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                       <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                       <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="userIconToUpload" id="userIconToUpload"></span>
+                       <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                 </div>
+              </div>
+              <div class="modal-footer">
+                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 <button type="submit" class="btn btn-primary">Upload</button>
+              </div>
+              </form>
+           </div>
+        </div>
+     </div>
+
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">
