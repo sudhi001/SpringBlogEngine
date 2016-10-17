@@ -17,6 +17,7 @@ import org.hanbo.mvc.utilities.IdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class LoginUserServiceImpl
@@ -24,6 +25,9 @@ public class LoginUserServiceImpl
 {
    @Autowired
    private UsersRepository _usersRepository;
+   
+   @Autowired
+   private ResourceService _resourceService;
 
    @Override
    public void validateUserInfoData(UserSignupDataModel userInfo)
@@ -122,6 +126,50 @@ public class LoginUserServiceImpl
       }
       
       return null;
+   }
+
+   @Override
+   public void changeUserProfileIcon(String ownerId, String iconName, String profileId, MultipartFile userIconToSave)
+   {
+      validateUserIconUploadInfo(ownerId, iconName, profileId, userIconToSave);
+      
+      String userIconId = 
+      _resourceService.saveResourceFileWithId(ownerId, iconName, "image", userIconToSave);
+      
+      if (StringUtils.isEmpty(userIconId))
+      {
+         throw new WebAppException("User icon resource uploaded failed. return empty icon id.", WebAppException.ErrorType.DATA);
+      }
+      
+      _usersRepository.updateUserProfileIcon(ownerId, profileId, userIconId);
+   }
+   
+   private void validateUserIconUploadInfo(String ownerId, String iconName, String profileId, MultipartFile userIconToSave)
+   {
+      if (StringUtils.isEmpty(ownerId))
+      {
+         throw new WebAppException("Owner id cannot be null or empty.",  WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(profileId))
+      {
+         throw new WebAppException("User profile id cannot be null or empty.",  WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(iconName))
+      {
+         throw new WebAppException("User icon name cannot be null or empty.",  WebAppException.ErrorType.DATA);
+      }
+      
+      if (iconName != null && iconName.length() > 96)
+      {
+         throw new WebAppException("User icon name is too long.",  WebAppException.ErrorType.DATA);
+      }
+      
+      if (userIconToSave == null || StringUtils.isEmpty(userIconToSave.getOriginalFilename()))
+      {
+         throw new WebAppException("User icon uploaded is empty or invalid.",  WebAppException.ErrorType.DATA);         
+      }
    }
    
    private void validateUserProfileModel(UserProfileDataModel userProfileModel)

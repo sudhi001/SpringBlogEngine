@@ -19,4 +19,6 @@ public interface UsersRepository
    
    void saveUserProfile(UserProfile userProfile);
    UserProfile getUserProfileByUserId(String userId);
+   
+   void updateUserProfileIcon(String ownerId, String profileId, String userIconId);
 }

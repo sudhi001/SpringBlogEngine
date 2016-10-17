@@ -25,6 +25,9 @@ public class UsersRepositoryImpl implements UsersRepository
    @Autowired
    private SessionFactory _sessionFactory;
    
+   @Autowired
+   private ResourcesRepository _resourcesRepository;
+
    @Override
    @Transactional(
       propagation = Propagation.REQUIRED,
@@ -142,6 +145,40 @@ public class UsersRepositoryImpl implements UsersRepository
       }
       
       return null;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )   
+   public void updateUserProfileIcon(String ownerId, String profileId, String userIconId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query objQuery = session.createQuery(
+            "select userProfile from UserProfile userProfile where userProfile.owner.id = :userId"
+            + " and userProfile.id = :profileId"
+         ).setParameter("userId", ownerId)
+          .setParameter("profileId", profileId) 
+          .setFirstResult(0)
+          .setMaxResults(1);
+      
+      List<UserProfile> foundProfiles = objQuery.list();
+      if (foundProfiles != null && foundProfiles.size() > 0)
+      {
+         UserProfile foundProfile = foundProfiles.get(0);
+         if (foundProfile != null)
+         {
+            FileResource userIconFound = 
+            _resourcesRepository.getImageResourceById(session, ownerId, userIconId);
+            if (userIconFound != null)
+            {
+               foundProfile.setUserIcon(userIconFound);
+               session.update(foundProfile);
+            }
+         }
+      }
    }
    
    private LoginUser getUserQuery(String queryParam, String paramName, String queryVal)

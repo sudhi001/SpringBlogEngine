@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hanbo.mvc.entities.FileResource;
 import org.hanbo.mvc.entities.Resource;
+import org.hibernate.Session;
 
 public interface ResourcesRepository
 {
@@ -22,6 +23,9 @@ public interface ResourcesRepository
    
    List<FileResource> getImageResourcesByOwnerId(
       String ownerId, int pageIdx, int itemsCount);
+   
+   FileResource getImageResourceById(
+      Session session, String ownerId, String fileId);
    
    void deleteResource(Resource resource);
 }

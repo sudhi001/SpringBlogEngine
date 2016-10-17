@@ -170,7 +170,30 @@ public class ResourcesRepositoryImpl implements ResourcesRepository
       List<FileResource> objList = objQuery.list();
       return objList;
    }
+   
+   @Override
+   public FileResource getImageResourceById(Session session, String ownerId, String fileId)
+   {
+      Query objQuery = session.createQuery(
+         "select resource from FileResource resource"
+         + " where resource.owner.id = :ownerId"
+         + " and resource.subResourceType = 'image'"
+         + " and resource.id = :resourceId"
+         + " order by resource.updateDate desc")
+         .setParameter("ownerId", ownerId)
+         .setParameter("resourceId", fileId)
+         .setFirstResult(0)
+         .setMaxResults(1);
+
+      List<FileResource> objList = objQuery.list();
+      if (objList.size() > 0)
+      {
+         return objList.get(0);
+      }
       
+      return null;
+   }
+   
    protected static FileResource getFileResourceById(Session session, String resourceId)
    {
       return (FileResource)getResourceById(session, resourceId);
