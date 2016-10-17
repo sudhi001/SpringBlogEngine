@@ -7,8 +7,6 @@ import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.UserProfileDataModel;
 import org.hanbo.mvc.models.UserSignupDataModel;
 import org.hanbo.mvc.services.LoginUserService;
-import org.hanbo.mvc.services.ResourceService;
-import org.hanbo.mvc.utilities.DateToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -26,8 +24,8 @@ public class UserActions
    @Autowired
    private LoginUserService _userService;
    
-   @Autowired
-   private ResourceService _resourceService;
+   //@Autowired
+   //private ResourceService _resourceService;
    
    @Autowired
    private ActionsUtil _actionUtil;
@@ -194,6 +192,52 @@ public class UserActions
       retVal.addObject("userProfileToView", userProfile);
    
       return retVal;
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/changeUserIcon")
+   public ModelAndView changeUserIcon(
+      @RequestParam("userIconName")
+      String userIconName,
+      @RequestParam("userProfileId")
+      String profileId,
+      @RequestParam("userIconToUpload")
+      MultipartFile userIconToUpload
+   )
+   {
+      UserPrincipalDataModel loginUser = this._actionUtil.getLoginUser();
+      if (loginUser == null)
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User Authorization Failure", "User cannot be found");
+      }
+      
+      String ownerId = loginUser.getUserId();
+      if (StringUtils.isEmpty(ownerId))
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User id invalid", "Invalid User ID detected");
+      }
+      
+      if (userIconToUpload == null
+         || StringUtils.isEmpty(userIconToUpload.getOriginalFilename()))
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User Icon invalid", "User Icon file is not valid");
+      }
+      
+      try
+      {
+         _userService.changeUserProfileIcon(ownerId, userIconName, profileId, userIconToUpload);
+         
+         return _actionUtil.createRedirectPageView("redirect:/admin/viewUserProfile");
+      }
+      catch(Exception e)
+      {
+         e.printStackTrace();
+         return _actionUtil.createErorrPageViewModel(
+            "Error occurred", "Unable to change the user profile icon");
+      }
    }
    
    private ModelAndView createSignupSuccessPageModelAndView(

@@ -18,6 +18,15 @@
          </div>
        </div>
        <div class="box-body" style="display: block;">
+          <c:if test="${userProfileToView != null && userProfileToView.getUserIconId() != null && userProfileToView.getUserIconId().length() > 0}">
+          <div class="row">
+             <div class="col-md-3">
+                <div class="thumbnail" style="width: 100px; max-width: 100px;">
+                   <img src="${pageContext.request.contextPath}/public/imgresource/${userProfileToView.getUserIconId()}" width="100%">
+                </div>
+             </div>         
+          </div>
+          </c:if>
           <div class="row">
              <div class="col-md-2">
                 <label>First Name:</label>
@@ -103,18 +112,31 @@
                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                  <h4 class="modal-title">Add/Change User Icon</h4>
               </div>
-              <form id="addUserIconForm" action="${pageContext.request.contextPath}/admin/changeUserIcon" enctype="multipart/form-data" method="post">
+              <form id="addUserIconForm" class="form-horizontal" action="${pageContext.request.contextPath}/admin/changeUserIcon" enctype="multipart/form-data" method="post"
+                    onsubmit="return validateUserIconData()" onreset="resetChangeUserIconDlg()">
+              <input type="hidden" id="userProfileId" name="userProfileId" value="${userProfileToView.getUserProfileId()}">
               <div class="modal-body">
                  <div class="form-group">
-                    <label for="resourceName">Icon Name</label>
-                    <input type="text" class="form-control" name="userIconName" id="userIconName" placeholder="Enter name of user's icon">
+                    <label for="userIconName" class="col-xs-3 control-label text-right">Icon Name</label>
+                    <div class="col-xs-6">
+                       <input class="form-control" type="text" name="userIconName" id="userIconName" placeholder="Enter name of user's icon">
+                    </div>
                  </div>
                  <div class="form-group">
-                    <label for="resourceName">Resource File</label>
-                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                       <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
-                       <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="userIconToUpload" id="userIconToUpload"></span>
-                       <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    <label for="userIconToUpload" class="control-label col-xs-3 text-right">Resource File</label>
+                    <div class="col-xs-9">
+                       <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                          <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename"></span></div>
+                          <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span><span class="fileinput-exists">Change</span><input type="file" name="userIconToUpload" id="userIconToUpload"></span>
+                          <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                       </div>
+                    </div>
+                 </div>
+                 <div class="row margin-updown" id="addUserIconError" style="display: none;">
+                    <div class="col-xs-12">
+                       <div class="warning-block" id="addUserIconErrorMsg">
+                          test test
+                       </div>
                     </div>
                  </div>
               </div>
