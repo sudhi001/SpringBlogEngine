@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,10 +24,7 @@ public class UserActions
 {
    @Autowired
    private LoginUserService _userService;
-   
-   //@Autowired
-   //private ResourceService _resourceService;
-   
+      
    @Autowired
    private ActionsUtil _actionUtil;
    
@@ -237,6 +235,36 @@ public class UserActions
          e.printStackTrace();
          return _actionUtil.createErorrPageViewModel(
             "Error occurred", "Unable to change the user profile icon");
+      }
+   }
+   
+   @RequestMapping(value = "/userProfile/{userId}")
+   public ModelAndView viewUserProfile(
+      @PathVariable("userId")
+      String userId)
+   {
+      if (StringUtils.isEmpty(userId))
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User id invalid", "User id is needed to view the user's profile.");
+      }
+      
+      UserProfileDataModel userProfileModel = _userService.getUserProfile(userId);
+      if (userProfileModel != null)
+      {
+         PageMetadata pageMetadata
+            = _actionUtil.creatPageMetadata(String.format("View User Profile - %s", userProfileModel.getUserName()));
+         ModelAndView retVal
+            = _actionUtil.getDefaultModelAndView(
+                 "viewUserProfile", pageMetadata);
+         retVal.addObject("userProfileToView", userProfileModel);
+         
+         return retVal;
+      }
+      else
+      {
+         return _actionUtil.createErorrPageViewModel(
+            "User profile not found", "User profile cannot be found");
       }
    }
    
