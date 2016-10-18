@@ -23,12 +23,14 @@
         <div class="user-block">
           <div class="row">
             <div class="col-xs-1">
-               <img class="img-oval" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="User Image">
+               <c:if test="${articleModel.authorIconId != null && articleModel.authorIconId.length() > 0}">
+                  <img class="img-oval" src="${pageContext.request.contextPath}/public/imgresource/${articleModel.authorIconId}" alt="User Image">
+               </c:if>
             </div>
             <div class="col-xs-11">
               <span class="username">${articleModel.articleTitle}</span>
               <div class="row">
-                 <div class="col-xs-6"><span class="description">By ${articleModel.authorName}</span></div>
+                 <div class="col-xs-6"><span class="description">By <a href="${pageContext.request.contextPath}/userProfile/${articleModel.authorId}">${articleModel.authorName}</a></span></div>
                  <div class="col-xs-6"><span class="description"><strong>Updated</strong> - ${articleModel.getArticleUpdateDateString()}</span></div>
               </div>
               <div class="row">
@@ -47,7 +49,7 @@
         </div>
         <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> Share</button>
         <button type="button" class="btn btn-default btn-xs"><i class="fa fa-thumbs-o-up"></i> Like</button>
-        <span class="pull-right text-muted">127 likes - 3 comments</span>
+        <!-- <span class="pull-right text-muted">127 likes - 3 comments</span> -->
       </div>
 
       <div class="box-footer box-comments" style="display: block;">
@@ -55,7 +57,7 @@
 
       <div class="box-footer" style="display: block;">
         <form action="#" method="post">
-          <img class="img-responsive img-oval img-sm" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="Alt Text">
+          <!-- <img class="img-responsive img-oval img-sm" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="Alt Text"> -->
           <div class="img-push row">
             <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
                <input type="text" class="form-control input-sm" placeholder="Post your comments">

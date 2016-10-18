@@ -6,6 +6,7 @@ import java.util.List;
 import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.models.ArticleDataModel;
 import org.hanbo.mvc.models.SimplifiedArticleDataModel;
+import org.springframework.util.StringUtils;
 
 public class ArticleDataModelEntityMapping
 {
@@ -57,8 +58,27 @@ public class ArticleDataModelEntityMapping
       retVal.setArticleTitle(article.getArticleTitle());
       retVal.setArticleType(article.getArticleType());
       retVal.setArticleUpdateDate(article.getUpdateDate());
-      retVal.setAuthorId(article.getAuthor().getId());
-      retVal.setAuthorName(article.getAuthor().getUserName());
+
+      if (article.getAuthor() != null)
+      {
+         retVal.setAuthorId(article.getAuthor().getId());
+         retVal.setAuthorUserName(article.getAuthor().getUserName());
+         
+         if (article.getAuthor().getUserProfile() != null)
+         {
+            retVal.setAuthorName(String.format("%s %s",
+               article.getAuthor().getUserProfile().getFirstName(),
+               article.getAuthor().getUserProfile().getLastName()));
+            
+            if (article.getAuthor().getUserProfile().getUserIcon() != null)
+            {
+               retVal.setAuthorIconId(article.getAuthor()
+                  .getUserProfile()
+                  .getUserIcon()
+                  .getId());
+            }
+         }
+      }
       
       return retVal;
    }

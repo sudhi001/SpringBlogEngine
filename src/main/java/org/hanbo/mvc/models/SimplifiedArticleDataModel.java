@@ -17,8 +17,9 @@ public class SimplifiedArticleDataModel
    private Date articleUpdateDate;
    
    private String authorId;
+   private String authorUserName;   
    private String authorName;
-   
+   private String authorIconId;
    
    public SimplifiedArticleDataModel()
    {      
@@ -150,5 +151,25 @@ public class SimplifiedArticleDataModel
    public void setArticlePublished(boolean articlePublished)
    {
       this.articlePublished = articlePublished;
+   }
+
+   public String getAuthorIconId()
+   {
+      return authorIconId;
+   }
+
+   public void setAuthorIconId(String authorIconId)
+   {
+      this.authorIconId = authorIconId;
+   }
+
+   public String getAuthorUserName()
+   {
+      return authorUserName;
+   }
+
+   public void setAuthorUserName(String authorUserName)
+   {
+      this.authorUserName = authorUserName;
    }
 }

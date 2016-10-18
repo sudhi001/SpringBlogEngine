@@ -76,6 +76,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
          retVal.getAuthor().getId();
          retVal.getAuthor().getUserName();
          
+         loadArticleMetadata(retVal);
          return retVal;
       }
 
@@ -146,6 +147,8 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       {
          article.getAuthor().getUserName();
          article.getAuthor().getId();
+         
+         loadArticleMetadata(article);
       }
 
       return articlesRet;
@@ -258,8 +261,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       {
          for (Article article : objsList)
          {
-            article.getAuthor().getId();
-            article.getAuthor().getUserName();
+            loadArticleMetadata(article);
          }
       }
       
@@ -287,9 +289,32 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       List<Article> objList =  query.list();
       if (objList.size() > 0)
       {
-         return objList.get(0);
+         Article article = objList.get(0);
+         loadArticleMetadata(article);
+         
+         return article;
       }
       
       return null;
+   }
+   
+   static void loadArticleMetadata(Article article)
+   {
+      if (article != null && article.getAuthor() != null)
+      {
+         article.getAuthor().getId();
+         article.getAuthor().getUserName();
+         
+         if (article.getAuthor().getUserProfile() != null)
+         {
+            article.getAuthor().getUserProfile().getFirstName();
+            article.getAuthor().getUserProfile().getLastName();
+
+            if (article.getAuthor().getUserProfile().getUserIcon() != null)
+            {
+               article.getAuthor().getUserProfile().getUserIcon().getId();
+            }
+         }
+      }
    }
 }
