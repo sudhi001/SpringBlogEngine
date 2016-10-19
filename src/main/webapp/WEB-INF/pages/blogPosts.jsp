@@ -26,12 +26,14 @@
                     <h4 class="media-heading">
                       <a href="${pageContext.request.contextPath}/blog/view/${articleModel.articleId}">${articleModel.articleTitle}</a>
                     </h4>
-                    <hr class="postlist-hr">
-                    <div class="postlist-postsummary">
-                      <p>
-                      ${articleModel.articleSummary}
-                      </p>
-                    </div>
+                    <c:if test="${articleModel.articleSummary != null && articleModel.articleSummary.length() > 0}">
+                       <hr class="postlist-hr">
+                       <div class="postlist-postsummary">
+                          <p>
+                          ${articleModel.articleSummary}
+                          </p>
+                       </div>
+                    </c:if>
                     
                     <div class="thumbnail postlist-bottom-sidebar">
                       <div class="row">
