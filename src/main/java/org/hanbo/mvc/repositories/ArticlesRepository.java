@@ -2,6 +2,7 @@ package org.hanbo.mvc.repositories;
 
 import java.util.List;
 import org.hanbo.mvc.entities.Article;
+import org.hanbo.mvc.entities.ArticleIcon;
 
 public interface ArticlesRepository
 {
@@ -35,4 +36,10 @@ public interface ArticlesRepository
       String articleType, int pageIdx, int itemsCount);
    
    Article findArticleById(String articleId);
+   
+   void saveArticleIcon(ArticleIcon articleIcon);
+   
+   void saveArticleIcon(String articleId, String iconFileid);
+   
+   void deleteArticleIcon(String articleId);
 }

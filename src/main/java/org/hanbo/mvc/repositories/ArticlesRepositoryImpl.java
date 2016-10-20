@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Article;
+import org.hanbo.mvc.entities.ArticleIcon;
+import org.hanbo.mvc.entities.FileResource;
+import org.hanbo.mvc.utilities.IdUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,6 +22,9 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
 {
    @Autowired
    private SessionFactory _sessionFactory;
+   
+   @Autowired
+   private ResourcesRepository _resourcesRepository;
    
    @Transactional(
       propagation = Propagation.REQUIRED,
@@ -277,6 +283,109 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    {
       Session session = _sessionFactory.getCurrentSession();
       return internalFindArticleById(session, articleId);
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public void saveArticleIcon(ArticleIcon articleIcon)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      persistArticleIcon(session, articleIcon);
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public void saveArticleIcon(String articleId, String iconFileid)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Article article = internalFindArticleById(session, articleId);
+      FileResource iconFile = _resourcesRepository.getImageResourceById(session, iconFileid);
+      
+      Query objQuery = findArticleIconByArticleIdQuery(session, articleId);
+      if (objQuery != null)
+      {
+         List<ArticleIcon> foundObjs = objQuery.list();
+         if (foundObjs != null && foundObjs.size() > 0)
+         {
+            ArticleIcon foundArticleIcon = foundObjs.get(0);
+            if (foundArticleIcon != null)
+            {
+               if (article != null && iconFile != null)
+               {
+                  foundArticleIcon.setArticle(article);
+                  foundArticleIcon.setArticleIcon(iconFile);
+                  
+                  persistArticleIcon(session, foundArticleIcon);
+                  return;
+               }
+            }
+         }
+      }
+
+      if (article != null && iconFile != null)
+      {
+         ArticleIcon articleIconToSave = new ArticleIcon();
+         articleIconToSave.setId(IdUtil.generateUuid());
+         articleIconToSave.setArticle(article);
+         articleIconToSave.setArticleIcon(iconFile);
+         
+         persistArticleIcon(session, articleIconToSave);
+      }
+   }
+   
+
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public void deleteArticleIcon(String articleId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query objQuery = findArticleIconByArticleIdQuery(session, articleId);
+      
+      if (objQuery != null)
+      {
+         List<ArticleIcon> foundObjs = objQuery.list();
+         if (foundObjs.size() > 0)
+         {
+            ArticleIcon objToDelete = foundObjs.get(0);
+            session.delete(objToDelete);
+         }
+      }
+   }
+
+   private static void persistArticleIcon(Session session, ArticleIcon articleIcon)
+   {
+      if (session != null && articleIcon != null)
+      {
+         session.saveOrUpdate(articleIcon);
+      }
+   }
+   
+   private static Query findArticleIconByArticleIdQuery(Session session, String articleId)
+   {
+      Query query = null;
+      if (session != null)
+      {
+         query = session.createQuery(
+            "select articleIcon from ArticleIcon articleIcon "
+            + "where articleIcon.article.id = :articleId"
+         )
+          .setParameter("articleId", articleId)
+          .setMaxResults(1)
+          .setFirstResult(0);
+      }
+      
+      return query;
    }
    
    static Article internalFindArticleById(Session session, String articleId)

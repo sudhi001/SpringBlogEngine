@@ -27,5 +27,8 @@ public interface ResourcesRepository
    FileResource getImageResourceById(
       Session session, String ownerId, String fileId);
    
+   FileResource getImageResourceById(
+      Session session, String fileId);
+   
    void deleteResource(Resource resource);
 }
