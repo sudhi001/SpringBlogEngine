@@ -32,60 +32,86 @@
 
       <c:choose>
       <c:when test="${!articleListPageModel.isDataModelEmpty()}">
-
-      <table class="table table-hover">
-        <tr>
-          <th class="col-md-1">Type</th>
-          <th class="col-md-4">Subject</th>
-          <th class="col-md-2">Author</th>
-          <th class="col-md-3">Last Modified</th>
-          <th class="col-md-2">Actions</th>
-        </tr>
-        <c:forEach items="${articleListPageModel.getListItems()}" var="postInfo">
-          <tr>
-            <td>
-              <c:choose>
-                <c:when test="${postInfo.articleType.equals('post')}">
-                  <p style="padding-top: 5px;">
-                     <span class="glyphicon glyphicon-book"></span> Post
-                  </p>
-                </c:when>
-                <c:otherwise>
-                  <p style="padding-top: 5px;">
-                     <span class="glyphicon glyphicon-file"></span> Page
-                  </p>
-                </c:otherwise>
-              </c:choose>
-            </td>
-            <td>
-                <a href="${pageContext.request.contextPath}/admin/blog/editPost/${postInfo.articleId}" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="${pageContext.request.contextPath}/admin/blog/previewPost/${postInfo.articleId}"><strong>${postInfo.articleTitle}</strong></a>
-            </td>
-            <td>
-               <p style="padding-top: 5px;">
-                  <span class="glyphicon glyphicon-user"></span> ${postInfo.authorName}
-               </p>
-            </td>  
-            <td>
-               <p style="padding-top: 5px;">
-                  <span class="glyphicon glyphicon-calendar"></span> ${postInfo.getArticleUpdateDateString()}
-               </p>
-            </td>
-            <td>
-              <button class="btn btn-danger" onclick="deletePostJson('${postInfo.articleId}')"><span class="glyphicon glyphicon-floppy-remove"></span></button>
-              <c:choose>
-                <c:when test="${!postInfo.articlePublished}">
-                  <button class="btn btn-success" onclick="publishPostJson('${postInfo.articleId}', 'true')"><span class="glyphicon glyphicon-file"></span></button>
-                </c:when>
-                <c:otherwise>
-                  <button class="btn btn-default" onclick="publishPostJson('${postInfo.articleId}', 'false')"><span class="glyphicon glyphicon-file"></span></button>
-                </c:otherwise>
-              </c:choose>
-              <button class="btn btn-default" onclick="setPermaLinkBtnClick('${postInfo.articleId}', '${postInfo.authorId}', '${postInfo.articleTitle}')"><span class="glyphicon glyphicon-link"></span></button>
-            </td>
-          </tr>
-        </c:forEach>        
-      </table>
+      
+      <c:forEach items="${articleListPageModel.getListItems()}" var="postInfo">
+         <div class="post-list">
+            <div class="panel panel-default">
+               <div class="panel-body">
+                  <div class="row">
+                     <div class="col-md-12">
+                        <h4 class="media-heading">
+                           <a href="${pageContext.request.contextPath}/admin/blog/previewPost/${postInfo.articleId}"><strong>${postInfo.articleTitle}</strong></a>
+                        </h4>
+                        <hr class="postlist-hr">
+                        <div class="postlist-postsummary">
+                           <div class="row">
+                              <div class="col-xs-4 col-sm-2 col-md-2 col-lg-3 text-center">
+                                 <div class="thumbnail gallery-image">
+                                    <img src="${pageContext.request.contextPath}/assets/imgs/default-user.jpg" width="100%">
+                                 </div>
+                              </div>
+                              <div class="col-xs-12 col-sm-10 col-md-10 col-lg-9">
+                                 <c:if test="${postInfo.articleSummary != null && postInfo.articleSummary.length() > 0}">
+                                 <p>
+                                 ${postInfo.articleSummary}
+                                 </p>
+                                 </c:if>
+                              </div>
+                           </div>
+                        </div>
+                 
+                        <div class="thumbnail postlist-bottom-sidebar">
+                           <div class="row">
+                              <div class="col-md-2 padding-updown">
+                                 <c:choose>
+                                    <c:when test="${postInfo.articleType.equals('post')}">
+                                       <span class="glyphicon glyphicon-book"></span> Post
+                                    </c:when>
+                                    <c:otherwise>
+                                       <span class="glyphicon glyphicon-file"></span> Page
+                                    </c:otherwise>
+                                 </c:choose>
+                              </div>
+                              <div class="col-md-3 padding-updown">
+                                 <span class="glyphicon glyphicon-calendar"></span>
+                                 ${postInfo.getArticleUpdateDateString()}
+                              </div>
+                              <div class="col-md-3 padding-updown">
+                                 <span class="glyphicon glyphicon-user"></span>
+                                 <a href="${pageContext.request.contextPath}/userProfile/${postInfo.authorId}">
+                                    <c:choose>
+                                       <c:when test="${postInfo.authorName != null && postInfo.authorName.length() > 0}">
+                                       ${postInfo.authorName}
+                                       </c:when>
+                                       <c:otherwise>
+                                       ${postInfo.authorUserName}
+                                       </c:otherwise>
+                                    </c:choose>
+                                 </a>
+                              </div>
+                              <div class="col-md-4 text-right">
+                                 <button class="btn btn-success" onclick="" data-toggle="tooltip" data-placement="top" title="Set/Edit Article Icon"><span class="glyphicon glyphicon-picture"></span></button>
+                                 <a href="${pageContext.request.contextPath}/admin/blog/editPost/${postInfo.articleId}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Edit Article"><span class="glyphicon glyphicon-pencil"></span></a>
+                                 <button class="btn btn-danger" onclick="deletePostJson('${postInfo.articleId}')" data-toggle="tooltip" data-placement="top" title="Delete Article"><span class="glyphicon glyphicon-floppy-remove"></span></button>
+                                 <c:choose>
+                                    <c:when test="${!postInfo.articlePublished}">
+                                       <button class="btn btn-success" onclick="publishPostJson('${postInfo.articleId}', 'true')" data-toggle="tooltip" data-placement="top" title="Publish"><span class="glyphicon glyphicon-file"></span></button>
+                                    </c:when>
+                                    <c:otherwise>
+                                       <button class="btn btn-default" onclick="publishPostJson('${postInfo.articleId}', 'false')"  data-toggle="tooltip" data-placement="top" title="Unpublish/Draft"><span class="glyphicon glyphicon-file"></span></button>
+                                    </c:otherwise>
+                                 </c:choose>
+                                 <button class="btn btn-default" onclick="setPermaLinkBtnClick('${postInfo.articleId}', '${postInfo.authorId}', '${postInfo.articleTitle}')"  data-toggle="tooltip" data-placement="top" title="Set/Edit PermaLink"><span class="glyphicon glyphicon-link"></span></button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </c:forEach>
+      
 
       <div class="row">
         <div class="md-col-12 text-right">

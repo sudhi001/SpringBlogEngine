@@ -32,7 +32,16 @@
             <div class="col-xs-11">
               <span class="username">${articleModel.articleTitle}</span>
               <div class="row">
-                 <div class="col-xs-6"><span class="description">By <a href="${pageContext.request.contextPath}/userProfile/${articleModel.authorId}">${articleModel.authorName}</a></span></div>
+                 <div class="col-xs-6"><span class="description">By <a href="${pageContext.request.contextPath}/userProfile/${articleModel.authorId}">
+                    <c:choose>
+                       <c:when test="${articleModel.authorName != null && articleModel.authorName.length() > 0}">
+                          ${articleModel.authorName}
+                       </c:when>
+                       <c:otherwise>
+                          ${articleModel.authorUserName}
+                       </c:otherwise>
+                    </c:choose>
+                 </a></span></div>
                  <div class="col-xs-6"><span class="description"><strong>Updated</strong> - ${articleModel.getArticleUpdateDateString()}</span></div>
               </div>
               <c:if test="${articleModel.articleCategory != null && articleModel.articleCategory.length() > 0}">

@@ -59,7 +59,14 @@ public class ArticleDataModelEntityMapping
       retVal.setArticleType(article.getArticleType());
       retVal.setArticleUpdateDate(article.getUpdateDate());
 
-      if (article.getAuthor() != null)
+      setArticleAuthorInfo(article, retVal);
+      
+      return retVal;
+   }
+
+   private static void setArticleAuthorInfo(Article article, SimplifiedArticleDataModel retVal)
+   {
+      if (article != null && retVal != null && article.getAuthor() != null)
       {
          retVal.setAuthorId(article.getAuthor().getId());
          retVal.setAuthorUserName(article.getAuthor().getUserName());
@@ -79,8 +86,6 @@ public class ArticleDataModelEntityMapping
             }
          }
       }
-      
-      return retVal;
    }
 
    public static List<SimplifiedArticleDataModel> toDataListItems(List<Article> articles)
@@ -107,10 +112,10 @@ public class ArticleDataModelEntityMapping
       retVal.setArticleSummary(article.getArticleSummary());
       retVal.setArticleTitle(article.getArticleTitle());
       retVal.setArticleType(article.getArticleType());
-      retVal.setAuthorId(article.getAuthor().getId());
-      retVal.setAuthorName(article.getAuthor().getUserName());
       retVal.setArticleCreateDate(article.getCreateDate());
       retVal.setArticleUpdateDate(article.getUpdateDate());
+      
+      setArticleAuthorInfo(article, retVal);
       
       return retVal;
    }

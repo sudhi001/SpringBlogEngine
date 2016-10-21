@@ -345,6 +345,11 @@ body {
    margin-bottom: 12px;
 }
 
+.padding-updown {
+   padding-top: 6px;
+   padding-bottom: 6px;
+}
+
 .warning-block {
    background-color: red;
    color: white;
