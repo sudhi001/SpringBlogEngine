@@ -1,5 +1,6 @@
 package org.hanbo.mvc.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hanbo.mvc.entities.FileResource;
@@ -194,6 +195,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepository
       return null;
    }
    
+   @Override
    public FileResource getImageResourceById(Session session, String fileId)
    {
       Query objQuery = session.createQuery(
@@ -212,6 +214,34 @@ public class ResourcesRepositoryImpl implements ResourcesRepository
       }
       
       return null;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<FileResource> getUserSquareImageReosurces(String ownerId, int pageIdx, int itemsCountVal)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query objQuery = session.createQuery(
+         "select resource from FileResource resource"
+         + " where resource.subResourceType = 'image'"
+         + " and resource.owner.id = :ownerId"
+         + " and resource.imageWidth = resource.imageHeight"
+         + " order by resource.updateDate desc")
+         .setParameter("ownerid", ownerId)
+         .setFirstResult(pageIdx * itemsCountVal)
+         .setMaxResults(itemsCountVal);
+      
+      List<FileResource> foundObjs = objQuery.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         return foundObjs;
+      }
+      
+      return new ArrayList<FileResource>();
    }
    
    protected static FileResource getFileResourceById(Session session, String resourceId)

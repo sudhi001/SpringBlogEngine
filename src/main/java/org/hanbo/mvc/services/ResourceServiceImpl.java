@@ -17,6 +17,7 @@ import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.ResourceListItemDataModel;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
+import org.hanbo.mvc.models.json.ArticleIconsJsonDataModel;
 import org.hanbo.mvc.models.json.ImageResourceJsonResponse;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
 import org.hanbo.mvc.models.json.ResourcesListJsonResponse;
@@ -400,6 +401,47 @@ public class ResourceServiceImpl implements ResourceService
       );
       
       return retVal;
+   }
+   
+   @Override
+   public ArticleIconsJsonDataModel getArticleIconsByOwnerId(String ownerId, int pageIdx)
+   {
+      if (StringUtils.isEmpty(ownerId))
+      {
+         throw new WebAppException("Article owner id not found.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (pageIdx < 0)
+      {
+         pageIdx = 0;
+      }
+      
+      try
+      {
+         String itemsCount = configValues.getProperty("userArticleIconsPerPage");
+         int itemsCountVal = Integer.parseInt(itemsCount);
+         
+         ArticleIconsJsonDataModel retVal = new ArticleIconsJsonDataModel();
+         retVal.setCurrentPageIdx(pageIdx);
+         
+         List<FileResource> articleIcons = this._resRepo.getUserSquareImageReosurces(ownerId, pageIdx, itemsCountVal);
+         if (articleIcons != null && articleIcons.size() > 0)
+         {
+            List<ResourceListItemDataModel> listOfArticleIcons
+               = ResourceDataModelEntityMapping.listItemsFromEntities(articleIcons);
+            
+            retVal.setArticleIconList(listOfArticleIcons);
+            
+            return retVal;
+         }
+      }
+      catch(Exception e)
+      {
+         throw new WebAppException("Exception happened when fetching user's article icons.", WebAppException.ErrorType.DATA, e);
+      }
+      
+      // returns null if processing fails.
+      return null;
    }
    
    private void validateTextResourceInputs(

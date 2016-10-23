@@ -31,4 +31,6 @@ public interface ResourcesRepository
       Session session, String fileId);
    
    void deleteResource(Resource resource);
+
+   List<FileResource> getUserSquareImageReosurces(String ownerId, int pageIdx, int itemsCountVal);
 }
