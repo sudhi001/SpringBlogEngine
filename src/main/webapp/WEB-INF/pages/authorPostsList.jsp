@@ -90,7 +90,9 @@
                                  </a>
                               </div>
                               <div class="col-md-4 text-right">
-                                 <button class="btn btn-success" onclick="" data-toggle="tooltip" data-placement="top" title="Set/Edit Article Icon"><span class="glyphicon glyphicon-picture"></span></button>
+                                 <c:if test="${postInfo.articleType.equals('post')}">
+                                 <button class="btn btn-success" onclick="clickEditArticleIconBtn('${postInfo.articleId}', '${pageContext.request.contextPath}')" data-toggle="tooltip" data-placement="top" title="Set/Edit Article Icon"><span class="glyphicon glyphicon-picture"></span></button>
+                                 </c:if>
                                  <a href="${pageContext.request.contextPath}/admin/blog/editPost/${postInfo.articleId}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Edit Article"><span class="glyphicon glyphicon-pencil"></span></a>
                                  <button class="btn btn-danger" onclick="deletePostJson('${postInfo.articleId}')" data-toggle="tooltip" data-placement="top" title="Delete Article"><span class="glyphicon glyphicon-floppy-remove"></span></button>
                                  <c:choose>
@@ -176,11 +178,41 @@
       </div>
     </div>
     
+    <div class="modal fade" id="addArticleIconDlg">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Edit Article Icon</h4>
+          </div>
+          <div class="modal-body">
+            <div id="addArticleIconForm" style="height: 250px; max-height: 250px; overflow-y: scroll;">
+              <input type="hidden" id="addIconArticleId" name="addIconArticleId" value="" />
+              <div id="addArticleIconGallery" class="row">
+              </div>
+            </div>
+            <div class="row margin-updown" id="addArticleIconError" style="display: none;">
+               <div class="col-xs-12">
+                  <div class="warning-block" id="addArticleIconErrorMsg">
+                     test test
+                  </div>
+               </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/addArticleIcon.js"></script>
     <script type="text/javascript">       
         var deletePostJson = function (articleId)
         {
@@ -259,23 +291,23 @@
               }).always(function (){
                  $("#permaLinkDlg").modal("hide");
               });
-          };
+        };
           
-          var deletePermaLinkClick = function ()
-          {
-        	 var articleId = $("#permaLinkDlg #permaLinkForm #permaLinkArticleId").val();
-        	 var deletePermaLinkUrl
-        	    = "${pageContext.request.contextPath}/admin/blog/deletePermaLink?articleId=" +articleId;
+        var deletePermaLinkClick = function ()
+        {
+           var articleId = $("#permaLinkDlg #permaLinkForm #permaLinkArticleId").val();
+           var deletePermaLinkUrl
+              = "${pageContext.request.contextPath}/admin/blog/deletePermaLink?articleId=" +articleId;
         	 
-        	 $.ajax({
-                url: deletePermaLinkUrl,
-                type: "DELETE",
-                success: function (result)
-                {
-                   $("#permaLinkDlg").modal("hide");
-                }
-        	 });
-          };
+           $.ajax({
+              url: deletePermaLinkUrl,
+              type: "DELETE",
+              success: function (result)
+              {
+                 $("#permaLinkDlg").modal("hide");
+              }
+           });
+        };
         
     </script>
   </tiles:putAttribute>
