@@ -357,3 +357,12 @@ body {
    margin-right: 12px;
    text-align: center;
 }
+
+.article-icon-list {
+   max-height: 125px;
+   overflow-y: scroll;
+}
+
+.article-icon-list .article-icon {
+   max-width: 118px;
+}

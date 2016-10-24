@@ -8,6 +8,7 @@ import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.ResourceListPageDataModel;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.json.ArticleIconsJsonDataModel;
 import org.hanbo.mvc.models.json.ImageResourceJsonResponse;
 import org.hanbo.mvc.models.json.TextResourceJsonResponse;
 import org.hanbo.mvc.models.json.ResourcesListJsonResponse;
@@ -389,6 +390,49 @@ public class ResourcesActions
       downloadImage(resourceId, response);
    }
 
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/resources/articleImages",
+      method=RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> articleImages(
+      @RequestParam("pageIdx")
+      int pageIdx
+   )
+   {
+      if (pageIdx < 0)
+      {
+         pageIdx = 0;
+      }
+      
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+      
+      ArticleIconsJsonDataModel retVal
+         = this._resourceService.getArticleIconsByOwnerId(loginUser.getUserId(), pageIdx);
+      if (retVal != null)
+      {
+         String retJsonObj = JsonUtil.convertObjectToJson(retVal);
+         ResponseEntity<String> retResp = new ResponseEntity<String>(retJsonObj, HttpStatus.OK);
+      
+         return retResp;
+      }
+      else
+      {
+         retVal = new ArticleIconsJsonDataModel();
+         String retJsonObj = JsonUtil.convertObjectToJson(retVal);
+         ResponseEntity<String> retResp = new ResponseEntity<String>(retJsonObj, HttpStatus.OK);
+         
+         return retResp;
+      }
+   }
+   
    private void downloadImage(String resourceId, HttpServletResponse response)
    {
       try

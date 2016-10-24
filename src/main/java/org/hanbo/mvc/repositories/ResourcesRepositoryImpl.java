@@ -231,7 +231,7 @@ public class ResourcesRepositoryImpl implements ResourcesRepository
          + " and resource.owner.id = :ownerId"
          + " and resource.imageWidth = resource.imageHeight"
          + " order by resource.updateDate desc")
-         .setParameter("ownerid", ownerId)
+         .setParameter("ownerId", ownerId)
          .setFirstResult(pageIdx * itemsCountVal)
          .setMaxResults(itemsCountVal);
       

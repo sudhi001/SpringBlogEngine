@@ -187,7 +187,7 @@
             <h4 class="modal-title">Edit Article Icon</h4>
           </div>
           <div class="modal-body">
-            <div id="addArticleIconForm" style="height: 250px; max-height: 250px; overflow-y: scroll;">
+            <div id="addArticleIconForm" class="article-icon-list">
               <input type="hidden" id="addIconArticleId" name="addIconArticleId" value="" />
               <div id="addArticleIconGallery" class="row">
               </div>

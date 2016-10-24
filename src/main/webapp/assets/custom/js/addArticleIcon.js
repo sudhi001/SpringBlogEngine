@@ -11,10 +11,16 @@ var clickEditArticleIconBtn = function (articleId, baseUrl) {
             withCredentials: true
          },
          success: function(data) {
-            console.log("Call successful");
+            console.log(JSON.stringify(data));
+            if (data != null) {
+               if (data.currentPageIdx >= 0 &&
+                  data.articleIconList != null &&
+                  data.articleIconList.length > 0) {
+                  addArticleIconToUI(data.articleIconList, baseUrl);
+               }
+            }
          },
          error: function(data) {
-            alert(JSON.stringify(data));
             showError("Something bad happened when trying to fetch article icons.");
          }
       });   
@@ -31,4 +37,33 @@ var showError = function (errorMsg) {
    }
 }
 
-
+var addArticleIconToUI = function (articleIconList, baseUrl) {
+   if (articleIconList != null && articleIconList.length > 0) {
+      var articleIcons = [];
+      for (var i = 0; i < articleIconList.length; i++) {
+         var iconImg = $("<img>", {
+            "src": baseUrl + "/secure/imgresource/" + articleIconList[i].resourceId,
+            "width": "100%",
+            "class": "img-responsive",
+            "style": "max-width: 118px;",
+            "alt":  articleIconList[i].resourceName
+         });
+         
+         var iconHref = $("<a>", {
+            "href": "#",
+            "onclick": ""
+         }).append(iconImg);
+         
+         var imageDiv = $("<div>", {
+            "class": "col-xs-3",
+            "style": "max-width: 118px;"
+         }).append(iconHref);
+         
+         articleIcons.push(imageDiv);
+      }
+      
+      if (articleIcons.length > 0) {
+         $("#addArticleIconDlg #addArticleIconForm #addArticleIconGallery").append(articleIcons);
+      }
+   }
+}
