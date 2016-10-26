@@ -339,6 +339,30 @@ public class BlogPostActions
       return new ResponseEntity<String>(HttpStatus.OK);
    }
    
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/blog/setArticleIcon",
+      method=RequestMethod.POST,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> setArticleIcon(
+      @RequestParam("articleId")
+      String articleId,
+      @RequestParam("articleIconId")
+      String articleIconId
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+
+      return new ResponseEntity<String>(HttpStatus.OK);
+   }
+   
    @ExceptionHandler(WebAppException.class)
    public ModelAndView handleException(WebAppException ex)
    {

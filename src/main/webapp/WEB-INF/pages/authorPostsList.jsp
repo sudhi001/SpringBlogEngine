@@ -189,7 +189,7 @@
           <div class="modal-body">
             <div id="addArticleIconForm" class="article-icon-list">
               <input type="hidden" id="addIconArticleId" name="addIconArticleId" value="" />
-              <div id="addArticleIconGallery" class="row">
+              <div id="addArticleIconGallery" class="row" style="padding-left: 20px; padding-right: 20px;">
               </div>
             </div>
             <div class="row margin-updown" id="addArticleIconError" style="display: none;">
