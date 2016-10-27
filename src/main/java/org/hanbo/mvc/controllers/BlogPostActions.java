@@ -359,7 +359,14 @@ public class BlogPostActions
             HttpStatus.UNAUTHORIZED
          );
       }
-
+      
+      try
+      {
+         this._articleService.setArticleIcon(articleId, articleIconId);
+      }
+      catch(Exception e) {
+         e.printStackTrace();
+      }
       return new ResponseEntity<String>(HttpStatus.OK);
    }
    

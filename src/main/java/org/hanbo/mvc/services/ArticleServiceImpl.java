@@ -197,6 +197,25 @@ public class ArticleServiceImpl implements ArticleService
       return retVal;
    }
    
+   @Override
+   public void setArticleIcon(String articleId, String articleIconId)
+   {
+      if (StringUtils.isEmpty(articleId))
+      {
+         throw new WebAppException(
+            "Article id is null or empty.", WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(articleIconId))
+      {
+         throw new WebAppException(
+            "Article icon id is null or empty.", WebAppException.ErrorType.DATA);
+      }
+      
+      this.articlesRepo.saveArticleIcon(articleId, articleIconId);
+   }
+   
+   @Override
    public String createBlogPostFromImage(String ownerId, String imageId, String postTitle,
       String postKeywords, String postContent, String basedUrlPath)
    {

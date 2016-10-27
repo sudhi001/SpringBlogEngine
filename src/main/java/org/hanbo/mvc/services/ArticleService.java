@@ -25,4 +25,6 @@ public interface ArticleService
    
    String createBlogPostFromImage(String ownerId, String imageId,
       String postTitle, String postKeywords, String postContent, String basedUrlPath);
+   
+   void setArticleIcon(String articleId, String articleIconId);
 }

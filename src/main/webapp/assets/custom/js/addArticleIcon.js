@@ -52,7 +52,7 @@ var addArticleIconToUI = function (articleId, articleIconList, baseUrl) {
          
          var iconHref = $("<a>", {
             "href": "#",
-            "onclick": "setArticleIcon('" + articleId + "', '" + articleIconList[i].resourceId + "')"
+            "onclick": "setArticleIcon('" + articleId + "', '" + articleIconList[i].resourceId + "', '" + baseUrl + "')"
          }).append(iconImg);
          
          var imageDiv = $("<div>", {
@@ -73,7 +73,7 @@ var clearAllIcons = function () {
    $("#addArticleIconDlg #addArticleIconForm #addArticleIconGallery").empty();
 };
 
-var setArticleIcon = function (articleId, iconResourceId) {
+var setArticleIcon = function (articleId, iconResourceId, baseUrl) {
    if (articleId != null && articleId.length > 0 &&
       iconResourceId != null &&  iconResourceId.length > 0) {
       $.ajax({

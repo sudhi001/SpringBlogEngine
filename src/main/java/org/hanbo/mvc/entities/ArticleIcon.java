@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "article")
+@Table(name = "articleicon")
 public class ArticleIcon
 {
    @Id
