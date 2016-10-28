@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ArticleDataModel;
@@ -30,9 +31,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import org.apache.log4j.*;
+
 @Controller
 public class BlogPostActions
 {
+   private static Logger _logger = LogManager.getLogger(BlogPostActions.class);
+   
    @Autowired
    private ActionsUtil _util;
    
@@ -363,11 +368,13 @@ public class BlogPostActions
       try
       {
          this._articleService.setArticleIcon(articleId, articleIconId);
+         return new ResponseEntity<String>(HttpStatus.OK);
       }
-      catch(Exception e) {
-         e.printStackTrace();
+      catch(Exception e)
+      {
+         _logger.error(ExceptionUtils.getStackTrace(e));
+         return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
-      return new ResponseEntity<String>(HttpStatus.OK);
    }
    
    @ExceptionHandler(WebAppException.class)

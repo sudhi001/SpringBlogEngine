@@ -69,6 +69,9 @@ public class Article
    
    @OneToOne(fetch = FetchType.LAZY, mappedBy="article", cascade={CascadeType.ALL})
    private PermaLink permaLinks;
+
+   @OneToOne(fetch = FetchType.LAZY, mappedBy="article")
+   private ArticleIcon articleIcon;
    
    public String getId()
    {
@@ -194,5 +197,15 @@ public class Article
    public void setPermaLinks(PermaLink permaLinks)
    {
       this.permaLinks = permaLinks;
+   }
+
+   public ArticleIcon getArticleIcon()
+   {
+      return articleIcon;
+   }
+
+   public void setArticleIcon(ArticleIcon articleIcon)
+   {
+      this.articleIcon = articleIcon;
    }
 }

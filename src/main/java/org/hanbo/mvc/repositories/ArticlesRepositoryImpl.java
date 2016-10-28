@@ -80,10 +80,9 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       if (foundObjs.size() > 0)
       {
          Article retVal = foundObjs.get(0);
-         retVal.getAuthor().getId();
-         retVal.getAuthor().getUserName();
          
          loadArticleMetadata(retVal);
+         loadArticleIconInfo(retVal);
          return retVal;
       }
 
@@ -152,56 +151,13 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       List<Article> articlesRet = objQuery.list();
       for (Article article : articlesRet)
       {
-         article.getAuthor().getUserName();
-         article.getAuthor().getId();
-         
          loadArticleMetadata(article);
+         loadArticleIconInfo(article);
       }
 
       return articlesRet;
    }
 
-   @Transactional(
-      propagation = Propagation.REQUIRED,
-      isolation = Isolation.READ_COMMITTED
-   )
-   public List<ArticleIcon> getAllArticlesWithIconsByUserId(
-      String authorId, int pageIdx,
-      int pageItemCount, boolean sortDsc
-   )
-   {
-      Session session = _sessionFactory.getCurrentSession();
-      
-      StringBuilder querySb = new StringBuilder();
-      querySb.append("Select articleIcon from ArticleIcon articleIcon");
-      querySb.append(" where articleIcon.article.author.id = :authorId");
-      if (sortDsc)
-      {
-         querySb.append(" order by articleIcon.article.updateDate desc");
-      }
-      else
-      {
-         querySb.append(" order by articleIcon.article.updateDate asc");
-      }
-      
-      int pageItemStart = pageIdx *pageItemCount;      
-      Query objQuery = session.createQuery(querySb.toString())
-         .setMaxResults(pageItemCount)
-         .setFirstResult(pageItemStart)
-         .setParameter("authorId", authorId);
-      
-      List<ArticleIcon> articlesRet = objQuery.list();
-      if (articlesRet != null)
-      {
-         for (ArticleIcon articleIcon : articlesRet)
-         {
-            loadArticleIconComposite(articleIcon);
-         }
-      }
-
-      return articlesRet;
-   }
-   
    @Override
    @Transactional(
       propagation = Propagation.REQUIRED,
@@ -310,43 +266,13 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
          for (Article article : objsList)
          {
             loadArticleMetadata(article);
+            loadArticleIconInfo(article);
          }
       }
       
       return objsList;
    }
    
-   @Override
-   @Transactional(
-      propagation = Propagation.REQUIRED,
-      isolation = Isolation.READ_COMMITTED
-   )
-   public List<ArticleIcon> getViewableArticlesAndIcons(
-      String articleType, int pageIdx, int itemsCount)
-   {
-      int firstResult = pageIdx * itemsCount;
-      
-      Session session = _sessionFactory.getCurrentSession();
-      Query query = session.createQuery(
-         "select articleIcon from ArticleIcon articleIcon where articleIcon.article.articleType = :articleType "
-         + "and articleIcon.article.published = true order by articleIcon.article.updateDate desc"
-      )
-         .setParameter("articleType", articleType)
-         .setMaxResults(itemsCount)
-         .setFirstResult(firstResult);
-      
-      List<ArticleIcon> objsList = query.list();
-      
-      if (objsList != null && objsList.size() > 0)
-      {
-         for (ArticleIcon articleIcon : objsList)
-         {
-            loadArticleIconComposite(articleIcon);
-         }
-      }
-      
-      return objsList;
-   }
    @Override
    @Transactional(
       propagation = Propagation.REQUIRED,
@@ -473,6 +399,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       {
          Article article = objList.get(0);
          loadArticleMetadata(article);
+         loadArticleIconInfo(article);
          
          return article;
       }
@@ -500,23 +427,14 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       }
    }
    
-   static void loadArticleIconComposite(ArticleIcon articleIcon)
+   
+   static void loadArticleIconInfo(Article article)
    {
-      if (articleIcon != null)
+      if (article != null)
       {
-         if (articleIcon.getArticle() != null)
+         if (article.getArticleIcon() != null && article.getArticleIcon().getArticleIcon() != null)
          {
-            Hibernate.initialize(articleIcon.getArticle());
-         
-            if (articleIcon.getArticle().getAuthor() != null)
-            {
-               Hibernate.initialize(articleIcon.getArticle().getAuthor());
-            }
-         }
-         
-         if (articleIcon.getArticleIcon() != null)
-         {
-            Hibernate.initialize(articleIcon.getArticleIcon());
+            Hibernate.initialize(article.getArticleIcon().getArticleIcon());
          }
       }
    }

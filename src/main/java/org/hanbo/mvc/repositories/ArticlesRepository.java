@@ -23,11 +23,6 @@ public interface ArticlesRepository
       int pageItemCount, boolean sortDsc
    );
    
-   List<ArticleIcon> getAllArticlesWithIconsByUserId(
-      String authorId, int pageIdx,
-      int pageItemCount, boolean sortDsc
-   );
-   
    String getArticleOwnerId(String articleId);
    
    void deleteArticle(String articleId);
@@ -38,9 +33,6 @@ public interface ArticlesRepository
    long getViewableArticlesCount(String articleType);
    
    List<Article> getViewableArticles(
-      String articleType, int pageIdx, int itemsCount);
-   
-   List<ArticleIcon> getViewableArticlesAndIcons(
       String articleType, int pageIdx, int itemsCount);
    
    Article findArticleById(String articleId);
