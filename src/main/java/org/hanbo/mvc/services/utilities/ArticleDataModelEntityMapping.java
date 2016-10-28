@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Article;
+import org.hanbo.mvc.entities.ArticleIcon;
 import org.hanbo.mvc.models.ArticleDataModel;
 import org.hanbo.mvc.models.SimplifiedArticleDataModel;
-import org.springframework.util.StringUtils;
 
 public class ArticleDataModelEntityMapping
 {
@@ -116,6 +116,55 @@ public class ArticleDataModelEntityMapping
       retVal.setArticleUpdateDate(article.getUpdateDate());
       
       setArticleAuthorInfo(article, retVal);
+      
+      return retVal;
+   }
+   
+   public static List<SimplifiedArticleDataModel> toDataListItemsWithIcons(List<ArticleIcon> articleIcons)
+   {
+      List<SimplifiedArticleDataModel> retVals
+         = new ArrayList<SimplifiedArticleDataModel>();
+      if (articleIcons != null)
+      {
+         for (ArticleIcon articleIcon : articleIcons)
+         {
+            SimplifiedArticleDataModel articleDataModel
+               = toDataListItem(articleIcon);
+            
+            retVals.add(articleDataModel);
+         }
+      }
+      
+      return retVals;
+   }
+   
+   public static SimplifiedArticleDataModel toDataListItem(ArticleIcon articleIcon)
+   {
+      SimplifiedArticleDataModel retVal = new SimplifiedArticleDataModel();
+      
+      if (articleIcon != null)
+      {
+         if (articleIcon.getArticle() != null)
+         {
+            retVal.setArticleId(articleIcon.getArticle().getId());
+            retVal.setArticlePublished(articleIcon.getArticle().isPublished());
+            retVal.setArticleSummary(articleIcon.getArticle().getArticleSummary());
+            retVal.setArticleTitle(articleIcon.getArticle().getArticleTitle());
+            retVal.setArticleType(articleIcon.getArticle().getArticleType());
+            retVal.setArticleCreateDate(articleIcon.getArticle().getCreateDate());
+            retVal.setArticleUpdateDate(articleIcon.getArticle().getUpdateDate());
+            
+            if (articleIcon.getArticle().getAuthor() != null)
+            {
+               setArticleAuthorInfo(articleIcon.getArticle(), retVal);
+            }
+            
+            if (articleIcon.getArticleIcon() != null)
+            {
+               retVal.setArticleIconId(articleIcon.getArticleIcon().getId());
+            }
+         }
+      }
       
       return retVal;
    }

@@ -7,6 +7,7 @@ import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.entities.ArticleIcon;
 import org.hanbo.mvc.entities.FileResource;
 import org.hanbo.mvc.utilities.IdUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -159,6 +160,47 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
 
       return articlesRet;
    }
+
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<ArticleIcon> getAllArticlesWithIconsByUserId(
+      String authorId, int pageIdx,
+      int pageItemCount, boolean sortDsc
+   )
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      StringBuilder querySb = new StringBuilder();
+      querySb.append("Select articleIcon from ArticleIcon articleIcon");
+      querySb.append(" where articleIcon.article.author.id = :authorId");
+      if (sortDsc)
+      {
+         querySb.append(" order by articleIcon.article.updateDate desc");
+      }
+      else
+      {
+         querySb.append(" order by articleIcon.article.updateDate asc");
+      }
+      
+      int pageItemStart = pageIdx *pageItemCount;      
+      Query objQuery = session.createQuery(querySb.toString())
+         .setMaxResults(pageItemCount)
+         .setFirstResult(pageItemStart)
+         .setParameter("authorId", authorId);
+      
+      List<ArticleIcon> articlesRet = objQuery.list();
+      if (articlesRet != null)
+      {
+         for (ArticleIcon articleIcon : articlesRet)
+         {
+            loadArticleIconComposite(articleIcon);
+         }
+      }
+
+      return articlesRet;
+   }
    
    @Override
    @Transactional(
@@ -274,6 +316,37 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       return objsList;
    }
    
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<ArticleIcon> getViewableArticlesAndIcons(
+      String articleType, int pageIdx, int itemsCount)
+   {
+      int firstResult = pageIdx * itemsCount;
+      
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select articleIcon from ArticleIcon articleIcon where articleIcon.article.articleType = :articleType "
+         + "and articleIcon.article.published = true order by articleIcon.article.updateDate desc"
+      )
+         .setParameter("articleType", articleType)
+         .setMaxResults(itemsCount)
+         .setFirstResult(firstResult);
+      
+      List<ArticleIcon> objsList = query.list();
+      
+      if (objsList != null && objsList.size() > 0)
+      {
+         for (ArticleIcon articleIcon : objsList)
+         {
+            loadArticleIconComposite(articleIcon);
+         }
+      }
+      
+      return objsList;
+   }
    @Override
    @Transactional(
       propagation = Propagation.REQUIRED,
@@ -423,6 +496,27 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
             {
                article.getAuthor().getUserProfile().getUserIcon().getId();
             }
+         }
+      }
+   }
+   
+   static void loadArticleIconComposite(ArticleIcon articleIcon)
+   {
+      if (articleIcon != null)
+      {
+         if (articleIcon.getArticle() != null)
+         {
+            Hibernate.initialize(articleIcon.getArticle());
+         
+            if (articleIcon.getArticle().getAuthor() != null)
+            {
+               Hibernate.initialize(articleIcon.getArticle().getAuthor());
+            }
+         }
+         
+         if (articleIcon.getArticleIcon() != null)
+         {
+            Hibernate.initialize(articleIcon.getArticleIcon());
          }
       }
    }
