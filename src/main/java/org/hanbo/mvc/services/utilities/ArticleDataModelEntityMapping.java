@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Article;
-import org.hanbo.mvc.entities.ArticleIcon;
 import org.hanbo.mvc.models.ArticleDataModel;
 import org.hanbo.mvc.models.SimplifiedArticleDataModel;
 
@@ -87,6 +86,18 @@ public class ArticleDataModelEntityMapping
          }
       }
    }
+   
+   private static void setArticleIconInfo(Article article, SimplifiedArticleDataModel retVal)
+   {
+      if (article != null && retVal != null)
+      {
+         if (article.getArticleIcon() != null && article.getArticleIcon().getArticleIcon() != null)
+         {
+            System.out.println(article.getArticleIcon().getArticleIcon().getId());
+            retVal.setArticleIconId(article.getArticleIcon().getArticleIcon().getId());
+         }
+       }
+   }
 
    public static List<SimplifiedArticleDataModel> toDataListItems(List<Article> articles)
    {
@@ -106,66 +117,23 @@ public class ArticleDataModelEntityMapping
    
    public static SimplifiedArticleDataModel toDataListItem(Article article)
    {
-      SimplifiedArticleDataModel retVal = new SimplifiedArticleDataModel();
-      retVal.setArticleId(article.getId());
-      retVal.setArticlePublished(article.isPublished());
-      retVal.setArticleSummary(article.getArticleSummary());
-      retVal.setArticleTitle(article.getArticleTitle());
-      retVal.setArticleType(article.getArticleType());
-      retVal.setArticleCreateDate(article.getCreateDate());
-      retVal.setArticleUpdateDate(article.getUpdateDate());
-      
-      setArticleAuthorInfo(article, retVal);
-      
-      return retVal;
-   }
-   
-   public static List<SimplifiedArticleDataModel> toDataListItemsWithIcons(List<ArticleIcon> articleIcons)
-   {
-      List<SimplifiedArticleDataModel> retVals
-         = new ArrayList<SimplifiedArticleDataModel>();
-      if (articleIcons != null)
+      if (article != null)
       {
-         for (ArticleIcon articleIcon : articleIcons)
-         {
-            SimplifiedArticleDataModel articleDataModel
-               = toDataListItem(articleIcon);
-            
-            retVals.add(articleDataModel);
-         }
+         SimplifiedArticleDataModel retVal = new SimplifiedArticleDataModel();
+         retVal.setArticleId(article.getId());
+         retVal.setArticlePublished(article.isPublished());
+         retVal.setArticleSummary(article.getArticleSummary());
+         retVal.setArticleTitle(article.getArticleTitle());
+         retVal.setArticleType(article.getArticleType());
+         retVal.setArticleCreateDate(article.getCreateDate());
+         retVal.setArticleUpdateDate(article.getUpdateDate());
+         
+         setArticleAuthorInfo(article, retVal);
+         setArticleIconInfo(article, retVal);
+         
+         return retVal;
       }
       
-      return retVals;
-   }
-   
-   public static SimplifiedArticleDataModel toDataListItem(ArticleIcon articleIcon)
-   {
-      SimplifiedArticleDataModel retVal = new SimplifiedArticleDataModel();
-      
-      if (articleIcon != null)
-      {
-         if (articleIcon.getArticle() != null)
-         {
-            retVal.setArticleId(articleIcon.getArticle().getId());
-            retVal.setArticlePublished(articleIcon.getArticle().isPublished());
-            retVal.setArticleSummary(articleIcon.getArticle().getArticleSummary());
-            retVal.setArticleTitle(articleIcon.getArticle().getArticleTitle());
-            retVal.setArticleType(articleIcon.getArticle().getArticleType());
-            retVal.setArticleCreateDate(articleIcon.getArticle().getCreateDate());
-            retVal.setArticleUpdateDate(articleIcon.getArticle().getUpdateDate());
-            
-            if (articleIcon.getArticle().getAuthor() != null)
-            {
-               setArticleAuthorInfo(articleIcon.getArticle(), retVal);
-            }
-            
-            if (articleIcon.getArticleIcon() != null)
-            {
-               retVal.setArticleIconId(articleIcon.getArticleIcon().getId());
-            }
-         }
-      }
-      
-      return retVal;
+      return null;
    }
 }

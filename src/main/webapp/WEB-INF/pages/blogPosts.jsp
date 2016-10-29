@@ -26,12 +26,30 @@
                     <h4 class="media-heading">
                       <a href="${pageContext.request.contextPath}/blog/view/${articleModel.articleId}">${articleModel.articleTitle}</a>
                     </h4>
+                    <hr class="postlist-hr">
                     <c:if test="${articleModel.articleSummary != null && articleModel.articleSummary.length() > 0}">
-                       <hr class="postlist-hr">
-                       <div class="postlist-postsummary">
-                          <p>
-                          ${articleModel.articleSummary}
-                          </p>
+                       <div class="row">
+                          <div class="col-xs-4 col-sm-2 col-md-2 col-lg-3 text-center">
+                             <div class="thumbnail gallery-image">
+                                <c:choose>
+                                   <c:when test="${articleModel.articleIconId != null && articleModel.articleIconId.length() > 0}">
+                                       <img src="${pageContext.request.contextPath}/public/imgresource/${articleModel.articleIconId}" width="100%">
+                                   </c:when>
+                                   <c:otherwise>
+                                       <img src="${pageContext.request.contextPath}/assets/imgs/default-user.jpg" width="100%">
+                                   </c:otherwise>
+                                </c:choose>
+                             </div>
+                         </div>
+                          <div class="col-xs-12 col-sm-10 col-md-10 col-lg-9">
+                             <c:if test="${articleModel.articleSummary != null && articleModel.articleSummary.length() > 0}">
+                             <div class="postlist-postsummary">
+                                <p>
+                                ${articleModel.articleSummary}
+                                </p>
+                             </div>
+                             </c:if>
+                          </div>
                        </div>
                     </c:if>
                     
@@ -43,7 +61,16 @@
                         </div>
                         <div class="col-md-3">
                           <span class="glyphicon glyphicon-user"></span>
-                          ${articleModel.getAuthorName()}
+                          <a href="${pageContext.request.contextPath}/userProfile/${articleModel.authorId}">
+                          <c:choose>
+                             <c:when test="${articleModel.authorName != null && articleModel.authorName.length() > 0}">
+                             ${articleModel.authorName}
+                             </c:when>
+                             <c:otherwise>
+                             ${articleModel.authorUserName}
+                             </c:otherwise>
+                          </c:choose>
+                          </a>
                         </div>             
                         <div class="col-md-2">
                         </div>                            

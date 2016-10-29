@@ -188,7 +188,8 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    public void deleteArticle(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();
-
+      
+      deleteArticleIcon(session, articleId);
       Query query = session.createQuery(
          "delete from Article where id = :articleId"
       )
@@ -307,6 +308,8 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       Article article = internalFindArticleById(session, articleId);
       FileResource iconFile = _resourcesRepository.getImageResourceById(session, iconFileid);
       
+      Date updateTime = new Date();
+      
       Query objQuery = findArticleIconByArticleIdQuery(session, articleId);
       if (objQuery != null)
       {
@@ -322,6 +325,9 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
                   foundArticleIcon.setArticleIcon(iconFile);
                   
                   persistArticleIcon(session, foundArticleIcon);
+                  
+                  article.setUpdateDate(updateTime);
+                  session.update(article);
                   return;
                }
             }
@@ -336,6 +342,8 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
          articleIconToSave.setArticleIcon(iconFile);
          
          persistArticleIcon(session, articleIconToSave);
+         article.setUpdateDate(updateTime);
+         session.update(article);
       }
    }
    
@@ -348,17 +356,18 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    public void deleteArticleIcon(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();
-      
-      Query objQuery = findArticleIconByArticleIdQuery(session, articleId);
-      
-      if (objQuery != null)
+      deleteArticleIcon(session, articleId);
+   }
+   
+   private static void deleteArticleIcon(Session session, String articleId)
+   {
+      if (session != null)
       {
-         List<ArticleIcon> foundObjs = objQuery.list();
-         if (foundObjs.size() > 0)
-         {
-            ArticleIcon objToDelete = foundObjs.get(0);
-            session.delete(objToDelete);
-         }
+         String deleteObj = "delete from ArticleIcon where articleId = :articleId";
+         Query query = session.createQuery(deleteObj)
+            .setParameter("articleId", articleId);
+      
+         query.executeUpdate();
       }
    }
 

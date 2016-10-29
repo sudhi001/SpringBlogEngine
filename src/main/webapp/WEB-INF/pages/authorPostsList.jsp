@@ -47,7 +47,14 @@
                            <div class="row">
                               <div class="col-xs-4 col-sm-2 col-md-2 col-lg-3 text-center">
                                  <div class="thumbnail gallery-image">
-                                    <img src="${pageContext.request.contextPath}/assets/imgs/default-user.jpg" width="100%">
+                                    <c:choose>
+                                       <c:when test="${postInfo.articleIconId != null && postInfo.articleIconId.length() > 0}">
+                                          <img src="${pageContext.request.contextPath}/public/imgresource/${postInfo.articleIconId}" width="100%">
+                                       </c:when>
+                                       <c:otherwise>
+                                          <img src="${pageContext.request.contextPath}/assets/imgs/default-user.jpg" width="100%">
+                                       </c:otherwise>
+                                    </c:choose>
                                  </div>
                               </div>
                               <div class="col-xs-12 col-sm-10 col-md-10 col-lg-9">
