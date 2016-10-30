@@ -1,6 +1,6 @@
 var clickEditArticleIconBtn = function (articleId, baseUrl) {
    showError("");
-   $("#addArticleIconDlg #addArticleIconForm #addIconArticleId").val(articleId);
+   $("#addArticleIconDlg #addArticleIconForm #articleId").val(articleId);
    $("#addArticleIconDlg").modal("show");
    
    if (baseUrl != null) {
@@ -11,12 +11,13 @@ var clickEditArticleIconBtn = function (articleId, baseUrl) {
             withCredentials: true
          },
          success: function(data) {
-            clearAllIcons();
             console.log(JSON.stringify(data));
             if (data != null) {
                if (data.currentPageIdx >= 0 &&
                   data.articleIconList != null &&
                   data.articleIconList.length > 0) {
+                  $("#addArticleIconDlg #addArticleIconForm #currentPageIdx").val(data.currentPageIdx);
+                  clearAllIcons();
                   addArticleIconToUI(articleId, data.articleIconList, baseUrl);
                }
             }
@@ -47,7 +48,10 @@ var addArticleIconToUI = function (articleId, articleIconList, baseUrl) {
             "width": "100%",
             "class": "img-responsive",
             "style": "max-width: 118px;",
-            "alt":  articleIconList[i].resourceName
+            "data-toggle": "tooltip",
+            "data-placement": "top",
+            "title": articleIconList[i].resourceName,
+            "alt": articleIconList[i].resourceName
          });
          
          var iconHref = $("<a>", {
@@ -57,7 +61,7 @@ var addArticleIconToUI = function (articleId, articleIconList, baseUrl) {
          
          var imageDiv = $("<div>", {
             "class": "col-md-4 thumbnail",
-            "style": "max-width: 140px; margin: 5px;"
+            "style": "max-width: 120px; margin: 5px;"
          }).append(iconHref);
          
          articleIcons.push(imageDiv);
@@ -109,3 +113,78 @@ var clickRemoveArticleIconBtn = function (articleId, baseUrl) {
       });
    }
 }
+
+var clicNavigationBack = function (baseUrl) {
+   var idx = $("#addArticleIconDlg #addArticleIconForm #currentPageIdx").val();
+   var idxVal = parseInt(idx);
+   var articleId = $("#addArticleIconDlg #addArticleIconForm #articleId").val();
+   if (!isNaN(idxVal) && articleId != null) {
+      if (idxVal > 0) {
+         idxVal -= 1;
+      } else {
+         idxVal = 0;
+      }
+         
+      if (baseUrl != null) {
+         $.ajax({
+            type: "GET",
+            url: baseUrl + "/admin/resources/articleImages?pageIdx=" + idxVal,
+            xhrFields: {
+               withCredentials: true
+            },
+            success: function(data) {
+               console.log(JSON.stringify(data));
+               if (data != null) {
+                  if (data.currentPageIdx >= 0 &&
+                     data.articleIconList != null &&
+                     data.articleIconList.length > 0) {
+                     $("#addArticleIconDlg #addArticleIconForm #currentPageIdx").val(data.currentPageIdx);
+                     clearAllIcons();
+                     addArticleIconToUI(articleId, data.articleIconList, baseUrl);
+                  }
+               }
+            },
+            error: function(data) {
+               showError("Something bad happened when trying to fetch article icons.");
+            }
+         });
+      }
+   }
+};
+
+var clicNavigationNext = function (baseUrl) {
+   var idx = $("#addArticleIconDlg #addArticleIconForm #currentPageIdx").val();
+   var idxVal = parseInt(idx);
+   var articleId = $("#addArticleIconDlg #addArticleIconForm #articleId").val();
+   if (!isNaN(idxVal) && articleId != null) {
+      if (idxVal <= 0) {
+         idxVal = 0;
+      }
+      idxVal += 1;
+      
+      if (baseUrl != null) {
+         $.ajax({
+            type: "GET",
+            url: baseUrl + "/admin/resources/articleImages?pageIdx=" + idxVal,
+            xhrFields: {
+               withCredentials: true
+            },
+            success: function(data) {
+               console.log(JSON.stringify(data));
+               if (data != null) {
+                  if (data.currentPageIdx >= 0 &&
+                     data.articleIconList != null &&
+                     data.articleIconList.length > 0) {
+                     $("#addArticleIconDlg #addArticleIconForm #currentPageIdx").val(data.currentPageIdx);
+                     clearAllIcons();
+                     addArticleIconToUI(articleId, data.articleIconList, baseUrl);
+                  }
+               }
+            },
+            error: function(data) {
+               showError("Something bad happened when trying to fetch article icons.");
+            }
+         });
+      }
+   }
+};

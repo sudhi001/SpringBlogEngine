@@ -201,14 +201,20 @@
     <div class="modal fade" id="addArticleIconDlg">
       <div class="modal-dialog">
         <div class="modal-content">
-          
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">Edit Article Icon</h4>
           </div>
           <div class="modal-body">
             <div id="addArticleIconForm" class="article-icon-list">
-              <input type="hidden" id="addIconArticleId" name="addIconArticleId" value="" />
+              <input type="hidden" id="articleId" name="articleId" value="" />
+              <input type="hidden" id="currentPageIdx" name="currentPageIdx" value="" />
+              <nav aria-label="iconListNav">
+                 <ul class="pager">
+                    <li><a id="articleIconsBack" href="#addArticleIconDlg" onclick="clicNavigationBack('', '${pageContext.request.contextPath}')">Previous</a></li>
+                    <li><a id="articleIconsNext" href="#addArticleIconDlg" onclick="clicNavigationNext('', '${pageContext.request.contextPath}')">Next</a></li>
+                 </ul>
+              </nav>
               <div id="addArticleIconGallery" class="row" style="padding-left: 20px; padding-right: 20px;">
               </div>
             </div>
