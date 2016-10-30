@@ -376,6 +376,39 @@ public class BlogPostActions
          return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
    }
+
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/blog/removeArticleIcon",
+      method=RequestMethod.DELETE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> removeArticleIcon(
+      @RequestParam("articleId")
+      String articleId
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return new ResponseEntity<String>(
+            JsonUtil.simpleErrorMessage("User not found"),
+            HttpStatus.UNAUTHORIZED
+         );
+      }
+
+      try
+      {
+         this._articleService.removeArticleIcon(articleId);
+         return new ResponseEntity<String>(HttpStatus.OK);
+      }
+      catch(Exception e)
+      {
+         _logger.error(ExceptionUtils.getStackTrace(e));
+         return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+
+   }
+   
    
    @ExceptionHandler(WebAppException.class)
    public ModelAndView handleException(WebAppException ex)

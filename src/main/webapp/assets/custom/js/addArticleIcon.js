@@ -91,3 +91,21 @@ var setArticleIcon = function (articleId, iconResourceId, baseUrl) {
       });
    }
 }
+
+var clickRemoveArticleIconBtn = function (articleId, baseUrl) {
+   if (articleId != null && articleId.length > 0) {
+      $.ajax({
+         type: "DELETE",
+         url: baseUrl + "/admin/blog/removeArticleIcon?articleId=" + articleId,
+         xhrFields: {
+            withCredentials: true
+         },
+         success: function(data) {
+            location.reload();
+         },
+         error: function(data) {
+            showError("Something bad happened when trying to remove icon for article.");
+         }
+      });
+   }
+}

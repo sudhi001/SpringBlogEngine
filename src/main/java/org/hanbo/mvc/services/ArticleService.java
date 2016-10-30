@@ -27,4 +27,7 @@ public interface ArticleService
       String postTitle, String postKeywords, String postContent, String basedUrlPath);
    
    void setArticleIcon(String articleId, String articleIconId);
+   
+   void removeArticleIcon(String articleId);
+   
 }

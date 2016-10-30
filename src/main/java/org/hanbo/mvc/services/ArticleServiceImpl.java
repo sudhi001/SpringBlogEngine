@@ -216,6 +216,18 @@ public class ArticleServiceImpl implements ArticleService
    }
    
    @Override
+   public void removeArticleIcon(String articleId)
+   {
+      if (StringUtils.isEmpty(articleId))
+      {
+         throw new WebAppException(
+            "Article id is null or empty.", WebAppException.ErrorType.DATA);
+      }
+      
+      this.articlesRepo.deleteArticleIcon(articleId);
+   }
+   
+   @Override
    public String createBlogPostFromImage(String ownerId, String imageId, String postTitle,
       String postKeywords, String postContent, String basedUrlPath)
    {

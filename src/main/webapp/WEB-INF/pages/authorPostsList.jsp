@@ -100,6 +100,9 @@
                                  <c:if test="${postInfo.articleType.equals('post')}">
                                  <button class="btn btn-success" onclick="clickEditArticleIconBtn('${postInfo.articleId}', '${pageContext.request.contextPath}')" data-toggle="tooltip" data-placement="top" title="Set/Edit Article Icon"><span class="glyphicon glyphicon-picture"></span></button>
                                  </c:if>
+                                 <c:if test="${postInfo.articleType.equals('post')}">
+                                 <button class="btn btn-danger" onclick="clickRemoveArticleIconBtn('${postInfo.articleId}', '${pageContext.request.contextPath}')" data-toggle="tooltip" data-placement="top" title="Remove Article Icon"><span class="glyphicon glyphicon-picture"></span></button>
+                                 </c:if>
                                  <a href="${pageContext.request.contextPath}/admin/blog/editPost/${postInfo.articleId}" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Edit Article"><span class="glyphicon glyphicon-pencil"></span></a>
                                  <button class="btn btn-danger" onclick="deletePostJson('${postInfo.articleId}')" data-toggle="tooltip" data-placement="top" title="Delete Article"><span class="glyphicon glyphicon-floppy-remove"></span></button>
                                  <c:choose>
@@ -155,32 +158,42 @@
     <div class="modal fade" id="permaLinkDlg">
       <div class="modal-dialog">
         <div class="modal-content">
-          <form id="permaLinkForm" method="post" action="${pageContext.request.contextPath}/admin/blog/setPermaLink">
-            <input type="hidden" id="permaLinkArticleId" name="permaLinkArticleId" value="" />
-            <input type="hidden" id="permaLinkAuthorId" name="permaLinkAuthorId" value="" />
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">Set Perma Link</h4>
           </div>
           <div class="modal-body">
-            <div class="form-group">
-               <label class="col-md-3">Article</label>
-               <p class="col-md-9" id="articleTitle"></p>
-            </div>
-            <div class="form-group">
-               <label for="permaLinkPath" class="col-md-3">Perma Link</label>
-               <input type="text" class="col-md-9" id="permaLinkPath" name="permaLinkPath" placeholder=""/>
-            </div>
-            <p>
-              <input type="checkbox" id="pageReplacement" name="pageReplacement"> Use as page Replacement
-            </p>
+             <form class="form-horizontal" id="permaLinkForm" method="post" action="${pageContext.request.contextPath}/admin/blog/setPermaLink">
+                <input type="hidden" id="permaLinkArticleId" name="permaLinkArticleId" value="" />
+                <input type="hidden" id="permaLinkAuthorId" name="permaLinkAuthorId" value="" />
+             <div class="form-group">
+                <label for="articleTitle" class="control-label col-xs-3">Article</label>
+                <div class="col-xs-9" style="padding-top: 7px;">
+                   <input type="text" class="form-control" id="articleTitle" name="articleTitle" readonly />
+                </div>
+             </div>
+             <div class="form-group">
+                <label for="permaLinkPath" class="control-label col-xs-3">Perma Link</label>
+                <div class="col-xs-9">
+                   <input type="text" class="form-control" id="permaLinkPath" name="permaLinkPath" placeholder=""/>
+                </div>
+             </div>
+             <div class="form-group">
+                <div class="checkbox col-xs-offset-3">
+                   <label>
+                      <input type="checkbox" id="pageReplacement" name="pageReplacement"> Use as page Replacement
+                   </label>
+                </div>
+             </div>
+             <div class="form-group text-center">
+                <button type="button" class="btn btn-danger" onclick="deletePermaLinkClick()">Remove Link</button>
+                <button type="button" class="btn btn-primary" onclick="submitPermaLinkClick()">Change Link</button>
+             </div>
+             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" onclick="deletePermaLinkClick()">Remove Link</button>
-            <button type="button" class="btn btn-primary" onclick="submitPermaLinkClick()">Change Link</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
-          </form>
         </div>
       </div>
     </div>
@@ -257,7 +270,7 @@
         {
            $("#permaLinkDlg #permaLinkForm #permaLinkArticleId").val(articleId);
            $("#permaLinkDlg #permaLinkForm #permaLinkAuthorId").val(authorId);
-           $("#permaLinkDlg #permaLinkForm #articleTitle").html(articleTitle);
+           $("#permaLinkDlg #permaLinkForm #articleTitle").val(articleTitle);
            $("#permaLinkDlg #permaLinkForm #permaLinkPath").val("");
            $("#permaLinkDlg #permaLinkForm #pageReplacement").prop("checked", false);
            

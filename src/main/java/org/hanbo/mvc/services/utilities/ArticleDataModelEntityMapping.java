@@ -93,7 +93,6 @@ public class ArticleDataModelEntityMapping
       {
          if (article.getArticleIcon() != null && article.getArticleIcon().getArticleIcon() != null)
          {
-            System.out.println(article.getArticleIcon().getArticleIcon().getId());
             retVal.setArticleIconId(article.getArticleIcon().getArticleIcon().getId());
          }
        }
