@@ -111,7 +111,7 @@
                   </div>
                   <div class="form-group">
 			         <div class="col-xs-12 text-center">
-			            <button type="submit" class="btn btn-default">Save</button>&nbsp;
+			            <button type="submit" class="btn btn-success">Save Image Detail</button>&nbsp;
 			            <button type="reset" class="btn btn-default">Clear</button>&nbsp;			            
 			         </div>
                   </div>
@@ -120,27 +120,27 @@
          </div>
          <div class="panel panel-default" id="imageBlogPostPanel" style="display: none;">
             <div class="panel-body">
-               <form id="imageBlogPostForm" class="form" action="${pageContext.request.contextPath}/admin/image/postForBlog"
+               <form id="imageBlogPostForm" class="form-horizontal" action="${pageContext.request.contextPath}/admin/image/postForBlog"
                      method="POST" onsubmit="return validateBlogImagePost()"
                      onreset="resetForPostBlog('${imageDetail.getImageId()}')">
                   <legend>Create Blog Post</legend>
                   <input type="hidden" id="postImageId" name="postImageId" value="${imageDetail.getImageId()}" >
                   <div class="form-group">
-                     <label class="col-xs-12 control-label">Post Title</label>
-			         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                     <label class="col-xs-3 control-label">Post Title</label>
+			         <div class="col-xs-6">
 			            <input id="blogTitle" name="blogTitle" class="form-control" value="" />
 			         </div>
                   </div>
                   <div class="form-group">
-                     <label class="col-xs-12 control-label">Post Keywords</label>
-			         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                     <label class="col-xs-3 control-label">Post Keywords</label>
+			         <div class="col-xs-6">
 			            <input id="blogKeywords" name="blogKeywords" class="form-control" value="" />
 			         </div>
                   </div>
                   <div class="form-group">
-                     <label class="col-xs-12 control-label">Post Content</label>
-			         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-<textarea id="blogContent" name="blogContent" class="form-control">
+                     <label class="col-xs-3 control-label">Post Content</label>
+			         <div class="col-xs-9">
+<textarea id="blogContent" name="blogContent" class="form-control" rows="8">
 </textarea>
 			         </div>
                   </div>
@@ -153,7 +153,7 @@
                   </div>
                   <div class="form-group">
 			         <div class="col-xs-12 text-center">
-			            <button type="submit" class="btn btn-default">Post</button>&nbsp;
+			            <button type="submit" class="btn btn-success">Save Post</button>&nbsp;
 			            <button type="reset" class="btn btn-default">Clear</button>&nbsp;			            
 			         </div>
                   </div>
