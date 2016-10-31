@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -83,10 +84,14 @@ public class Image
    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "galleryImages")
    private Set<Gallery> associatedGalleries;
 
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "relatedImage")
+   private Set<VisitorComment> relatedComments;
+   
    public Image()
    {
       active = true;
       associatedGalleries = new HashSet<Gallery>();
+      relatedComments = new HashSet<VisitorComment>();
    }
    
    public String getId()
@@ -257,5 +262,15 @@ public class Image
    public void setNotSafeForWork(boolean notSafeForWork)
    {
       this.notSafeForWork = notSafeForWork;
+   }
+
+   public Set<VisitorComment> getRelatedComments()
+   {
+      return relatedComments;
+   }
+
+   public void setRelatedComments(Set<VisitorComment> relatedComments)
+   {
+      this.relatedComments = relatedComments;
    }
 }

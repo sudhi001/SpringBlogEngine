@@ -62,6 +62,9 @@ public class LoginUser
    
    @OneToOne(fetch = FetchType.LAZY, mappedBy="owner")
    private UserProfile userProfile;
+   
+   @OneToMany(fetch = FetchType.LAZY, mappedBy="owner")
+   private Set<VisitorComment> userComments;
 
    public LoginUser()
    {
@@ -71,6 +74,7 @@ public class LoginUser
       userResources = new HashSet<Resource>();
       userImages = new HashSet<Image>();
       userGalleries = new HashSet<Gallery>();
+      userComments = new HashSet<VisitorComment>();
    }
    
    public String getId()
@@ -183,27 +187,43 @@ public class LoginUser
       this.userResources = userResources;
    }
 
-   public Set<Image> getUserImages() {
+   public Set<Image> getUserImages()
+   {
       return userImages;
    }
 
-   public void setUserImages(Set<Image> userImages) {
+   public void setUserImages(Set<Image> userImages)
+   {
       this.userImages = userImages;
    }
 
-   public Set<Gallery> getUserGalleries() {
+   public Set<Gallery> getUserGalleries()
+   {
       return userGalleries;
    }
 
-   public void setUserGalleries(Set<Gallery> userGalleries) {
+   public void setUserGalleries(Set<Gallery> userGalleries)
+   {
       this.userGalleries = userGalleries;
    }
    
-   public UserProfile getUserProfile() {
+   public UserProfile getUserProfile()
+   {
       return userProfile;
    }
 
-   public void setUserProfile(UserProfile userProfile) {
+   public void setUserProfile(UserProfile userProfile)
+   {
       this.userProfile = userProfile;
+   }
+
+   public Set<VisitorComment> getUserComments()
+   {
+      return userComments;
+   }
+
+   public void setUserComments(Set<VisitorComment> userComments)
+   {
+      this.userComments = userComments;
    }
 }

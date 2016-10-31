@@ -1,6 +1,8 @@
 package org.hanbo.mvc.entities;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -72,6 +75,14 @@ public class Article
 
    @OneToOne(fetch = FetchType.LAZY, mappedBy="article")
    private ArticleIcon articleIcon;
+   
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "relatedArticle")
+   private Set<VisitorComment> relatedComments;
+   
+   public Article()
+   {
+      relatedComments = new HashSet<VisitorComment>();
+   }
    
    public String getId()
    {
@@ -207,5 +218,15 @@ public class Article
    public void setArticleIcon(ArticleIcon articleIcon)
    {
       this.articleIcon = articleIcon;
+   }
+
+   public Set<VisitorComment> getRelatedComments()
+   {
+      return relatedComments;
+   }
+
+   public void setRelatedComments(Set<VisitorComment> relatedComments)
+   {
+      this.relatedComments = relatedComments;
    }
 }

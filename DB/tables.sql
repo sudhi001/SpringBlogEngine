@@ -1,5 +1,6 @@
 use OldBlogEngine;
 
+
 DROP TABLE IF EXISTS imagetogallery;
 
 DROP TABLE IF EXISTS gallery;
@@ -175,6 +176,30 @@ CREATE TABLE imagetogallery (
    FOREIGN KEY (imageid) REFERENCES image(id)
       ON DELETE CASCADE
       ON UPDATE CASCADE
+);
+
+CREATE TABLE visitorcomment (
+   id VARCHAR(45) NOT NULL PRIMARY KEY,
+   commenter VARCHAR(96) NOT NULL,
+   commenteremail VARCHAR(96) NOT NULL,
+   sourceip VARCHAR(39) NOT NULL,
+   title VARCHAR(128) NULL,
+   content VARCHAR(512) NOT NULL,
+   isparivate BIT(1) NOT NULL DEFAULT 0,
+   isapproved BIT(1) NOT NULL DEFAULT 0,
+   
+   articleid VARCHAR(45) NULL,
+   imageid VARCHAR(45) NULL,
+   ownerid VARCHAR(45) NULL,
+   parentcommentid VARCHAR(45) NULL,
+   
+   createdate DATETIME NOT NULL,
+   updatedate DATETIME NOT NULL,
+   
+   FOREIGN KEY (articleid) REFERENCES article(id),
+   FOREIGN KEY (imageid) REFERENCES image(id),
+   FOREIGN KEY (ownerid) REFERENCES user(id),
+   FOREIGN KEY (parentcommentid) REFERENCES visitorcomment(id)  
 );
 
 INSERT INTO user (
