@@ -1,5 +1,6 @@
 use OldBlogEngine;
 
+DROP TABLE IF EXISTS visitorcomment;
 
 DROP TABLE IF EXISTS imagetogallery;
 
