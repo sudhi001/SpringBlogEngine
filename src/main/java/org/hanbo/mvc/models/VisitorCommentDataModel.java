@@ -2,7 +2,9 @@ package org.hanbo.mvc.models;
 
 import java.util.Date;
 
+import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.utilities.DateToString;
+import org.springframework.util.StringUtils;
 
 public class VisitorCommentDataModel
 {
@@ -134,5 +136,56 @@ public class VisitorCommentDataModel
    public void setCommenterEmail(String commenterEmail)
    {
       this.commenterEmail = commenterEmail;
+   }
+   
+   public void validateCommenterInfoNotEmpty()
+   {
+      if (StringUtils.isEmpty(this.commenterName))
+      {
+         throw new WebAppException("Commenter's full name cannot be null.",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(this.commenterEmail))
+      {
+         throw new WebAppException("Commenter's full email address cannot be null.",
+            WebAppException.ErrorType.DATA);
+      }
+   }
+   
+   public void validateCommenterInfo()
+   {
+      if (!StringUtils.isEmpty(this.commenterName) && this.commenterName.length() > 96)
+      {
+         throw new WebAppException("Commenter's full name contains too many characters.",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (!StringUtils.isEmpty(this.commenterEmail) && this.commenterEmail.length() > 96)
+      {
+         throw new WebAppException("Commenter's full email address contains too many characters.",
+            WebAppException.ErrorType.DATA);
+      }
+   }
+   
+   public void validateCommentContent()
+   {
+      if (!StringUtils.isEmpty(commentTitle) && commentTitle.length() > 128)
+      {
+         throw new WebAppException("Comment title contains too many characters.",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(commentContent))
+      {
+         throw new WebAppException("Comment content cannot be null or empty.",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (!StringUtils.isEmpty(commentContent) && commentContent.length() > 512)
+      {
+         throw new WebAppException("Comment content contains too many characters.",
+            WebAppException.ErrorType.DATA);
+      }
    }
 }
