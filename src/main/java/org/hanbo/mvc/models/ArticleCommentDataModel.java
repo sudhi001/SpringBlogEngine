@@ -1,5 +1,6 @@
 package org.hanbo.mvc.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hanbo.mvc.exceptions.WebAppException;
@@ -13,6 +14,12 @@ public class ArticleCommentDataModel extends VisitorCommentDataModel
    
    private List<ArticleCommentDataModel> childComments;
 
+   public ArticleCommentDataModel()
+   {
+      super();
+      childComments = new ArrayList<ArticleCommentDataModel>();
+   }
+   
    public String getArticleId()
    {
       return articleId;
@@ -60,6 +67,6 @@ public class ArticleCommentDataModel extends VisitorCommentDataModel
          super.validateCommenterInfo();
       }
       
-      
+      super.validateCommentContent();
    }
 }

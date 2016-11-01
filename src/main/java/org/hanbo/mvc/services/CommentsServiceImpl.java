@@ -61,7 +61,7 @@ public class CommentsServiceImpl implements CommentsService
                WebAppException.ErrorType.DATA);
       }
       
-      if (!StringUtils.isEmpty(commentAuthorEmail) && commentAuthorEmail.length() > 96)
+      if (!StringUtils.isEmpty(commentTitle) && commentTitle.length() > 96)
       {
          throw new WebAppException("Commenter's full email address has too many characters.",
                WebAppException.ErrorType.DATA);
