@@ -1,8 +1,8 @@
 package org.hanbo.mvc.services;
 
+import org.hanbo.mvc.models.ArticleCommentDataModel;
+
 public interface CommentsService
 {
-   void addArticleComment(String articleId, String commentUserId,
-      String commentAuthor, String commentAuthorEmail, String commentTitle,
-      String commentContent);
+   void addArticleComment(ArticleCommentDataModel commentToSave);
 }

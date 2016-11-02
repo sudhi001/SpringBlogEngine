@@ -284,6 +284,12 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       Session session = _sessionFactory.getCurrentSession();
       return internalFindArticleById(session, articleId);
    }
+
+   @Override
+   public Article findArticleById(Session session, String articleId)
+   {
+      return internalFindArticleById(session, articleId);
+   }
    
    @Override
    @Transactional(

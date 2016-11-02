@@ -20,6 +20,8 @@ public class VisitorCommentDataModel
    
    private String commentContent;
    
+   private String commentSourceIp;
+   
    private boolean commentPrivate;
    
    private boolean commentApproved;
@@ -151,6 +153,12 @@ public class VisitorCommentDataModel
          throw new WebAppException("Commenter's full email address cannot be null.",
             WebAppException.ErrorType.DATA);
       }
+      
+      if (StringUtils.isEmpty(this.commentSourceIp))
+      {
+         throw new WebAppException("Commenter's current IP cannot be null or empty.",
+            WebAppException.ErrorType.DATA);
+      }
    }
    
    public void validateCommenterInfo()
@@ -164,6 +172,12 @@ public class VisitorCommentDataModel
       if (!StringUtils.isEmpty(this.commenterEmail) && this.commenterEmail.length() > 96)
       {
          throw new WebAppException("Commenter's full email address contains too many characters.",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(this.commentSourceIp))
+      {
+         throw new WebAppException("Commenter's current IP cannot be null or empty.",
             WebAppException.ErrorType.DATA);
       }
    }
@@ -187,5 +201,15 @@ public class VisitorCommentDataModel
          throw new WebAppException("Comment content contains too many characters.",
             WebAppException.ErrorType.DATA);
       }
+   }
+
+   public String getCommentSourceIp()
+   {
+      return commentSourceIp;
+   }
+
+   public void setCommentSourceIp(String commentSourceIp)
+   {
+      this.commentSourceIp = commentSourceIp;
    }
 }

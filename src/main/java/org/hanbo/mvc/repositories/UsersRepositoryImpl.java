@@ -181,6 +181,28 @@ public class UsersRepositoryImpl implements UsersRepository
       }
    }
    
+   @Override
+   public LoginUser getUserById(Session session, String userId)
+   {
+      LoginUser retVal = null;
+      String hqlQuery = "select user from LoginUser user where user.id = :userId";
+      if (session != null)
+      {
+         Query query = session.createQuery(hqlQuery)
+            .setParameter("userId", userId)
+            .setMaxResults(1)
+            .setFirstResult(0);
+         
+         List<LoginUser> allUsers = query.list();
+         if (allUsers != null && allUsers.size() > 0)
+         {
+            retVal = allUsers.get(0);
+         }
+      }
+      
+      return retVal;
+   }
+   
    private LoginUser getUserQuery(String queryParam, String paramName, String queryVal)
    {
       String hqlQuery = String.format(

@@ -1,7 +1,12 @@
 package org.hanbo.mvc.services;
 
+import java.util.Date;
+
+import org.hanbo.mvc.entities.VisitorComment;
 import org.hanbo.mvc.exceptions.WebAppException;
+import org.hanbo.mvc.models.ArticleCommentDataModel;
 import org.hanbo.mvc.repositories.CommentsRepository;
+import org.hanbo.mvc.utilities.IdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -13,58 +18,44 @@ public class CommentsServiceImpl implements CommentsService
    private CommentsRepository _commentsRepo;
 
    @Override
-   public void addArticleComment(String articleId, String commentUserId,
-      String commentAuthor, String commentAuthorEmail, String commentTitle,
-      String commentContent)
+   public void addArticleComment(ArticleCommentDataModel commentToSave)
    {
-      validateComments(articleId, commentUserId,
-         commentAuthor, commentAuthorEmail, commentTitle,
-         commentContent);
-      
-      
-   }
-   
-   private void validateComments(String articleId, String commentUserId,
-      String commentAuthor, String commentAuthorEmail, String commentTitle,
-      String commentContent)
-   {
-      if (StringUtils.isEmpty(articleId))
+      if (commentToSave != null)
       {
-         throw new WebAppException("associated article id is null or empty.",
-            WebAppException.ErrorType.DATA);
-      }
-      
-      if (StringUtils.isEmpty(commentUserId))
-      {
-         if (StringUtils.isEmpty(commentAuthor))
+         commentToSave.validateDataModel();
+         
+         VisitorComment commentEntity = new VisitorComment();
+         
+         Date dateNow = new Date();
+         
+         commentEntity.setId(IdUtil.generateUuid());
+         commentEntity.setTitle(commentToSave.getCommentTitle());
+         commentEntity.setContent(commentToSave.getCommentContent());
+         commentEntity.setCreateDate(dateNow);
+         commentEntity.setUpdateDate(dateNow);
+         commentEntity.setCommentApproved(commentToSave.isCommentApproved());
+         commentEntity.setCommentPrivate(commentToSave.isCommentPrivate());
+         commentEntity.setSourceIp(commentToSave.getCommentSourceIp());
+
+         if (StringUtils.isEmpty(commentToSave.getCommentUserId()))
          {
-            throw new WebAppException("When the commenter is not logged in, commenter's full name cannot be null.",
-               WebAppException.ErrorType.DATA);
+            commentEntity.setCommenter(commentToSave.getCommenterName());
+            commentEntity.setCommenterEmail(commentToSave.getCommenterEmail());
+         }
+         else 
+         {
+            commentEntity.setCommenter("");
+            commentEntity.setCommenterEmail("");
+            if (StringUtils.isEmpty(commentToSave.getCommentUserId()))
+            {
+               throw new WebAppException("Comment owner's user id cannot be null or empty.", WebAppException.ErrorType.SECURITY);
+            }
          }
          
-         if (StringUtils.isEmpty(commentAuthorEmail))
-         {
-            throw new WebAppException("When the commenter is not logged in, commenter's full email address cannot be null.",
-               WebAppException.ErrorType.DATA);
-         }
-      }
-      
-      if (!StringUtils.isEmpty(commentAuthor) && commentAuthor.length() > 96)
-      {
-         throw new WebAppException("Commenter's full name has too many characters.",
-               WebAppException.ErrorType.DATA);
-      }
-  
-      if (!StringUtils.isEmpty(commentAuthorEmail) && commentAuthorEmail.length() > 96)
-      {
-         throw new WebAppException("Commenter's full email address has too many characters.",
-               WebAppException.ErrorType.DATA);
-      }
-      
-      if (!StringUtils.isEmpty(commentTitle) && commentTitle.length() > 96)
-      {
-         throw new WebAppException("Commenter's full email address has too many characters.",
-               WebAppException.ErrorType.DATA);
+         _commentsRepo.saveArticleComment(commentToSave.getArticleId(),
+            commentToSave.getCommentUserId(),
+            commentToSave.getParentCommentId(),
+            commentEntity);
       }
    }
 }
