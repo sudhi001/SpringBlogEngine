@@ -72,17 +72,34 @@
       </div>
 
       <div class="box-footer" style="display: block;">
-        <form action="#" method="post">
-          <!-- <img class="img-responsive img-oval img-sm" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="Alt Text"> -->
-          <div class="img-push row">
-            <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
-               <input type="text" class="form-control input-sm" placeholder="Post your comments">
+         <form class="form-horizontal">
+            <legend>Add your comment</legend>
+            <div class="form-group">
+               <label class="col-xs-12 col-sm-3 control-label" for="commentTitle">Subject</label>
+               <div class="col-xs-12 col-sm-9">
+                  <input class="form-control input-sm" type="text" id="commentTitle" name="commentTitle">
+               </div>
             </div>
-            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
-               <button type="submit" class="btn btn-default btn-sm">Comment</button>
-            </div> 
-          </div>
-        </form>
+            <div class="form-group">
+               <label class="col-xs-12 col-sm-3 control-label" for="commentTitle">Your Name</label>
+               <div class="col-xs-12 col-sm-6">
+                  <input class="form-control input-sm" type="text" id="commenterName" name="commenterName">
+               </div>
+            </div>
+            <div class="form-group">
+               <label class="col-xs-12 col-sm-3 control-label" for="commentTitle">Your Email</label>
+               <div class="col-xs-12 col-sm-6">
+                  <input class="form-control input-sm" type="text" id="commenterEmail" name="commenterEmail">
+               </div>
+            </div>
+            <div class="form-group">
+               <label class="col-xs-12 col-sm-3 control-label" for="commentContent">Your Comment</label>
+               <div class="col-xs-12 col-sm-9">
+<textarea class="form-control input-sm" row="6" id="commenterContent" name="commenterContent">
+</textarea>
+               </div>
+            </div>
+         </form>
       </div>
     </div>
     
