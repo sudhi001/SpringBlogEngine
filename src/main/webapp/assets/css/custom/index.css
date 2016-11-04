@@ -96,7 +96,7 @@ body {
 .user-block img {
     width: 40px;
     height: 40px;
-    float: left;
+    float: center;
 }
 .user-block .username {
     font-size: 16px;
@@ -172,6 +172,9 @@ body {
 }
 .img-oval {
 	border-radius: 15%;
+	border-width: 1px;
+	border-color: black;
+	border-style: solid;
 }
 .box-comments .comment-text {
     margin-left: 40px;

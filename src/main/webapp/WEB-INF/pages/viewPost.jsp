@@ -1,6 +1,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %> 
 
 <tiles:insertDefinition name="defaultTemplate">
   <tiles:putAttribute name="cssContent">
@@ -25,9 +26,14 @@
         <div class="user-block">
           <div class="row">
             <div class="col-xs-1">
-               <c:if test="${articleModel.authorIconId != null && articleModel.authorIconId.length() > 0}">
-                  <img class="img-oval" src="${pageContext.request.contextPath}/public/imgresource/${articleModel.authorIconId}" alt="User Image">
-               </c:if>
+               <c:choose>
+                  <c:when test="${articleModel.authorIconId != null && articleModel.authorIconId.length() > 0}">
+                     <img class="img-oval" src="${pageContext.request.contextPath}/public/imgresource/${articleModel.authorIconId}" alt="User Image">
+                  </c:when>
+                  <c:otherwise>
+                     <img class="img-oval" src="${pageContext.request.contextPath}/assets/imgs/default-user.jpg" alt="User Image">
+                  </c:otherwise>
+               </c:choose>
             </div>
             <div class="col-xs-11">
               <span class="username">${articleModel.articleTitle}</span>
@@ -61,7 +67,7 @@
 
       <div class="box-body" style="display: block;">
         <div class="row">
-          <div class="col-xs-12" style="padding-left:100px; padding-rght: 100px;">
+          <div class="col-xs-12">
 <c:out value="${articleModel.articleContent}" escapeXml = "false"/>
           </div>
         </div>
@@ -72,14 +78,18 @@
       </div>
 
       <div class="box-footer" style="display: block;">
-         <form class="form-horizontal">
+         <c:if test="${!articleModel.isPreviewMode()}">
+         <form id="addCommentForm" class="form-horizontal" onsubmit="return false;" onreset="">
             <legend>Add your comment</legend>
+            <input type="hidden" id="articleId" name="articleId" value="${articleModel.articleId}">
+            <input type="hidden" id="parentCommentId" name="parentCommentId" value="">
             <div class="form-group">
                <label class="col-xs-12 col-sm-3 control-label" for="commentTitle">Subject</label>
                <div class="col-xs-12 col-sm-9">
                   <input class="form-control input-sm" type="text" id="commentTitle" name="commentTitle">
                </div>
             </div>
+            <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
             <div class="form-group">
                <label class="col-xs-12 col-sm-3 control-label" for="commentTitle">Your Name</label>
                <div class="col-xs-12 col-sm-6">
@@ -92,6 +102,7 @@
                   <input class="form-control input-sm" type="text" id="commenterEmail" name="commenterEmail">
                </div>
             </div>
+            </sec:authorize>
             <div class="form-group">
                <label class="col-xs-12 col-sm-3 control-label" for="commentContent">Your Comment</label>
                <div class="col-xs-12 col-sm-9">
@@ -99,7 +110,12 @@
 </textarea>
                </div>
             </div>
+            <div class="form-group text-center">
+               <button class="btn btn-success">Add Comment</button>
+               <button class="btn btn-danger">Clear</button>
+            </div>
          </form>
+         </c:if>
       </div>
     </div>
     

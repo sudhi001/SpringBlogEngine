@@ -79,11 +79,11 @@
                                     </c:otherwise>
                                  </c:choose>
                               </div>
-                              <div class="col-md-3 padding-updown">
+                              <div class="col-md-2 padding-updown">
                                  <span class="glyphicon glyphicon-calendar"></span>
                                  ${postInfo.getArticleUpdateDateString()}
                               </div>
-                              <div class="col-md-3 padding-updown">
+                              <div class="col-md-4 padding-updown">
                                  <span class="glyphicon glyphicon-user"></span>
                                  <a href="${pageContext.request.contextPath}/userProfile/${postInfo.authorId}">
                                     <c:choose>
