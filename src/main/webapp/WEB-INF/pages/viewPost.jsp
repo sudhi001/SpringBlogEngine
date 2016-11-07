@@ -81,61 +81,7 @@
 
       <div class="box-footer" style="display: block;">
          <c:if test="${!articleModel.isPreviewMode()}">
-         <form id="addCommentForm" class="form-horizontal" onsubmit="return false;" onreset="">
-            <legend>Add your comment</legend>
-            <input type="hidden" id="articleId" name="articleId" value="${articleModel.articleId}">
-            <input type="hidden" id="parentCommentId" name="parentCommentId" value="">
-            <div class="form-group">
-               <label class="col-xs-12 col-sm-3 control-label" for="commentTitle">Subject<span class="field-required">*</span></label>
-               <div class="col-xs-12 col-sm-9">
-                  <input class="form-control input-sm" type="text" id="commentTitle" name="commentTitle">
-               </div>
-            </div>
-            <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-            <div class="form-group">
-               <label class="col-xs-12 col-sm-3 control-label" for="commenterName">Your Name<span class="field-required">*</span></label>
-               <div class="col-xs-12 col-sm-6">
-                  <input class="form-control input-sm" type="text" id="commenterName" name="commenterName">
-               </div>
-            </div>
-            <div class="form-group">
-               <label class="col-xs-12 col-sm-3 control-label" for="commenterEmail">Your Email<span class="field-required">*</span></label>
-               <div class="col-xs-12 col-sm-6">
-                  <input class="form-control input-sm" type="text" id="commenterEmail" name="commenterEmail">
-               </div>
-            </div>
-            </sec:authorize>
-            <div class="form-group">
-               <label class="col-xs-12 col-sm-3 control-label" for="commentContent">Your Comment<span class="field-required">*</span></label>
-               <div class="col-xs-12 col-sm-9">
-<textarea class="form-control input-sm post-comment-height" row="6" id="commentContent" name="commentContent">
-</textarea>
-               </div>
-            </div>
-            <div class="checkbox" style="margin-bottom: 10px;">
-               <label class="col-md-9 col-md-offset-3">
-                  <input type="checkbox" id="commentPrivate"/><span class="field-required">*</span> Private Message
-               </label>
-            </div>
-            <div id="addCommentFormSuccess" class="form-group text-center" style="display: none;">
-               <div class="col-xs-12">
-                  <div class="success-block" id="addCommentFormSuccessMsg">
-                     test test
-                  </div>
-               </div>
-            </div>
-            <div id="addCommentFormError" class="form-group text-center" style="display: none;">
-               <div class="col-xs-12">
-                  <div class="warning-block" id="addCommentFormErrorMsg">
-                     test test
-                  </div>
-               </div>
-            </div>
-            <div class="form-group text-center">
-               <button class="btn btn-success" onclick="validateAndSubmitComment('${pageContext.request.contextPath}')">Add Comment</button>
-               <button class="btn btn-danger" onclick="resetCommentEditing()">Clear</button>
-            </div>
-         </form>
+            <button class="btn btn-default" onclick="handleClickAddCommentBtn('${articleModel.articleId}', '')">Add Comment</button>
          </c:if>
       </div>
     </div>
@@ -185,7 +131,74 @@
               </div>
           </div>
       </div>
-          
+      
+    <div id="addCommentDlg" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Add Comment</h4>
+          </div>
+          <div class="modal-body">
+            <form id="addCommentForm" class="form-horizontal" onsubmit="return false;" onreset="">
+               <input type="hidden" id="articleId" name="articleId" value="${articleModel.articleId}">
+               <input type="hidden" id="parentCommentId" name="parentCommentId" value="">
+               <div class="form-group">
+                  <label class="col-xs-12 col-sm-3 control-label" for="commentTitle">Subject<span class="field-required">*</span></label>
+                  <div class="col-xs-12 col-sm-9">
+                     <input class="form-control input-sm" type="text" id="commentTitle" name="commentTitle">
+                  </div>
+               </div>
+               <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+               <div class="form-group">
+                  <label class="col-xs-12 col-sm-3 control-label" for="commenterName">Your Name<span class="field-required">*</span></label>
+                  <div class="col-xs-12 col-sm-6">
+                     <input class="form-control input-sm" type="text" id="commenterName" name="commenterName">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-xs-12 col-sm-3 control-label" for="commenterEmail">Your Email<span class="field-required">*</span></label>
+                  <div class="col-xs-12 col-sm-6">
+                     <input class="form-control input-sm" type="text" id="commenterEmail" name="commenterEmail">
+                  </div>
+               </div>
+               </sec:authorize>
+               <div class="form-group">
+                  <label class="col-xs-12 col-sm-3 control-label" for="commentContent">Your Comment<span class="field-required">*</span></label>
+                  <div class="col-xs-12 col-sm-9">
+<textarea class="form-control input-sm post-comment-height" row="6" id="commentContent" name="commentContent">
+</textarea>
+                  </div>
+               </div>
+               <div class="checkbox" style="margin-bottom: 10px;">
+                  <label class="col-md-9 col-md-offset-3">
+                     <input type="checkbox" id="commentPrivate"/><span class="field-required">*</span> Private Message
+                  </label>
+               </div>
+               <div id="addCommentFormSuccess" class="form-group text-center" style="display: none;">
+                  <div class="col-xs-12">
+                     <div class="success-block" id="addCommentFormSuccessMsg">
+                        test test
+                     </div>
+                  </div>
+               </div>
+               <div id="addCommentFormError" class="form-group text-center" style="display: none;">
+                  <div class="col-xs-12">
+                     <div class="warning-block" id="addCommentFormErrorMsg">
+                        test test
+                     </div>
+                  </div>
+               </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success" onclick="validateAndSubmitComment('${pageContext.request.contextPath}')">Add Comment</button>
+            <button class="btn btn-danger" onclick="resetCommentEditing()">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">

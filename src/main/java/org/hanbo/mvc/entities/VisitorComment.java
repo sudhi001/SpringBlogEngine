@@ -22,7 +22,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
 @Entity
-@Table(name = "visitorcmment")
+@Table(name = "visitorcomment")
 @Indexed
 public class VisitorComment
 {

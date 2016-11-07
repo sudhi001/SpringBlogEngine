@@ -26,7 +26,7 @@ public class JsonUtil
    public static String simpleErrorMessage(String errMsg)
    {
       String retVal = String.format(
-         "{ 'ErrorMessage' : '%s' }", errMsg
+         "{ \"ErrorMessage\" : \"%s\" }", errMsg
       );
       
       return retVal;

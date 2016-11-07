@@ -32,14 +32,12 @@ public class ActionsUtil
    {
       Authentication authentication
          = SecurityContextHolder.getContext().getAuthentication();
-      UserPrincipalDataModel userPrincipal
-         = (UserPrincipalDataModel)authentication.getPrincipal();
-      
-      if (userPrincipal == null)
+      Object userP = authentication.getPrincipal();
+      UserPrincipalDataModel userPrincipal = null;
+      if (userP != null && userP instanceof UserPrincipalDataModel)
       {
-         throw new WebAppException(
-            "No user is logged in.",
-            WebAppException.ErrorType.SECURITY);
+         userPrincipal
+            = (UserPrincipalDataModel)userP;
       }
       
       return userPrincipal;

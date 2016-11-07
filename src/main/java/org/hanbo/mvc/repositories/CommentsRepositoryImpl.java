@@ -11,6 +11,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @SuppressWarnings("unchecked")
@@ -28,6 +31,10 @@ public class CommentsRepositoryImpl
    private UsersRepository _userRepo;
    
    @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
    public void saveArticleComment(String articleId, String commentOwnerId,
       String parentCommentid, VisitorComment commentToSave)
    {

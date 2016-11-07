@@ -10,6 +10,7 @@ import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.services.CommentsService;
 import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,8 @@ public class CommentsActions
       {
          if (!StringUtils.isEmpty(commentJsonObject))
          {
+            System.out.println(commentJsonObject);
+            
             CommentInputDataModel commentReceived = 
             JsonUtil.convertJsonToObject(commentJsonObject, CommentInputDataModel.class);
             
@@ -76,24 +79,31 @@ public class CommentsActions
                   commentToAdd.setCommentUserId(loggedInUserId);
                }
                
+               System.out.println("Before Add Comment");
+               final HttpHeaders httpHeaders= new HttpHeaders();
+               httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                _commentService.addArticleComment(commentToAdd);
+               System.out.println("After Add Comment");
                
-               return new ResponseEntity<String>(HttpStatus.OK);
+               return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);
             }
             else
             {
+               System.out.println("1");
                String respJsonVal = JsonUtil.simpleErrorMessage("Comment content is empty.");
                return new ResponseEntity<String>(respJsonVal, HttpStatus.BAD_REQUEST);
             }
          }
          else
          {
+            System.out.println("2");
             String respJsonVal = JsonUtil.simpleErrorMessage("Comment content is empty.");
             return new ResponseEntity<String>(respJsonVal, HttpStatus.BAD_REQUEST);
          }
       }
       catch(Exception ex)
       {
+         ex.printStackTrace();
          String respJsonVal = JsonUtil.simpleErrorMessage("Unknown exception occurred.");
          return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
       }

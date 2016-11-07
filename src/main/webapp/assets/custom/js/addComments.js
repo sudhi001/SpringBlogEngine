@@ -1,13 +1,21 @@
+handleClickAddCommentBtn = function (articleId, parentCommentId, baseUrl) {
+   resetCommentEditing();
+   $("#addCommentDlg #addCommentForm #articleId").val(articleId);
+   $("#addCommentDlg #addCommentForm #parentCommentId").val(parentCommentId);
+   
+   $("#addCommentDlg").modal("show");   
+} 
+
 validateAndSubmitComment = function (baseUrl) {
    var errorMsg = [];
    var showError = false;
-   var textVal = $("#addCommentForm #articleId").val();
+   var textVal = $("#addCommentDlg #addCommentForm #articleId").val();
    if (textVal == null || textVal.length <= 0) {
       errorMsg.push("Related article id is null or empty.");
       showError = true;
    }
    
-   textVal = $("#addCommentForm #commentTitle").val();
+   textVal = $("#addCommentDlg #addCommentForm #commentTitle").val();
    if (textVal == null || textVal.length <= 0) {
       errorMsg.push("Comment title is null or empty.");
       showError = true;
@@ -18,13 +26,13 @@ validateAndSubmitComment = function (baseUrl) {
       showError = true;
    }
 
-   textVal = $("#addCommentForm #commenterName").val();
+   textVal = $("#addCommentDlg #addCommentForm #commenterName").val();
    if (textVal != null && textVal.length > 96) {
       errorMsg.push("Commenter's name has too many characters.");
       showError = true;
    }
    
-   textVal = $("#addCommentForm #commenterEmail").val();
+   textVal = $("#addCommentDlg #addCommentForm #commenterEmail").val();
    if (textVal != null && textVal.length > 96) {
       errorMsg.push("Commenter's email has too many characters.");
       showError = true;
@@ -37,7 +45,7 @@ validateAndSubmitComment = function (baseUrl) {
       }
    }
    
-   textVal = $("#addCommentForm #commentContent").val();
+   textVal = $("#addCommentDlg #addCommentForm #commentContent").val();
    if (textVal == null || textVal.length <= 0) {
       errorMsg.push("Comment conent is null or empty.");
       showError = true;
@@ -49,13 +57,13 @@ validateAndSubmitComment = function (baseUrl) {
    }
    
    if (!showError && (errorMsg == null || errorMsg.length <= 0)) {
-      var articleId = $("#addCommentForm #articleId").val();
-      var parentCommentId = $("#addCommentForm #parentCommentId").val();
-      var commentTitle = $("#addCommentForm #commentTitle").val();
-      var commenterName = $("#addCommentForm #commenterName").val();
-      var commenterEmail = $("#addCommentForm #commenterEmail").val();
-      var commentContent = $("#addCommentForm #commentContent").val();
-      var commentPrivate = $("#addCommentForm #commentPrivate").prop("checked") === true;
+      var articleId = $("#addCommentDlg #addCommentForm #articleId").val();
+      var parentCommentId = $("#addCommentDlg #addCommentForm #parentCommentId").val();
+      var commentTitle = $("#addCommentDlg #addCommentForm #commentTitle").val();
+      var commenterName = $("#addCommentDlg #addCommentForm #commenterName").val();
+      var commenterEmail = $("#addCommentDlg #addCommentForm #commenterEmail").val();
+      var commentContent = $("#addCommentDlg #addCommentForm #commentContent").val();
+      var commentPrivate = $("#addCommentDlg #addCommentForm #commentPrivate").prop("checked") === true;
       
       var articleCommentObj = {
          originId: articleId,
@@ -69,50 +77,51 @@ validateAndSubmitComment = function (baseUrl) {
       
       if (baseUrl != null) {
          resetCommentEditingErrorDisplay();
-         $("#addCommentForm #addCommentFormSuccess #addCommentFormSuccessMsg").html("Comments are successfuly posted, pending approval.");
-         $("#addCommentForm #addCommentFormSuccess").show();
+         //$("#addCommentDlg #addCommentForm #addCommentFormSuccess #addCommentFormSuccessMsg").html("Comments are successfuly posted, pending approval.");
+         //$("#addCommentDlg #addCommentForm #addCommentFormSuccess").show();
 
-         /*$.ajax({
+         $.ajax({
             type: "POST",
             url: baseUrl + "/public/comments/addArticleComment",
             xhrFields: {
                withCredentials: true
             },
-            data: articleCommentObj,
+            data: JSON.stringify(articleCommentObj),
             dataType: "json",
-            async:false,
-            success: function(data) {
-               $("#addCommentForm #addCommentFormSuccess #addCommentFormSuccessMsg").html("Comments are successfuly posted, pending approval.");
-               $("#addCommentForm #addCommentFormSuccess").show();
-            },
-            error: function() {
-               $("#addCommentForm #addCommentFormError #addCommentFormErrorMsg").html("Server error occured when posting comment.");
-               $("#addCommentForm #addCommentFormError").show();
-            }
-         });*/
+            contentType: "application/json",
+            async:false
+         })
+         .done(function(data) {
+            $("#addCommentDlg #addCommentForm #addCommentFormSuccess #addCommentFormSuccessMsg").html("Comments are successfuly posted, pending approval.");
+            $("#addCommentDlg #addCommentForm #addCommentFormSuccess").show();
+         }).fail(function() {
+            $("#addCommentDlg #addCommentForm #addCommentFormError #addCommentFormErrorMsg").html("Server error occured when posting comment.");
+            $("#addCommentDlg #addCommentForm #addCommentFormError").show();
+         });
       }
    } else {
       if (errorMsg != null && errorMsg.length > 0) {
          resetCommentEditingErrorDisplay();
-         $("#addCommentForm #addCommentFormError #addCommentFormErrorMsg").html(errorMsg[0]);
-         $("#addCommentForm #addCommentFormError").show();
+         $("#addCommentDlg #addCommentForm #addCommentFormError #addCommentFormErrorMsg").html(errorMsg[0]);
+         $("#addCommentDlg #addCommentForm #addCommentFormError").show();
       }
    }
 };
 
 var resetCommentEditing = function () {
-   $("#addCommentForm #commentTitle").val("");
-   $("#addCommentForm #commenterName").val("");
-   $("#addCommentForm #commenterEmail").val("");
-   $("#addCommentForm #commenterContent").val("");
+   $("#addCommentDlg #addCommentForm #commentTitle").val("");
+   $("#addCommentDlg #addCommentForm #commenterName").val("");
+   $("#addCommentDlg #addCommentForm #commenterEmail").val("");
+   $("#addCommentDlg #addCommentForm #commentContent").val("");
+   $("#addCommentDlg #addCommentForm #commentPrivate").prop("checked", false);
    
    resetCommentEditingErrorDisplay();
 } 
 
 var resetCommentEditingErrorDisplay = function () {
-   $("#addCommentForm #addCommentFormError #addCommentFormErrorMsg").html("");
-   $("#addCommentForm #addCommentFormError").hide();
+   $("#addCommentDlg #addCommentForm #addCommentFormError #addCommentFormErrorMsg").html("");
+   $("#addCommentDlg #addCommentForm #addCommentFormError").hide();
    
-   $("#addCommentForm #addCommentFormSuccess #addCommentFormSuccessMsg").html("");
-   $("#addCommentForm #addCommentFormSuccess").hide();
+   $("#addCommentDlg #addCommentForm #addCommentFormSuccess #addCommentFormSuccessMsg").html("");
+   $("#addCommentDlg #addCommentForm #addCommentFormSuccess").hide();
 }

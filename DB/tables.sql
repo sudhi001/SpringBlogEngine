@@ -186,7 +186,7 @@ CREATE TABLE visitorcomment (
    sourceip VARCHAR(39) NOT NULL,
    title VARCHAR(128) NULL,
    content VARCHAR(512) NOT NULL,
-   isparivate BIT(1) NOT NULL DEFAULT 0,
+   isprivate BIT(1) NOT NULL DEFAULT 0,
    isapproved BIT(1) NOT NULL DEFAULT 0,
    
    articleid VARCHAR(45) NULL,
