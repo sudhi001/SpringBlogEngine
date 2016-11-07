@@ -338,6 +338,11 @@ body {
    padding: 5px;
 }
 
+.post-comment-height {
+	height: 150px !important;
+	max-height: 300px;
+}
+
 .gallery-image {
    max-width: 260px;
    max-height: 260px;
@@ -359,6 +364,18 @@ body {
    margin-left: 12px;
    margin-right: 12px;
    text-align: center;
+   padding-top: 5px;
+   padding-bottom: 5px;
+}
+
+.success-block {
+   background-color: #006400;
+   color: white;
+   margin-left: 12px;
+   margin-right: 12px;
+   text-align: center;
+   padding-top: 5px;
+   padding-bottom: 5px;
 }
 
 .article-icon-list {
@@ -368,4 +385,8 @@ body {
 
 .article-icon-list .article-icon {
    max-width: 118px;
+}
+
+.field-required {
+   color: red;
 }
