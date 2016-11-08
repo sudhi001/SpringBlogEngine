@@ -77,9 +77,7 @@ validateAndSubmitComment = function (baseUrl) {
       
       if (baseUrl != null) {
          resetCommentEditingErrorDisplay();
-         //$("#addCommentDlg #addCommentForm #addCommentFormSuccess #addCommentFormSuccessMsg").html("Comments are successfuly posted, pending approval.");
-         //$("#addCommentDlg #addCommentForm #addCommentFormSuccess").show();
-
+         
          $.ajax({
             type: "POST",
             url: baseUrl + "/public/comments/addArticleComment",

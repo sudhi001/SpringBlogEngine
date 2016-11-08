@@ -41,6 +41,9 @@ public class ArticleServiceImpl implements ArticleService
    @Autowired
    private UserImageGalleryService userImageGalleryService;
    
+   @Autowired
+   private CommentsService commentsService;
+   
    @Override
    public ArticleDataModel saveArticle(ArticleDataModel articleDataModel)
    {

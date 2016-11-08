@@ -12,6 +12,10 @@ public class ArticleCommentDataModel extends VisitorCommentDataModel
    
    private String commentUserId;
    
+   private String commentUserName;
+   
+   private String commentUserFullName;   
+   
    private List<ArticleCommentDataModel> childComments;
 
    public ArticleCommentDataModel()
@@ -68,5 +72,25 @@ public class ArticleCommentDataModel extends VisitorCommentDataModel
       }
       
       super.validateCommentContent();
+   }
+
+   public String getCommentUserName()
+   {
+      return commentUserName;
+   }
+
+   public void setCommentUserName(String commentUserName)
+   {
+      this.commentUserName = commentUserName;
+   }
+
+   public String getCommentUserFullName()
+   {
+      return commentUserFullName;
+   }
+
+   public void setCommentUserFullName(String commentUserFullName)
+   {
+      this.commentUserFullName = commentUserFullName;
    }
 }

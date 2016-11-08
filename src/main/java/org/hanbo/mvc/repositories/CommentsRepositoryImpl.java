@@ -83,6 +83,102 @@ public class CommentsRepositoryImpl
       session.saveOrUpdate(commentToSave);
    }
    
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public List<VisitorComment> loadArticleComments(String articleId, int maxResultsCount)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query query = 
+      session.createQuery("select visitorComment from VisitorComment visitorComment where visitorComment.relatedArticle.id = :articleId")
+         .setParameter("articleId", articleId)
+         .setFirstResult(0)
+         .setMaxResults(maxResultsCount);
+      
+      List<VisitorComment> retVals = query.list();
+      if (retVals != null && retVals.size() > 0)
+      {
+         for (VisitorComment comment : retVals)
+         {
+            if (comment.getOwner() != null)
+            {
+               comment.getOwner().getId();
+               comment.getOwner().getUserName();
+               
+               if (comment.getOwner().getUserProfile() != null)
+               {
+                  comment.getOwner().getUserProfile().getId();
+                  comment.getOwner().getUserProfile().getFirstName();
+                  comment.getOwner().getUserProfile().getLastName();
+               }
+            }
+
+            if (comment.getParentComment() != null)
+            {
+               comment.getParentComment().getId();
+            }
+            
+            if (comment.getRelatedArticle() != null)
+            {
+               comment.getRelatedArticle().getId();
+               comment.getRelatedArticle().getArticleTitle();
+            }
+            
+            if (comment.getRelatedImage() != null)
+            {
+               comment.getRelatedImage().getId();
+               comment.getRelatedImage().getImageTitle();
+            }
+            
+            // XXX add more data extraction if needed.
+         }
+      }
+      
+      return retVals;
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public void deleteArticleComment(String articleId, String commentId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query query = 
+      session.createQuery("delete from VisitorComment where id = :commentId and relatedArticle.id = :articleId")
+         .setParameter("articleId", articleId)
+         .setParameter("commentId", commentId);
+      query.executeUpdate();
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public void deleteArticleComments(String articleId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      deleteArticleComments(session, articleId);
+   }
+   
+   @Override
+   public void deleteArticleComments(Session session, String articleId)
+   {
+      if (session != null)
+      {
+         Query query = 
+         session.createQuery("delete from VisitorComment where relatedArticle.id = :articleId")
+            .setParameter("articleId", articleId);
+         query.executeUpdate();
+      }
+   }
+   
    private VisitorComment getCommentById(Session session, String commentId)
    {
       Query query = session.createQuery("select comment from VisitorComment comment where comment.id = :commentId")

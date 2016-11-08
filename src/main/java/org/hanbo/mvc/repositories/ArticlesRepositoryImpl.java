@@ -27,6 +27,10 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    @Autowired
    private ResourcesRepository _resourcesRepository;
    
+   @Autowired
+   private CommentsRepository _commentsRepository;
+   
+   
    @Transactional(
       propagation = Propagation.REQUIRED,
       isolation = Isolation.READ_COMMITTED
@@ -189,11 +193,11 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    {
       Session session = _sessionFactory.getCurrentSession();
       
+      _commentsRepository.deleteArticleComments(session, articleId);
       deleteArticleIcon(session, articleId);
       Query query = session.createQuery(
          "delete from Article where id = :articleId"
-      )
-         .setParameter("articleId", articleId);
+      ).setParameter("articleId", articleId);
       
       query.executeUpdate();
    }
