@@ -93,7 +93,19 @@ public class CommentsRepositoryImpl
    {
       Session session = _sessionFactory.getCurrentSession();
       
-      return loadArticleComments(session, articleId, maxResultsCount);
+      return loadArticleComments(session, "select visitorComment from VisitorComment visitorComment where visitorComment.relatedArticle.id = :articleId", articleId, maxResultsCount);
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public List<VisitorComment> loadArticleViewableComments(String articleId, int maxResultsCount)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      return loadArticleComments(session, "select visitorComment from VisitorComment visitorComment where visitorComment.relatedArticle.id = :articleId and visitorComment.commentPrivate = false and visitorComment.commentApproval = true", articleId, maxResultsCount);
    }
    
    @Transactional(
@@ -124,13 +136,13 @@ public class CommentsRepositoryImpl
    }
    
    @Override
-   public List<VisitorComment> loadArticleComments(Session session, String articleId, int maxResultsCount)
+   public List<VisitorComment> loadArticleComments(Session session, String queryString, String articleId, int maxResultsCount)
    {
       List<VisitorComment> retVals = new ArrayList<VisitorComment>();
       if (session != null)
       {
          Query query = 
-            session.createQuery("select visitorComment from VisitorComment visitorComment where visitorComment.relatedArticle.id = :articleId")
+            session.createQuery(queryString)
                .setParameter("articleId", articleId)
                .setFirstResult(0)
                .setMaxResults(maxResultsCount);
