@@ -1,5 +1,6 @@
 package org.hanbo.mvc.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Article;
@@ -92,52 +93,7 @@ public class CommentsRepositoryImpl
    {
       Session session = _sessionFactory.getCurrentSession();
       
-      Query query = 
-      session.createQuery("select visitorComment from VisitorComment visitorComment where visitorComment.relatedArticle.id = :articleId")
-         .setParameter("articleId", articleId)
-         .setFirstResult(0)
-         .setMaxResults(maxResultsCount);
-      
-      List<VisitorComment> retVals = query.list();
-      if (retVals != null && retVals.size() > 0)
-      {
-         for (VisitorComment comment : retVals)
-         {
-            if (comment.getOwner() != null)
-            {
-               comment.getOwner().getId();
-               comment.getOwner().getUserName();
-               
-               if (comment.getOwner().getUserProfile() != null)
-               {
-                  comment.getOwner().getUserProfile().getId();
-                  comment.getOwner().getUserProfile().getFirstName();
-                  comment.getOwner().getUserProfile().getLastName();
-               }
-            }
-
-            if (comment.getParentComment() != null)
-            {
-               comment.getParentComment().getId();
-            }
-            
-            if (comment.getRelatedArticle() != null)
-            {
-               comment.getRelatedArticle().getId();
-               comment.getRelatedArticle().getArticleTitle();
-            }
-            
-            if (comment.getRelatedImage() != null)
-            {
-               comment.getRelatedImage().getId();
-               comment.getRelatedImage().getImageTitle();
-            }
-            
-            // XXX add more data extraction if needed.
-         }
-      }
-      
-      return retVals;
+      return loadArticleComments(session, articleId, maxResultsCount);
    }
    
    @Transactional(
@@ -165,6 +121,67 @@ public class CommentsRepositoryImpl
    {
       Session session = _sessionFactory.getCurrentSession();
       deleteArticleComments(session, articleId);
+   }
+   
+   @Override
+   public List<VisitorComment> loadArticleComments(Session session, String articleId, int maxResultsCount)
+   {
+      List<VisitorComment> retVals = new ArrayList<VisitorComment>();
+      if (session != null)
+      {
+         Query query = 
+            session.createQuery("select visitorComment from VisitorComment visitorComment where visitorComment.relatedArticle.id = :articleId")
+               .setParameter("articleId", articleId)
+               .setFirstResult(0)
+               .setMaxResults(maxResultsCount);
+         
+         retVals = query.list();
+         if (retVals != null && retVals.size() > 0)
+         {
+            for (VisitorComment comment : retVals)
+            {
+               if (comment.getOwner() != null)
+               {
+                  comment.getOwner().getId();
+                  comment.getOwner().getUserName();
+                  
+                  if (comment.getOwner().getUserProfile() != null)
+                  {
+                     comment.getOwner().getUserProfile().getId();
+                     comment.getOwner().getUserProfile().getFirstName();
+                     comment.getOwner().getUserProfile().getLastName();
+                     
+                     if (comment.getOwner().getUserProfile().getUserIcon() != null)
+                     {
+                        comment.getOwner().getUserProfile().getUserIcon().getId();
+                     }
+                  }
+               }
+
+               if (comment.getParentComment() != null)
+               {
+                  comment.getParentComment().getId();
+               }
+               
+               if (comment.getRelatedArticle() != null)
+               {
+                  comment.getRelatedArticle().getId();
+                  comment.getRelatedArticle().getArticleTitle();
+               }
+               
+               if (comment.getRelatedImage() != null)
+               {
+                  comment.getRelatedImage().getId();
+                  comment.getRelatedImage().getImageTitle();
+               }
+               
+               // XXX add more data extraction if needed.
+            }
+         }
+         
+      }
+      
+      return retVals;
    }
    
    @Override

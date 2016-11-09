@@ -11,7 +11,9 @@ public interface CommentsRepository
       String parentCommentid, VisitorComment commentToSave);
    
    List<VisitorComment> loadArticleComments(String articleId, int maxResultsCount);
-   
+
+   List<VisitorComment> loadArticleComments(Session session, String articleId, int maxResultsCount);
+
    void deleteArticleComment(String articleId, String commentId);   
    
    void deleteArticleComments(String articleId);

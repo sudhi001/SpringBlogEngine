@@ -10,12 +10,6 @@ public class ArticleCommentDataModel extends VisitorCommentDataModel
 {
    private String articleId;
    
-   private String commentUserId;
-   
-   private String commentUserName;
-   
-   private String commentUserFullName;   
-   
    private List<ArticleCommentDataModel> childComments;
 
    public ArticleCommentDataModel()
@@ -32,16 +26,6 @@ public class ArticleCommentDataModel extends VisitorCommentDataModel
    public void setArticleId(String articleId)
    {
       this.articleId = articleId;
-   }
-
-   public String getCommentUserId()
-   {
-      return commentUserId;
-   }
-
-   public void setCommentUserId(String commentUserId)
-   {
-      this.commentUserId = commentUserId;
    }
 
    public List<ArticleCommentDataModel> getChildComments()
@@ -62,7 +46,7 @@ public class ArticleCommentDataModel extends VisitorCommentDataModel
             WebAppException.ErrorType.DATA);
       }
       
-      if (StringUtils.isEmpty(this.commentUserId))
+      if (StringUtils.isEmpty(this.getCommentUserId()))
       {
          super.validateCommenterInfoNotEmpty();
       }
@@ -72,25 +56,5 @@ public class ArticleCommentDataModel extends VisitorCommentDataModel
       }
       
       super.validateCommentContent();
-   }
-
-   public String getCommentUserName()
-   {
-      return commentUserName;
-   }
-
-   public void setCommentUserName(String commentUserName)
-   {
-      this.commentUserName = commentUserName;
-   }
-
-   public String getCommentUserFullName()
-   {
-      return commentUserFullName;
-   }
-
-   public void setCommentUserFullName(String commentUserFullName)
-   {
-      this.commentUserFullName = commentUserFullName;
    }
 }

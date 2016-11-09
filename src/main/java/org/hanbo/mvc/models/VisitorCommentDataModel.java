@@ -29,6 +29,16 @@ public class VisitorCommentDataModel
    private Date commentCreateDate;
    
    private Date commentUpdateDate;
+   
+   private String commentUserId;
+   
+   private String commentUserName;
+   
+   private String commentUserFullName;
+   
+   private String commentUserProfileId;
+
+   private String commentUserIconId;
 
    public String getCommentId()
    {
@@ -211,5 +221,56 @@ public class VisitorCommentDataModel
    public void setCommentSourceIp(String commentSourceIp)
    {
       this.commentSourceIp = commentSourceIp;
+   }
+   
+   public String getCommentUserId()
+   {
+      return commentUserId;
+   }
+
+   public void setCommentUserId(String commentUserId)
+   {
+      this.commentUserId = commentUserId;
+   }
+   
+
+   public String getCommentUserName()
+   {
+      return commentUserName;
+   }
+
+   public void setCommentUserName(String commentUserName)
+   {
+      this.commentUserName = commentUserName;
+   }
+
+   public String getCommentUserFullName()
+   {
+      return commentUserFullName;
+   }
+
+   public void setCommentUserFullName(String commentUserFullName)
+   {
+      this.commentUserFullName = commentUserFullName;
+   }
+
+   public String getCommentUserProfileId()
+   {
+      return commentUserProfileId;
+   }
+
+   public void setCommentUserProfileId(String commentUserProfileId)
+   {
+      this.commentUserProfileId = commentUserProfileId;
+   }
+
+   public String getCommentUserIconId()
+   {
+      return commentUserIconId;
+   }
+
+   public void setCommentUserIconId(String commentUserIconId)
+   {
+      this.commentUserIconId = commentUserIconId;
    }
 }

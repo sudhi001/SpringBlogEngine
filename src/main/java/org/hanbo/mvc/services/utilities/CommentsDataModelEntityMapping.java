@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hanbo.mvc.entities.VisitorComment;
 import org.hanbo.mvc.models.ArticleCommentDataModel;
+import org.springframework.util.StringUtils;
 
 public class CommentsDataModelEntityMapping
 {
@@ -32,7 +33,24 @@ public class CommentsDataModelEntityMapping
          {
             retVal.setCommentUserId(commentEntity.getOwner().getId());
             retVal.setCommentUserName(commentEntity.getOwner().getUserName());
-            //retVal.setCommentUserFullName(commentEntity.getOwner().get);
+            if (commentEntity.getOwner().getUserProfile() != null)
+            {
+               retVal.setCommentUserProfileId(commentEntity.getOwner().getUserProfile().getId());
+               
+               if (!StringUtils.isEmpty(commentEntity.getOwner().getUserProfile().getFirstName())
+                  && !StringUtils.isEmpty(commentEntity.getOwner().getUserProfile().getLastName()))
+               {
+                  retVal.setCommentUserFullName(
+                     String.format("%s %s", commentEntity.getOwner().getUserProfile().getFirstName(),
+                        commentEntity.getOwner().getUserProfile().getLastName())
+                  );
+               }
+               
+               if (commentEntity.getOwner().getUserProfile().getUserIcon() != null)
+               {
+                  retVal.setCommentUserIconId(commentEntity.getOwner().getUserProfile().getUserIcon().getId());
+               }
+            }
          }
          
          if (commentEntity.getParentComment() != null)
