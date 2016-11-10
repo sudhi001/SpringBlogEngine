@@ -75,7 +75,8 @@
       </div>
 
       <div class="box-footer box-comments" style="display: block;">
-         <c:if test="${!articleModel.isPreviewMode()}">
+         <c:if test="${!articleModel.isPreviewMode() && articleComments != null && articleComments.size() > 0}">
+         
          </c:if>
       </div>
 

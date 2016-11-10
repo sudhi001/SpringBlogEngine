@@ -94,7 +94,7 @@ public class CommentsRepositoryImpl
       Session session = _sessionFactory.getCurrentSession();
       
       return loadArticleComments(session, "select visitorComment from VisitorComment visitorComment "
-         + "where visitorComment.relatedArticle.id = :articleId order by visitorComment.updatedate desc", articleId, pageIdx, maxResultsCount);
+         + "where visitorComment.relatedArticle.id = :articleId order by visitorComment.updateDate desc", articleId, pageIdx, maxResultsCount);
    }
    
    @Transactional(
@@ -107,7 +107,7 @@ public class CommentsRepositoryImpl
       Session session = _sessionFactory.getCurrentSession();
       
       return loadArticleComments(session, "select visitorComment from VisitorComment visitorComment where visitorComment.relatedArticle.id = :articleId "
-         + "and visitorComment.commentPrivate = false and visitorComment.commentApproval = true order by visitorComment.updatedate", articleId, 0, maxResultsCount);
+         + "and visitorComment.commentPrivate = false and visitorComment.commentApproved = true order by visitorComment.updateDate", articleId, 0, maxResultsCount);
    }
    
    @Transactional(
