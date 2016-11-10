@@ -1,6 +1,8 @@
 package org.hanbo.mvc.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,11 +11,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.exceptions.WebAppException;
+import org.hanbo.mvc.models.ArticleCommentDataModel;
 import org.hanbo.mvc.models.ArticleDataModel;
 import org.hanbo.mvc.models.ArticleListPageDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.services.ArticleService;
+import org.hanbo.mvc.services.CommentsService;
 import org.hanbo.mvc.services.PermaLinkService;
 import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +51,9 @@ public class BlogPostActions
    @Autowired
    private PermaLinkService _permaLinkService;
    
+   @Autowired
+   private CommentsService _commentsService;
+
    @ModelAttribute("newPostModel")
    public ArticleDataModel loadEmptyModelBean()
    {
@@ -449,7 +456,6 @@ public class BlogPostActions
    private ModelAndView createModelViewForArticle(
       ArticleDataModel articleDataModel)
    {
-      
       String pageTitle;
       String pageTemplate;
       if (articleDataModel.getArticleType().equals("post"))
@@ -485,7 +491,25 @@ public class BlogPostActions
       
       if (articleDataModel.isArticlePublished())
       {
-         return createModelViewForArticle(articleDataModel);
+         ModelAndView retVal = 
+            createModelViewForArticle(articleDataModel);
+         
+         if (retVal != null)
+         {
+            List<ArticleCommentDataModel> allViewableComments
+               = this._commentsService.getViewableArticleComments(articleId);
+            
+            if (allViewableComments != null && allViewableComments.size() > 0)
+            {
+               retVal.addObject("articleComments", allViewableComments);
+            }
+            else
+            {
+               retVal.addObject("articleComments", new ArrayList<ArticleCommentDataModel>());
+            }
+            
+            return retVal;
+         }
       }
       
       return _util.createErorrPageViewModel("Post is not published",

@@ -44,8 +44,8 @@ public class CommentsServiceImpl implements CommentsService
          commentEntity.setContent(commentToSave.getCommentContent());
          commentEntity.setCreateDate(dateNow);
          commentEntity.setUpdateDate(dateNow);
-         commentEntity.setCommentApproved(commentToSave.isCommentApproved());
-         commentEntity.setCommentPrivate(commentToSave.isCommentPrivate());
+         commentEntity.setCommentApproved(true);//(commentToSave.isCommentApproved()); //TODO
+         commentEntity.setCommentPrivate(false);//(commentToSave.isCommentPrivate()); //TODO
          commentEntity.setSourceIp(commentToSave.getCommentSourceIp());
 
          if (StringUtils.isEmpty(commentToSave.getCommentUserId()))
@@ -70,6 +70,7 @@ public class CommentsServiceImpl implements CommentsService
       }
    }
    
+   @Override
    public List<ArticleCommentDataModel> getViewableArticleComments(String articleId)
    {
       int maxDisplayedComments = getMaxCommentsForDisplay();
@@ -78,6 +79,28 @@ public class CommentsServiceImpl implements CommentsService
       if (!StringUtils.isEmpty(articleId))
       {
          List<VisitorComment> comments = _commentsRepo.loadArticleViewableComments(articleId, maxDisplayedComments);
+         
+         retVals
+            = CommentsDataModelEntityMapping.toDataModels_ArticleComments(comments);
+         
+         retVals
+            = associateArticleComments(retVals);
+      }
+      
+      return retVals;
+   }
+   
+   @Override
+   public List<ArticleCommentDataModel> getArticleComments(String articleId, int pageIdx)
+   {
+      int adminCommentsPerPageCount = getAdminCommentsCountForDisplay();
+      
+      List<ArticleCommentDataModel> retVals = new ArrayList<ArticleCommentDataModel>();
+      if (!StringUtils.isEmpty(articleId))
+      {
+         List<VisitorComment> comments = _commentsRepo.loadArticleComments(articleId,
+            pageIdx,
+            adminCommentsPerPageCount);
          
          retVals
             = CommentsDataModelEntityMapping.toDataModels_ArticleComments(comments);
@@ -142,6 +165,15 @@ public class CommentsServiceImpl implements CommentsService
    private int getMaxCommentsForDisplay()
    {
       String itemsCount = configValues.getProperty("maxDisplayedComments");
+      
+      int itemsCountVal = Integer.parseInt(itemsCount);
+      
+      return itemsCountVal;
+   }
+   
+   private int getAdminCommentsCountForDisplay()
+   {
+      String itemsCount = configValues.getProperty("adminCommentsCountPerPage");
       
       int itemsCountVal = Integer.parseInt(itemsCount);
       
