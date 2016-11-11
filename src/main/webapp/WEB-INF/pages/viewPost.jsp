@@ -110,9 +110,17 @@
    </c:otherwise>
 </c:choose>
                 <span class="text-muted pull-right">${commentItem.getCommentCreateDateString()}</span></span>
+                <hr>
+                <div class="row" id="prevComment_${commentItem.commentId}">
+                </div>
+                <div class="row">
+                   <div class="col-xs-12">
+<h4>${commentItem.commentTitle}</h4>
 <p>
 ${commentItem.commentContent}
 </p>
+                   </div>
+                </div>
                 <div class="row">
                    <div class="col-xs-12 text-right">
                       <c:if test="${commentItem.parentCommentId != null && commentItem.parentCommentId.length() > 0}">
