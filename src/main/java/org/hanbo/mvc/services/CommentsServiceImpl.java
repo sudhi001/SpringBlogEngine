@@ -82,9 +82,6 @@ public class CommentsServiceImpl implements CommentsService
          
          retVals
             = CommentsDataModelEntityMapping.toDataModels_ArticleComments(comments);
-         
-         retVals
-            = associateArticleComments(retVals);
       }
       
       return retVals;

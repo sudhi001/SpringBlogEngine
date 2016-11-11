@@ -76,13 +76,60 @@
 
       <div class="box-footer box-comments" style="display: block;">
          <c:if test="${!articleModel.isPreviewMode() && articleComments != null && articleComments.size() > 0}">
-         
+          <c:forEach items="${articleComments}" var="commentItem">
+          <div class="box-comment">
+             <c:choose>
+               <c:when test="${commentItem.commentUserIconId != null && commentItem.commentUserIconId.length() > 0}">
+                  <c:choose>
+                     <c:when test="${commentItem.commentUserProfileId != null && commentItem.commentUserProfileId.length() > 0}">
+                        <a href="${pageContext.request.contextPath}/userProfile/${articleModel.authorId}"><img class="img-oval img-sm" src="${pageContext.request.contextPath}/public/imgresource/${commentItem.commentUserIconId}"></a>
+                     </c:when>
+                     <c:otherwise>
+                        <img class="img-oval img-sm" src="${pageContext.request.contextPath}/public/imgresource/${commentItem.commentUserIconId}">
+                     </c:otherwise>
+                  </c:choose>
+               </c:when>
+               <c:otherwise>
+                  <img class="img-oval img-sm" src="${pageContext.request.contextPath}/assets/imgs/default-user.jpg">
+               </c:otherwise>
+             </c:choose>
+             <div class="comment-text">
+                <span class="username">
+<c:choose>
+   <c:when test="${commentItem.commenterName != null && commentItem.commenterName.length() > 0}">
+      ${commentItem.commenterName}
+   </c:when>
+   <c:when test="${commentItem.commentUserFullName != null && commentItem.commentUserFullName.length() > 0}">
+      ${commentItem.commentUserFullName}
+   </c:when>
+   <c:when test="${commentItem.commentUserName != null && commentItem.commentUserName.length() > 0}">
+      ${commentItem.commentUserName}
+   </c:when>
+   <c:otherwise>
+      Anonymous User**
+   </c:otherwise>
+</c:choose>
+                <span class="text-muted pull-right">${commentItem.getCommentCreateDateString()}</span></span>
+<p>
+${commentItem.commentContent}
+</p>
+                <div class="row">
+                   <div class="col-xs-12 text-right">
+                      <c:if test="${commentItem.parentCommentId != null && commentItem.parentCommentId.length() > 0}">
+                         <button class="btn btn-sm">Previous Comment</button>
+                      </c:if>
+                      <button class="btn btn-sm" onclick="handleClickAddCommentBtn('${articleModel.articleId}', '${commentItem.commentId}', '${pageContext.request.contextPath}')">Add Comment</button>
+                   </div>
+                </div>
+             </div>
+          </div>
+          </c:forEach>
          </c:if>
       </div>
 
       <div class="box-footer" style="display: block;">
          <c:if test="${!articleModel.isPreviewMode()}">
-            <button class="btn btn-default" onclick="handleClickAddCommentBtn('${articleModel.articleId}', '')">Add Comment</button>
+            <button class="btn btn-default" onclick="handleClickAddCommentBtn('${articleModel.articleId}', '', '${pageContext.request.contextPath}')">Add Comment</button>
          </c:if>
       </div>
     </div>
