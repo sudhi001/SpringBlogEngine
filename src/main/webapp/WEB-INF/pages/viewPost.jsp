@@ -116,9 +116,9 @@ ${commentItem.commentContent}
                 <div class="row">
                    <div class="col-xs-12 text-right">
                       <c:if test="${commentItem.parentCommentId != null && commentItem.parentCommentId.length() > 0}">
-                         <button class="btn btn-sm">Previous Comment</button>
+                         <button class="btn btn-sm">Previous Comment/Reply</button>
                       </c:if>
-                      <button class="btn btn-sm" onclick="handleClickAddCommentBtn('${articleModel.articleId}', '${commentItem.commentId}', '${pageContext.request.contextPath}')">Add Comment</button>
+                      <button class="btn btn-sm" onclick="handleClickAddCommentBtn('${articleModel.articleId}', '${commentItem.commentId}', '${pageContext.request.contextPath}')">Reply</button>
                    </div>
                 </div>
              </div>
