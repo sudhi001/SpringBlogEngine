@@ -8,6 +8,8 @@ public interface CommentsService
 {
    void addArticleComment(ArticleCommentDataModel commentToSave);
    
+   ArticleCommentDataModel loadArticleComment(String articleId, String commentId);
+   
    List<ArticleCommentDataModel> getArticleComments(String articleId, int pageIdx);
    
    List<ArticleCommentDataModel> getViewableArticleComments(String articleId);

@@ -115,10 +115,36 @@ public class CommentsRepositoryImpl
       isolation = Isolation.READ_COMMITTED
    )
    @Override
-   public void deleteArticleComment(String articleId, String commentId)
+   public VisitorComment loadArticleComment(String articleId, String commentId)
    {
       Session session = _sessionFactory.getCurrentSession();
       
+      Query query = session.createQuery("select visitorComment from VisitorComment visitorComment where visitorComment.id = :commentId and relatedArticle.id = :articleId")
+         .setParameter("articleId", articleId)
+         .setParameter("commentId", commentId)
+         .setFirstResult(0)
+         .setMaxResults(1);
+      List<VisitorComment> foundObjs =  query.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         VisitorComment retVal = foundObjs.get(0);
+         preloadVisitorComment(retVal);
+         
+         return retVal;
+      }
+      
+      return null;
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public void deleteArticleComment(String articleId, String commentId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+
       Query query = 
       session.createQuery("delete from VisitorComment where id = :commentId and relatedArticle.id = :articleId")
          .setParameter("articleId", articleId)
@@ -154,42 +180,7 @@ public class CommentsRepositoryImpl
          {
             for (VisitorComment comment : retVals)
             {
-               if (comment.getOwner() != null)
-               {
-                  comment.getOwner().getId();
-                  comment.getOwner().getUserName();
-                  
-                  if (comment.getOwner().getUserProfile() != null)
-                  {
-                     comment.getOwner().getUserProfile().getId();
-                     comment.getOwner().getUserProfile().getFirstName();
-                     comment.getOwner().getUserProfile().getLastName();
-                     
-                     if (comment.getOwner().getUserProfile().getUserIcon() != null)
-                     {
-                        comment.getOwner().getUserProfile().getUserIcon().getId();
-                     }
-                  }
-               }
-
-               if (comment.getParentComment() != null)
-               {
-                  comment.getParentComment().getId();
-               }
-               
-               if (comment.getRelatedArticle() != null)
-               {
-                  comment.getRelatedArticle().getId();
-                  comment.getRelatedArticle().getArticleTitle();
-               }
-               
-               if (comment.getRelatedImage() != null)
-               {
-                  comment.getRelatedImage().getId();
-                  comment.getRelatedImage().getImageTitle();
-               }
-               
-               // XXX add more data extraction if needed.
+               preloadVisitorComment(comment);
             }
          }
          
@@ -223,5 +214,48 @@ public class CommentsRepositoryImpl
       }
       
       return null;
+   }
+   
+   private void preloadVisitorComment(VisitorComment comment)
+   {
+      if (comment != null)
+      {
+         if (comment.getOwner() != null)
+         {
+            comment.getOwner().getId();
+            comment.getOwner().getUserName();
+            
+            if (comment.getOwner().getUserProfile() != null)
+            {
+               comment.getOwner().getUserProfile().getId();
+               comment.getOwner().getUserProfile().getFirstName();
+               comment.getOwner().getUserProfile().getLastName();
+               
+               if (comment.getOwner().getUserProfile().getUserIcon() != null)
+               {
+                  comment.getOwner().getUserProfile().getUserIcon().getId();
+               }
+            }
+         }
+
+         if (comment.getParentComment() != null)
+         {
+            comment.getParentComment().getId();
+         }
+         
+         if (comment.getRelatedArticle() != null)
+         {
+            comment.getRelatedArticle().getId();
+            comment.getRelatedArticle().getArticleTitle();
+         }
+         
+         if (comment.getRelatedImage() != null)
+         {
+            comment.getRelatedImage().getId();
+            comment.getRelatedImage().getImageTitle();
+         }
+         
+         // XXX add more data extraction if needed.
+      }
    }
 }

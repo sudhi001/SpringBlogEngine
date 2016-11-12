@@ -71,6 +71,20 @@ public class CommentsServiceImpl implements CommentsService
    }
    
    @Override
+   public ArticleCommentDataModel loadArticleComment(String articleId, String commentId)
+   {
+      VisitorComment commentEntity = this._commentsRepo.loadArticleComment(articleId, commentId);
+      if (commentEntity != null)
+      {
+         ArticleCommentDataModel retVal = CommentsDataModelEntityMapping.toDataModel_ArticleComment(commentEntity);
+         
+         return retVal;
+      }
+      
+      return null;
+   }
+   
+   @Override
    public List<ArticleCommentDataModel> getViewableArticleComments(String articleId)
    {
       int maxDisplayedComments = getMaxCommentsForDisplay();

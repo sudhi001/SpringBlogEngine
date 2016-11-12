@@ -123,3 +123,26 @@ var resetCommentEditingErrorDisplay = function () {
    $("#addCommentDlg #addCommentForm #addCommentFormSuccess #addCommentFormSuccessMsg").html("");
    $("#addCommentDlg #addCommentForm #addCommentFormSuccess").hide();
 }
+
+var loadParentComment = function (articleId, parentCommentId, divId, baseUrl) {
+  if (articleId != null && articleId.length > 0 &&
+     parentCommentId != null && parentCommentId.length > 0 &&
+     divId != null && divId.length > 0)
+  {
+     $.ajax({
+        type: "GET",
+        url: baseUrl + "/public/comments/loadParentComment/" + parentCommentId,
+        xhrFields: {
+           withCredentials: true
+        },
+        dataType: "json",
+        contentType: "application/json",
+        async:false
+     })
+     .done(function(data) {
+        
+     }).fail(function() {
+     });
+  }
+   
+}

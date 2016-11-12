@@ -16,6 +16,8 @@ public interface CommentsRepository
 
    List<VisitorComment> loadArticleViewableComments(String articleId, int maxResultsCount);
    
+   VisitorComment loadArticleComment(String articleId, String commentId);
+   
    void deleteArticleComment(String articleId, String commentId);   
    
    void deleteArticleComments(String articleId);

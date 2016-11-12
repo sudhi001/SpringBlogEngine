@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -33,7 +34,7 @@ public class CommentsActions
       method=RequestMethod.POST,
       produces = MediaType.APPLICATION_JSON_VALUE)
    @ResponseBody
-   public ResponseEntity<String> newPost(
+   public ResponseEntity<String> addArticleComment(
       @RequestBody
       String commentJsonObject,      
       HttpServletRequest request
@@ -79,24 +80,20 @@ public class CommentsActions
                   commentToAdd.setCommentUserId(loggedInUserId);
                }
                
-               System.out.println("Before Add Comment");
                final HttpHeaders httpHeaders= new HttpHeaders();
                httpHeaders.setContentType(MediaType.APPLICATION_JSON);
                _commentService.addArticleComment(commentToAdd);
-               System.out.println("After Add Comment");
-               
+
                return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);
             }
             else
             {
-               System.out.println("1");
                String respJsonVal = JsonUtil.simpleErrorMessage("Comment content is empty.");
                return new ResponseEntity<String>(respJsonVal, HttpStatus.BAD_REQUEST);
             }
          }
          else
          {
-            System.out.println("2");
             String respJsonVal = JsonUtil.simpleErrorMessage("Comment content is empty.");
             return new ResponseEntity<String>(respJsonVal, HttpStatus.BAD_REQUEST);
          }
@@ -108,4 +105,36 @@ public class CommentsActions
          return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
       }
    }
+   
+   @RequestMapping(value = "/public/comments/loadComment",
+      method=RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> loadComment(
+      @RequestParam("articleId")
+      String articleId,      
+      @RequestParam("commentId")
+      String commentId
+   )
+   {
+      if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+      {
+         ArticleCommentDataModel articleComment
+            = this._commentService.loadArticleComment(articleId, commentId);
+         
+         if (articleComment != null)
+         {
+            String jsonResp = JsonUtil.convertObjectToJson(articleComment);
+            
+            final HttpHeaders httpHeaders= new HttpHeaders();
+            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+            
+            return new ResponseEntity<String>(jsonResp, HttpStatus.OK);
+         }
+      }
+      
+      String respJsonVal = JsonUtil.simpleErrorMessage("Article Id is null or empty, or comment Id is null or empty.");
+      return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
+   }
+
 }
