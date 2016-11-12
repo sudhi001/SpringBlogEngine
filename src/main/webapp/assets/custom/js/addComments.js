@@ -129,20 +129,64 @@ var loadParentComment = function (articleId, parentCommentId, divId, baseUrl) {
      parentCommentId != null && parentCommentId.length > 0 &&
      divId != null && divId.length > 0)
   {
-     $.ajax({
-        type: "GET",
-        url: baseUrl + "/public/comments/loadParentComment/" + parentCommentId,
-        xhrFields: {
-           withCredentials: true
-        },
-        dataType: "json",
-        contentType: "application/json",
-        async:false
-     })
-     .done(function(data) {
+     var pCommentId = $(divId + " input:hidden").val();
+     if (pCommentId != null && pCommentId === parentCommentId)
+     {
+        $(divId).empty();
+     }
+     else
+     {
+        var loadCommentParam = {
+           articleId: articleId,
+           commentId: parentCommentId
+        };
         
-     }).fail(function() {
-     });
+        $.ajax({
+           type: "GET",
+           url: baseUrl + "/public/comments/loadComment/",
+           xhrFields: {
+              withCredentials: true
+           },
+           data: loadCommentParam,
+           dataType: "json",
+           contentType: "application/json",
+           async:false
+        })
+        .done(function(data) {
+           if (data) {
+              var hidden = $("<input>", {
+                 "type": "hidden",
+                 "value": data.commentId
+              });
+              var h3 = $("<h4>").append(data.commentTitle);
+              var author = $("<strong>");
+              if (data.commentUserFullName != null && data.commentUserFullName.length > 0)
+              {
+                 author.append(data.commentUserFullName);
+              }
+              else if (data.commentUserName != null && data.commentUserName.length > 0)
+              {
+                 author.append(data.commentUserName);
+              }
+              else if (data.commenterName != null && data.commenterName.length > 0)
+              {
+                 author.append(data.commenterName);
+              }
+              var p = $("<p>").append(data.commentContent);
+              var panelBody = $("<div>", {
+                 "class": "panel-body"
+              }).append(hidden).append(h3).append(author).append(p);
+              var panelDiv = $("<div>", {
+                 "class": "panel panel-default"
+              }).append(panelBody);
+              var divCol = $("<div>", {
+                 "class": "col-xs-12"
+              }).append(panelDiv);
+              $(divId).append(divCol);
+           }
+        }).fail(function() {
+        });
+     }
   }
    
 }
