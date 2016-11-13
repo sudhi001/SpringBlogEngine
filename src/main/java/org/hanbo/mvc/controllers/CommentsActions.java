@@ -1,7 +1,5 @@
 package org.hanbo.mvc.controllers;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;

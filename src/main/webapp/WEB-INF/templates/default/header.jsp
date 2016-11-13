@@ -29,7 +29,7 @@
                   <li><a href="${pageContext.request.contextPath}/admin/galleries/allMyGalleries/0">My Galleries</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/updates/allMyUpdates">My Updates</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/resources/allMyResources">My Resources</a></li>
-                  <li><a href="${pageContext.request.contextPath}/admin/comments/guestComments">Guest Comments</a></li>
+                  <li><a href="${pageContext.request.contextPath}/admin/comments/0">Guest Comments</a></li>
                 </ul>
               </li>
             </sec:authorize>
