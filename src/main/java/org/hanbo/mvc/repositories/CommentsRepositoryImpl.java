@@ -190,6 +190,61 @@ public class CommentsRepositoryImpl
    }
    
    @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public long getUnapprovedArticleCommentsCount()
+   {
+      Session session = _sessionFactory.getCurrentSession();
+
+      Query query = 
+      session.createQuery("select count(visitorComment) from VisitorComment visitorComment where visitorComment.commentApproved = false")
+         .setFirstResult(0)
+         .setMaxResults(1);
+      List<Long> foundObjs = query.list();
+      
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         Long itemsCount = foundObjs.get(0);
+         
+         return itemsCount;
+      }
+      
+      return 0L;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<VisitorComment> getUnapprovedArticleComments(int pageIdx, int maxItemsCount)
+   {
+      List<VisitorComment> retVals = new ArrayList<VisitorComment>();
+      
+      Session session = _sessionFactory.getCurrentSession();
+
+      Query query = 
+      session.createQuery("select visitorComment from VisitorComment visitorComment where visitorComment.commentApproved = false")
+         .setFirstResult(pageIdx * maxItemsCount)
+         .setMaxResults(maxItemsCount);
+      List<VisitorComment> foundObjs = query.list();
+      
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         for (VisitorComment comment : foundObjs)
+         {
+            preloadVisitorComment(comment);
+         }
+         
+         retVals = foundObjs;
+      }
+      
+      return retVals;
+   }
+   
+   @Override
    public void deleteArticleComments(Session session, String articleId)
    {
       if (session != null)

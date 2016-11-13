@@ -9,6 +9,8 @@ import java.util.Map;
 import org.hanbo.mvc.entities.VisitorComment;
 import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ArticleCommentDataModel;
+import org.hanbo.mvc.models.ItemListPageDataModel;
+import org.hanbo.mvc.models.UserArticleCommentsPageDataModel;
 import org.hanbo.mvc.repositories.CommentsRepository;
 import org.hanbo.mvc.services.utilities.CommentsDataModelEntityMapping;
 import org.hanbo.mvc.utilities.IdUtil;
@@ -99,6 +101,34 @@ public class CommentsServiceImpl implements CommentsService
       }
       
       return retVals;
+   }
+   
+   @Override
+   public UserArticleCommentsPageDataModel getUnapprovedArticleComments(int pageIdx)
+   {
+      int adminCommentsPerPageCount = getAdminCommentsCountForDisplay();
+      
+      long unapprovedCommentsCount = _commentsRepo.getUnapprovedArticleCommentsCount();
+      
+      List<VisitorComment> comments = _commentsRepo.getUnapprovedArticleComments(pageIdx,
+         adminCommentsPerPageCount);
+      
+      List<ArticleCommentDataModel> articleComments
+         = CommentsDataModelEntityMapping.toDataModels_ArticleComments(comments);
+
+      UserArticleCommentsPageDataModel retVal
+         = new UserArticleCommentsPageDataModel();
+      if (articleComments != null && articleComments.size() > 0)
+      {
+         ItemListPageDataModel.<UserArticleCommentsPageDataModel>createPageModel(retVal, articleComments.size(),
+            (int)unapprovedCommentsCount, pageIdx,
+            adminCommentsPerPageCount);
+         
+         return retVal;
+      }
+
+      ItemListPageDataModel.createEmptyPageDataModel(retVal);
+      return retVal;
    }
    
    @Override

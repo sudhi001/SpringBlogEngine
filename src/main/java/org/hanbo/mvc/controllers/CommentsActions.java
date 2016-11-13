@@ -1,11 +1,16 @@
 package org.hanbo.mvc.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
+import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ArticleCommentDataModel;
 import org.hanbo.mvc.models.CommentInputDataModel;
+import org.hanbo.mvc.models.PageMetadata;
+import org.hanbo.mvc.models.UserArticleCommentsPageDataModel;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.services.CommentsService;
 import org.hanbo.mvc.utilities.JsonUtil;
@@ -14,12 +19,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class CommentsActions
@@ -135,5 +143,32 @@ public class CommentsActions
       
       String respJsonVal = JsonUtil.simpleErrorMessage("Article Id is null or empty, or comment Id is null or empty.");
       return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/comments/{pageIdx}",
+      method=RequestMethod.GET)
+   public ModelAndView allUserArticleComments(
+      @PathVariable("pageIdx")
+      int pageIdx
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         throw new WebAppException("User is not logged in", WebAppException.ErrorType.SECURITY);
+      }
+      
+      UserArticleCommentsPageDataModel articleCommentsPageDataModel
+         = _commentService.getUnapprovedArticleComments(pageIdx);
+      
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata("All My Galleries");
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+              "userCommentsList", pageMetadata);
+      retVal.addObject("unapprovedArticleComments", articleCommentsPageDataModel);
+      
+      return retVal;
    }
 }
