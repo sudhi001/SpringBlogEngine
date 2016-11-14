@@ -256,6 +256,18 @@ public class CommentsRepositoryImpl
       }
    }
    
+   @Override
+   public void unassociateArticleComments(Session session, String articleId)
+   {
+      if (session != null)
+      {
+         Query query =
+            session.createQuery("update VisitorComment set parentComment = null where relatedArticle.id = :articleId")
+               .setParameter("articleId", articleId);         
+         query.executeUpdate();
+      }
+   }
+   
    private VisitorComment getCommentById(Session session, String commentId)
    {
       Query query = session.createQuery("select comment from VisitorComment comment where comment.id = :commentId")

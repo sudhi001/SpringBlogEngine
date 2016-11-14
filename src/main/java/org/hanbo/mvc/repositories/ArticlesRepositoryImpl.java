@@ -193,6 +193,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
    {
       Session session = _sessionFactory.getCurrentSession();
       
+      _commentsRepository.unassociateArticleComments(session, articleId);
       _commentsRepository.deleteArticleComments(session, articleId);
       deleteArticleIcon(session, articleId);
       Query query = session.createQuery(

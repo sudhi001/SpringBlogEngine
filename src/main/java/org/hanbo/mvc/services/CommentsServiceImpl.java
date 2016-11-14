@@ -46,8 +46,8 @@ public class CommentsServiceImpl implements CommentsService
          commentEntity.setContent(commentToSave.getCommentContent());
          commentEntity.setCreateDate(dateNow);
          commentEntity.setUpdateDate(dateNow);
-         commentEntity.setCommentApproved(true);//(commentToSave.isCommentApproved()); //TODO
-         commentEntity.setCommentPrivate(false);//(commentToSave.isCommentPrivate()); //TODO
+         commentEntity.setCommentApproved(false);
+         commentEntity.setCommentPrivate(commentToSave.isCommentPrivate());
          commentEntity.setSourceIp(commentToSave.getCommentSourceIp());
 
          if (StringUtils.isEmpty(commentToSave.getCommentUserId()))
@@ -123,6 +123,7 @@ public class CommentsServiceImpl implements CommentsService
          ItemListPageDataModel.<UserArticleCommentsPageDataModel>createPageModel(retVal, articleComments.size(),
             (int)unapprovedCommentsCount, pageIdx,
             adminCommentsPerPageCount);
+         retVal.setCommentsList(articleComments);
          
          return retVal;
       }

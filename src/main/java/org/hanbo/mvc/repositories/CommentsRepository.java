@@ -27,4 +27,6 @@ public interface CommentsRepository
    void deleteArticleComments(String articleId);
    
    void deleteArticleComments(Session session, String articleId);
+   
+   void unassociateArticleComments(Session session, String articleId);
 }

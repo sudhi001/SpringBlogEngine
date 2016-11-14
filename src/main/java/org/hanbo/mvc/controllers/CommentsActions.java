@@ -57,8 +57,6 @@ public class CommentsActions
       {
          if (!StringUtils.isEmpty(commentJsonObject))
          {
-            System.out.println(commentJsonObject);
-            
             CommentInputDataModel commentReceived = 
             JsonUtil.convertJsonToObject(commentJsonObject, CommentInputDataModel.class);
             
@@ -161,7 +159,7 @@ public class CommentsActions
          = _commentService.getUnapprovedArticleComments(pageIdx);
       
       PageMetadata pageMetadata
-         = _util.creatPageMetadata("All My Galleries");
+         = _util.creatPageMetadata("Unapproved Comments");
       ModelAndView retVal
          = _util.getDefaultModelAndView(
               "userCommentsList", pageMetadata);
