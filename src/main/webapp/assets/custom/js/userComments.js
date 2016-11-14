@@ -26,4 +26,50 @@ var displayCommentDetail = function(articleId, commentId, baseUrl) {
       }).fail(function() {
       });
    }
-}
+};
+
+var approveComment = function (articleId, commentId, baseUrl) {
+   var approveCommentParam = {
+      articleId: articleId,
+      commentId: commentId
+   };
+   $.ajax({
+      type: "GET",
+      url: baseUrl + "/admin/comments/approveComment/",
+      xhrFields: {
+         withCredentials: true
+      },
+      data: approveCommentParam,
+      dataType: "json",
+      contentType: "application/json",
+      async:false
+   })
+   .done(function(data) {
+      if (data != null) {
+      }
+   }).fail(function() {
+   });
+};
+
+var adminDeleteComment = function (articleId, commentId, baseUrl) {
+   var deleteCommentParam = {
+      articleId: articleId,
+      commentId: commentId
+   };
+   $.ajax({
+      type: "GET",
+      url: baseUrl + "/admin/comments/deleteComment/",
+      xhrFields: {
+         withCredentials: true
+      },
+      data: deleteCommentParam,
+      dataType: "json",
+      contentType: "application/json",
+      async:false
+   })
+   .done(function(data) {
+      if (data != null) {
+      }
+   }).fail(function() {
+   });
+};
