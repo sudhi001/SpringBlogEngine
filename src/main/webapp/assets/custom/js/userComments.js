@@ -34,7 +34,7 @@ var approveComment = function (articleId, commentId, baseUrl) {
       commentId: commentId
    };
    $.ajax({
-      type: "GET",
+      type: "PUT",
       url: baseUrl + "/admin/comments/approveComment/",
       xhrFields: {
          withCredentials: true
@@ -57,7 +57,7 @@ var adminDeleteComment = function (articleId, commentId, baseUrl) {
       commentId: commentId
    };
    $.ajax({
-      type: "GET",
+      type: "DELETE",
       url: baseUrl + "/admin/comments/deleteComment/",
       xhrFields: {
          withCredentials: true
