@@ -16,4 +16,8 @@ public interface CommentsService
    List<ArticleCommentDataModel> getArticleComments(String articleId, int pageIdx);
    
    List<ArticleCommentDataModel> getViewableArticleComments(String articleId);
+
+   boolean approveComment(String articleId, String commentId);
+
+   boolean deleteComment(String articleId, String commentId);
 }

@@ -10,6 +10,7 @@ import org.hanbo.mvc.models.CommentInputDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserArticleCommentsPageDataModel;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.json.UserCommentActionInputDataModel;
 import org.hanbo.mvc.services.CommentsService;
 import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,5 +167,101 @@ public class CommentsActions
       retVal.addObject("unapprovedArticleComments", articleCommentsPageDataModel);
       
       return retVal;
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/comments/approveComment",
+      method=RequestMethod.PUT,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> approveComment(
+      @RequestBody
+      String approveRequest
+   )
+   {
+      System.out.println(approveRequest);
+      
+      final HttpHeaders httpHeaders= new HttpHeaders();
+      httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+      
+      UserCommentActionInputDataModel commentInputParam = 
+      JsonUtil.convertJsonToObject(approveRequest, UserCommentActionInputDataModel.class);      
+      if (commentInputParam == null)
+      {
+         return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Input request is empty."), httpHeaders, HttpStatus.BAD_REQUEST);
+      }
+      
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         throw new WebAppException("User is not logged in", WebAppException.ErrorType.SECURITY);
+      }
+
+      try
+      {
+         if (_commentService.approveComment(commentInputParam.getArticleId(), commentInputParam.getCommentId()))
+         {
+            return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);            
+         }
+         else
+         {
+            return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Processing failed."), httpHeaders, HttpStatus.BAD_REQUEST);                        
+         }
+      }
+      catch(Exception e)
+      {
+         return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Unknown error occurred"), httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value="/admin/comments/deleteComment",
+      method=RequestMethod.DELETE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> deleteComment(
+      @RequestBody
+      String deleteRequest
+   )
+   {
+      System.out.println(deleteRequest);
+      
+      final HttpHeaders httpHeaders= new HttpHeaders();
+      httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+      if (StringUtils.isEmpty(deleteRequest))
+      {
+         return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Input request is empty."), httpHeaders, HttpStatus.BAD_REQUEST);
+      }
+      
+      UserCommentActionInputDataModel commentInputParam = 
+      JsonUtil.convertJsonToObject(deleteRequest, UserCommentActionInputDataModel.class);      
+      if (commentInputParam == null)
+      {
+         return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Input request is empty."), httpHeaders, HttpStatus.BAD_REQUEST);
+      }
+      
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         throw new WebAppException("User is not logged in", WebAppException.ErrorType.SECURITY);
+      }
+
+      try
+      {
+         if (_commentService.deleteComment(commentInputParam.getArticleId(), commentInputParam.getCommentId()))
+         {
+            return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);
+         }
+         else
+         {
+            return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Processing failed."), httpHeaders, HttpStatus.BAD_REQUEST);
+         }
+      }
+      catch(Exception e)
+      {
+        e.printStackTrace();
+         return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Unknown error occurred"), httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
    }
 }

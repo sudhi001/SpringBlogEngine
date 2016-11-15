@@ -35,17 +35,18 @@ var approveComment = function (articleId, commentId, baseUrl) {
    };
    $.ajax({
       type: "PUT",
-      url: baseUrl + "/admin/comments/approveComment/",
+      url: baseUrl + "/admin/comments/approveComment",
       xhrFields: {
          withCredentials: true
       },
-      data: approveCommentParam,
+      data: JSON.stringify(approveCommentParam),
       dataType: "json",
       contentType: "application/json",
       async:false
    })
    .done(function(data) {
       if (data != null) {
+         location.reload();
       }
    }).fail(function() {
    });
@@ -58,17 +59,18 @@ var adminDeleteComment = function (articleId, commentId, baseUrl) {
    };
    $.ajax({
       type: "DELETE",
-      url: baseUrl + "/admin/comments/deleteComment/",
+      url: baseUrl + "/admin/comments/deleteComment",
       xhrFields: {
          withCredentials: true
       },
-      data: deleteCommentParam,
+      data: JSON.stringify(deleteCommentParam),
       dataType: "json",
       contentType: "application/json",
       async:false
    })
    .done(function(data) {
       if (data != null) {
+         location.reload();
       }
    }).fail(function() {
    });

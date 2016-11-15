@@ -263,9 +263,59 @@ public class CommentsRepositoryImpl
       {
          Query query =
             session.createQuery("update VisitorComment set parentComment = null where relatedArticle.id = :articleId")
-               .setParameter("articleId", articleId);         
+               .setParameter("articleId", articleId);
          query.executeUpdate();
       }
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public boolean approveComment(String articleId, String commentId)
+   {
+      boolean retVal = false;
+      Session session = this._sessionFactory.getCurrentSession();
+      if (session != null)
+      {
+         if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+         {
+            Query query =
+               session.createQuery("update VisitorComment set commentApproved = true where relatedArticle.id = :articleId and id = :commentId")
+                  .setParameter("articleId", articleId)
+                  .setParameter("commentId", commentId);
+            int resultsCount = query.executeUpdate();
+            retVal = resultsCount > 0;
+         }
+      }
+      
+      return retVal;
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public boolean deleteComment(String articleId, String commentId)
+   {
+      boolean retVal = false;
+      Session session = this._sessionFactory.getCurrentSession();
+      if (session != null)
+      {
+         if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+         {
+            Query query =
+               session.createQuery("delete VisitorComment where relatedArticle.id = :articleId and id = :commentId")
+                  .setParameter("articleId", articleId)
+                  .setParameter("commentId", commentId);
+            int resultsCount = query.executeUpdate();
+            retVal = resultsCount > 0;
+         }
+      }
+      
+      return retVal;
    }
    
    private VisitorComment getCommentById(Session session, String commentId)

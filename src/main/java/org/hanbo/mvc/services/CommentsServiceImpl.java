@@ -154,6 +154,28 @@ public class CommentsServiceImpl implements CommentsService
       return retVals;
    }
    
+   @Override
+   public boolean approveComment(String articleId, String commentId)
+   {
+      if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+      {
+         return this._commentsRepo.approveComment(articleId, commentId);
+      }
+      
+      return false;
+   }
+   
+   @Override
+   public boolean deleteComment(String articleId, String commentId)
+   {
+      if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+      {
+         return this._commentsRepo.deleteComment(articleId, commentId);
+      }
+      
+      return false;
+   }
+   
    private List<ArticleCommentDataModel> associateArticleComments(List<ArticleCommentDataModel> unorderedCommentsList)
    {
       List<ArticleCommentDataModel> retVals = new ArrayList<ArticleCommentDataModel>();
