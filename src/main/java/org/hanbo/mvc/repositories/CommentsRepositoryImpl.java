@@ -273,17 +273,16 @@ public class CommentsRepositoryImpl
       isolation = Isolation.READ_COMMITTED
    )
    @Override
-   public boolean approveComment(String articleId, String commentId)
+   public boolean approveComment(String commentId)
    {
       boolean retVal = false;
       Session session = this._sessionFactory.getCurrentSession();
       if (session != null)
       {
-         if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+         if (!StringUtils.isEmpty(commentId))
          {
             Query query =
-               session.createQuery("update VisitorComment set commentApproved = true where relatedArticle.id = :articleId and id = :commentId")
-                  .setParameter("articleId", articleId)
+               session.createQuery("update VisitorComment set commentApproved = true where id = :commentId")
                   .setParameter("commentId", commentId);
             int resultsCount = query.executeUpdate();
             retVal = resultsCount > 0;
@@ -298,17 +297,16 @@ public class CommentsRepositoryImpl
       isolation = Isolation.READ_COMMITTED
    )
    @Override
-   public boolean deleteComment(String articleId, String commentId)
+   public boolean deleteComment(String commentId)
    {
       boolean retVal = false;
       Session session = this._sessionFactory.getCurrentSession();
       if (session != null)
       {
-         if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+         if (!StringUtils.isEmpty(commentId))
          {
             Query query =
-               session.createQuery("delete VisitorComment where relatedArticle.id = :articleId and id = :commentId")
-                  .setParameter("articleId", articleId)
+               session.createQuery("delete VisitorComment where id = :commentId")
                   .setParameter("commentId", commentId);
             int resultsCount = query.executeUpdate();
             retVal = resultsCount > 0;
@@ -316,6 +314,22 @@ public class CommentsRepositoryImpl
       }
       
       return retVal;
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public VisitorComment loadComment(String commentId)
+   {
+      Session session = this._sessionFactory.getCurrentSession();
+      if (session != null)
+      {
+         return getCommentById(session, commentId);
+      }
+      
+      return null;
    }
    
    private VisitorComment getCommentById(Session session, String commentId)

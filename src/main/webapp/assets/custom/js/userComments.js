@@ -1,14 +1,12 @@
-var displayCommentDetail = function(articleId, commentId, baseUrl) {
-   if (articleId != null && articleId.length > 0 &&
-      commentId != null && commentId.length > 0)
+var displayCommentDetail = function(commentId, baseUrl) {
+   if (commentId != null && commentId.length > 0)
    {
       var loadCommentParam = {
-         articleId: articleId,
          commentId: commentId
       };
       $.ajax({
          type: "GET",
-         url: baseUrl + "/public/comments/loadComment/",
+         url: baseUrl + "/admin/comments/loadComment",
          xhrFields: {
             withCredentials: true
          },
@@ -28,9 +26,8 @@ var displayCommentDetail = function(articleId, commentId, baseUrl) {
    }
 };
 
-var approveComment = function (articleId, commentId, baseUrl) {
+var approveComment = function (commentId, baseUrl) {
    var approveCommentParam = {
-      articleId: articleId,
       commentId: commentId
    };
    $.ajax({
@@ -52,9 +49,8 @@ var approveComment = function (articleId, commentId, baseUrl) {
    });
 };
 
-var adminDeleteComment = function (articleId, commentId, baseUrl) {
+var adminDeleteComment = function (commentId, baseUrl) {
    var deleteCommentParam = {
-      articleId: articleId,
       commentId: commentId
    };
    $.ajax({

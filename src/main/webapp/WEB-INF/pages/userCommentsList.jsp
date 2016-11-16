@@ -35,7 +35,7 @@
                <span class="glyphicon glyphicon-comment"></span>
             </td>
             <td>
-               <a href="#" onclick="displayCommentDetail('${commentItem.articleId}', '${commentItem.commentId}', '${pageContext.request.contextPath}')">${commentItem.commentTitle}</a>
+               <a href="#" onclick="displayCommentDetail('${commentItem.commentId}', '${pageContext.request.contextPath}')">${commentItem.commentTitle}</a>
             </td>
             <td>
                <c:choose>
@@ -57,8 +57,8 @@
                ${commentItem.getCommentUpdateDateString()}
             </td>
             <td>
-               <button class="btn btn-sm btn-success" onclick="approveComment('${commentItem.articleId}', '${commentItem.commentId}', '${pageContext.request.contextPath}')" data-toggle="tooltip" data-placement="top" title="Approve Comment"><span class="glyphicon glyphicon-ok-circle"></span></button>
-               <button class="btn btn-sm btn-danger" onclick="adminDeleteComment('${commentItem.articleId}', '${commentItem.commentId}', '${pageContext.request.contextPath}')" data-toggle="tooltip" data-placement="top" title="Delete Comment"><span class="glyphicon glyphicon-remove-circle"></span></button>
+               <button class="btn btn-sm btn-success" onclick="approveComment('${commentItem.commentId}', '${pageContext.request.contextPath}')" data-toggle="tooltip" data-placement="top" title="Approve Comment"><span class="glyphicon glyphicon-ok-circle"></span></button>
+               <button class="btn btn-sm btn-danger" onclick="adminDeleteComment('${commentItem.commentId}', '${pageContext.request.contextPath}')" data-toggle="tooltip" data-placement="top" title="Delete Comment"><span class="glyphicon glyphicon-remove-circle"></span></button>
             </td>
           </tr>
         </c:forEach>

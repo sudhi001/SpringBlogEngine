@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hanbo.mvc.models.ArticleCommentDataModel;
 import org.hanbo.mvc.models.UserArticleCommentsPageDataModel;
+import org.hanbo.mvc.models.json.CommentJsonDataModel;
 
 public interface CommentsService
 {
@@ -17,7 +18,9 @@ public interface CommentsService
    
    List<ArticleCommentDataModel> getViewableArticleComments(String articleId);
 
-   boolean approveComment(String articleId, String commentId);
+   CommentJsonDataModel loadComment(String commentId);
+   
+   boolean approveComment(String commentId);
 
-   boolean deleteComment(String articleId, String commentId);
+   boolean deleteComment(String commentId);
 }

@@ -10,6 +10,7 @@ import org.hanbo.mvc.models.CommentInputDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserArticleCommentsPageDataModel;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.json.CommentJsonDataModel;
 import org.hanbo.mvc.models.json.UserCommentActionInputDataModel;
 import org.hanbo.mvc.services.CommentsService;
 import org.hanbo.mvc.utilities.JsonUtil;
@@ -111,11 +112,11 @@ public class CommentsActions
       }
    }
    
-   @RequestMapping(value = "/public/comments/loadComment",
+   @RequestMapping(value = "/public/comments/loadArticleComment",
       method=RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
    @ResponseBody
-   public ResponseEntity<String> loadComment(
+   public ResponseEntity<String> loadArticleComment(
       @RequestParam("articleId")
       String articleId,      
       @RequestParam("commentId")
@@ -140,6 +141,51 @@ public class CommentsActions
       
       String respJsonVal = JsonUtil.simpleErrorMessage("Article Id is null or empty, or comment Id is null or empty.");
       return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/comments/loadComment",
+      method=RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> loadComment(
+      @RequestParam("commentId")
+      String commentId
+   )
+   {
+      System.out.println(commentId);
+    
+      final HttpHeaders httpHeaders= new HttpHeaders();
+      httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+      
+      if (StringUtils.isEmpty(commentId))
+      {
+         return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Comment Id is null or empty."), httpHeaders, HttpStatus.BAD_REQUEST);
+      }
+      
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         throw new WebAppException("User is not logged in", WebAppException.ErrorType.SECURITY);
+      }
+
+      try
+      {
+         CommentJsonDataModel retObj = _commentService.loadComment(commentId);
+         if (retObj != null)
+         {
+            String retVal = JsonUtil.convertObjectToJson(retObj);
+            return new ResponseEntity<String>(retVal, httpHeaders, HttpStatus.OK);            
+         }
+         else
+         {
+            return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Processing failed."), httpHeaders, HttpStatus.NOT_FOUND);                        
+         }
+      }
+      catch(Exception e)
+      {
+         return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Unknown error occurred"), httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
    }
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
@@ -185,7 +231,7 @@ public class CommentsActions
       httpHeaders.setContentType(MediaType.APPLICATION_JSON);
       
       UserCommentActionInputDataModel commentInputParam = 
-      JsonUtil.convertJsonToObject(approveRequest, UserCommentActionInputDataModel.class);      
+      JsonUtil.convertJsonToObject(approveRequest, UserCommentActionInputDataModel.class);
       if (commentInputParam == null)
       {
          return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Input request is empty."), httpHeaders, HttpStatus.BAD_REQUEST);
@@ -199,7 +245,7 @@ public class CommentsActions
 
       try
       {
-         if (_commentService.approveComment(commentInputParam.getArticleId(), commentInputParam.getCommentId()))
+         if (_commentService.approveComment(commentInputParam.getCommentId()))
          {
             return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);            
          }
@@ -210,6 +256,7 @@ public class CommentsActions
       }
       catch(Exception e)
       {
+         e.printStackTrace();
          return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Unknown error occurred"), httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
       }
    }
@@ -249,7 +296,7 @@ public class CommentsActions
 
       try
       {
-         if (_commentService.deleteComment(commentInputParam.getArticleId(), commentInputParam.getCommentId()))
+         if (_commentService.deleteComment(commentInputParam.getCommentId()))
          {
             return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);
          }

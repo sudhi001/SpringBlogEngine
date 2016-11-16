@@ -11,6 +11,7 @@ import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ArticleCommentDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.UserArticleCommentsPageDataModel;
+import org.hanbo.mvc.models.json.CommentJsonDataModel;
 import org.hanbo.mvc.repositories.CommentsRepository;
 import org.hanbo.mvc.services.utilities.CommentsDataModelEntityMapping;
 import org.hanbo.mvc.utilities.IdUtil;
@@ -155,25 +156,43 @@ public class CommentsServiceImpl implements CommentsService
    }
    
    @Override
-   public boolean approveComment(String articleId, String commentId)
+   public boolean approveComment(String commentId)
    {
-      if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+      if (!StringUtils.isEmpty(commentId))
       {
-         return this._commentsRepo.approveComment(articleId, commentId);
+         return this._commentsRepo.approveComment(commentId);
       }
       
       return false;
    }
    
    @Override
-   public boolean deleteComment(String articleId, String commentId)
+   public boolean deleteComment(String commentId)
    {
-      if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+      if (!StringUtils.isEmpty(commentId))
       {
-         return this._commentsRepo.deleteComment(articleId, commentId);
+         return this._commentsRepo.deleteComment(commentId);
       }
       
       return false;
+   }
+   
+   @Override
+   public CommentJsonDataModel loadComment(String commentId)
+   {
+      CommentJsonDataModel retVal = null;
+      if (!StringUtils.isEmpty(commentId))
+      {
+         VisitorComment foundObj = this._commentsRepo.loadComment(commentId);
+         if (foundObj != null)
+         {
+            retVal = new CommentJsonDataModel();
+            retVal.setCommenTitle(foundObj.getTitle());
+            retVal.setCommentContent(foundObj.getContent());
+         }
+      }
+      
+      return retVal;
    }
    
    private List<ArticleCommentDataModel> associateArticleComments(List<ArticleCommentDataModel> unorderedCommentsList)

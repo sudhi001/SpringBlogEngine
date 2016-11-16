@@ -30,7 +30,9 @@ public interface CommentsRepository
    
    void unassociateArticleComments(Session session, String articleId);
    
-   boolean approveComment(String articleId, String commentId);
+   boolean approveComment(String commentId);
 
-   boolean deleteComment(String articleId, String commentId);
+   boolean deleteComment(String commentId);
+
+   VisitorComment loadComment(String commentId);
 }
