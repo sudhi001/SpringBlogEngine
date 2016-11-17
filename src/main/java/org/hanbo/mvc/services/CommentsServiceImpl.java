@@ -11,6 +11,7 @@ import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ArticleCommentDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.UserArticleCommentsPageDataModel;
+import org.hanbo.mvc.models.UserCommentsPageDataModel;
 import org.hanbo.mvc.models.json.CommentJsonDataModel;
 import org.hanbo.mvc.repositories.CommentsRepository;
 import org.hanbo.mvc.services.utilities.CommentsDataModelEntityMapping;
@@ -109,9 +110,9 @@ public class CommentsServiceImpl implements CommentsService
    {
       int adminCommentsPerPageCount = getAdminCommentsCountForDisplay();
       
-      long unapprovedCommentsCount = _commentsRepo.getUnapprovedArticleCommentsCount();
+      long unapprovedCommentsCount = _commentsRepo.getUnapprovedCommentsCount();
       
-      List<VisitorComment> comments = _commentsRepo.getUnapprovedArticleComments(pageIdx,
+      List<VisitorComment> comments = _commentsRepo.getUnapprovedComments(pageIdx,
          adminCommentsPerPageCount);
       
       List<ArticleCommentDataModel> articleComments
@@ -131,6 +132,13 @@ public class CommentsServiceImpl implements CommentsService
 
       ItemListPageDataModel.createEmptyPageDataModel(retVal);
       return retVal;
+   }
+   
+   @Override
+   public UserCommentsPageDataModel getUnapprovedComments(int pageIdx)
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
    
    @Override

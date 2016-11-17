@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hanbo.mvc.entities.VisitorComment;
 import org.hanbo.mvc.models.ArticleCommentDataModel;
+import org.hanbo.mvc.models.VisitorCommentDataModel;
 import org.springframework.util.StringUtils;
 
 public class CommentsDataModelEntityMapping
@@ -14,11 +15,26 @@ public class CommentsDataModelEntityMapping
       if (commentEntity != null)
       {
          ArticleCommentDataModel retVal = new ArticleCommentDataModel();
-        
-         if (commentEntity.getRelatedArticle() != null)
-         {   
-            retVal.setArticleId(commentEntity.getRelatedArticle().getId());
+         VisitorCommentDataModel tempRetVal = toDataModel_UserComment(commentEntity, retVal);
+         if (tempRetVal != null)
+         {
+            retVal = (ArticleCommentDataModel)tempRetVal;
+            if (commentEntity.getRelatedArticle() != null)
+            {   
+               retVal.setArticleId(commentEntity.getRelatedArticle().getId());
+            }
          }
+         
+         return retVal;
+      }
+      
+      return null;
+   }
+
+   public static VisitorCommentDataModel toDataModel_UserComment(VisitorComment commentEntity, VisitorCommentDataModel retVal)
+   {
+      if (commentEntity != null && retVal != null)
+      {
          retVal.setCommentApproved(commentEntity.isCommentApproved());
          retVal.setCommentPrivate(commentEntity.isCommentApproved());
          retVal.setCommentContent(commentEntity.getContent());
@@ -63,6 +79,7 @@ public class CommentsDataModelEntityMapping
       
       return null;
    }
+
    
    public static List<ArticleCommentDataModel> toDataModels_ArticleComments(List<VisitorComment> commentEntities)
    {
@@ -76,6 +93,26 @@ public class CommentsDataModelEntityMapping
             if (dataModel != null)
             {
                retVals.add(dataModel);
+            }
+         }
+      }
+      
+      return retVals;
+   }
+   
+   public static List<VisitorCommentDataModel> toDataModels_UserComments(List<VisitorComment> commentEntities)
+   {
+      List<VisitorCommentDataModel> retVals = new ArrayList<VisitorCommentDataModel>();
+      if (commentEntities != null && commentEntities.size() > 0)
+      {
+         for (VisitorComment commentEntity : commentEntities)
+         {
+            VisitorCommentDataModel dataModel = new VisitorCommentDataModel();
+            VisitorCommentDataModel retValElem = toDataModel_UserComment(commentEntity, dataModel);
+            
+            if (retValElem != null)
+            {
+               retVals.add(retValElem);
             }
          }
       }

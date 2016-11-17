@@ -16,9 +16,9 @@ public interface CommentsRepository
 
    List<VisitorComment> loadArticleViewableComments(String articleId, int maxResultsCount);
    
-   long getUnapprovedArticleCommentsCount();
+   long getUnapprovedCommentsCount();
    
-   List<VisitorComment> getUnapprovedArticleComments(int pageIdx, int maxItemsCount);
+   List<VisitorComment> getUnapprovedComments(int pageIdx, int maxItemsCount);
    
    VisitorComment loadArticleComment(String articleId, String commentId);
    

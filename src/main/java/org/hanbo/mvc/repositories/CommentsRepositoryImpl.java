@@ -194,7 +194,7 @@ public class CommentsRepositoryImpl
       propagation = Propagation.REQUIRED,
       isolation = Isolation.READ_COMMITTED
    )
-   public long getUnapprovedArticleCommentsCount()
+   public long getUnapprovedCommentsCount()
    {
       Session session = _sessionFactory.getCurrentSession();
 
@@ -219,7 +219,7 @@ public class CommentsRepositoryImpl
       propagation = Propagation.REQUIRED,
       isolation = Isolation.READ_COMMITTED
    )
-   public List<VisitorComment> getUnapprovedArticleComments(int pageIdx, int maxItemsCount)
+   public List<VisitorComment> getUnapprovedComments(int pageIdx, int maxItemsCount)
    {
       List<VisitorComment> retVals = new ArrayList<VisitorComment>();
       
