@@ -186,7 +186,8 @@ body {
 }
 .box-comments .comment-text .panelbody-updown-paddingtiny {
     padding-top: 3px;
-    padding-bottom: 3px;    
+    padding-bottom: 3px;
+    margin-bottom: 5px !important;
 }
 .box-comments .username {
     color: #444;

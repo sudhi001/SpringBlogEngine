@@ -160,7 +160,7 @@ var loadArticleComment = function (articleId, parentCommentId, divId, baseUrl) {
               });
               var h3 = $("<h4>", {
                  "class": "margin-updown-tiny"
-              }).append(data.commentTitle);
+              }).append(data.commentTitle)
               var author = $("<strong>");
               if (data.commentUserFullName != null && data.commentUserFullName.length > 0)
               {
@@ -174,12 +174,13 @@ var loadArticleComment = function (articleId, parentCommentId, divId, baseUrl) {
               {
                  author.append(data.commenterName);
               }
+              author.append($("<hr>", { "class": "margin-updown-tiny"}))
               var p = $("<p>", {
                  "class": "margin-updown-tiny"
               }).append(data.commentContent);
               var panelBody = $("<div>", {
                  "class": "panel-body panelbody-updown-paddingtiny"
-              }).append(hidden).append(h3).append(author).append(p);
+              }).append(hidden).append(author).append(h3).append(p);
               var panelDiv = $("<div>", {
                  "class": "panel panel-default"
               }).append(panelBody);
