@@ -180,6 +180,14 @@ body {
     margin-left: 40px;
     color: #555;
 }
+.box-comments .comment-text .margin-updown-tiny {
+    margin-top: 3px;
+    margin-bottom: 3px;    
+}
+.box-comments .comment-text .panelbody-updown-paddingtiny {
+    padding-top: 3px;
+    padding-bottom: 3px;    
+}
 .box-comments .username {
     color: #444;
     display: block;

@@ -110,13 +110,13 @@
    </c:otherwise>
 </c:choose>
                 <span class="text-muted pull-right">${commentItem.getCommentCreateDateString()}</span></span>
-                <hr>
+                <hr class="margin-updown-tiny">
                 <div class="row" id="prevComment_${commentItem.commentId}">
                 </div>
                 <div class="row">
                    <div class="col-xs-12">
-<h4>${commentItem.commentTitle}</h4>
-<p>
+<h4 class="margin-updown-tiny">${commentItem.commentTitle}</h4>
+<p class="margin-updown-tiny">
 ${commentItem.commentContent}
 </p>
                    </div>
