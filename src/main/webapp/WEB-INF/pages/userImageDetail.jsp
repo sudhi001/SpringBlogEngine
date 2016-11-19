@@ -34,24 +34,6 @@
                </c:otherwise>
             </c:choose>
          </p>
-
-         <c:choose>
-            <c:when test="${imageDetail.getImageWidth() > imageDetail.getImageHeight()}">
-              <div class="row">
-                 <div class="col-xs-12 thumbnail">
-                    <img class="img-responsive pad" style="text-align: center;" width="100%" src="${pageContext.request.contextPath}/secure/image-full/${imageDetail.getImageId()}" alt="Photo">
-                 </div>
-              </div>
-            </c:when>
-            <c:otherwise>
-              <div class="row">
-                 <div class="col-xs-8 col-xs-offset-2 thumbnail">
-                    <img class="img-responsive pad" style="text-align: center;" width="100%" src="${pageContext.request.contextPath}/secure/image-full/${imageDetail.getImageId()}" alt="Photo">
-                 </div>
-              </div>
-            </c:otherwise>
-         </c:choose>       
-         
          <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
             <div class="col-xs-12">
                <button class="btn btn-default" id="editImageDetailsBtn" onclick="editImageDetails()">Edit Detail</button>&nbsp;
@@ -68,15 +50,15 @@
                   <input type="hidden" id="imageId" name="imageId" value="${imageDetail.getImageId()}" >
                   <div class="form-group">
                      <label class="col-xs-12 control-label">Title</label>
-			         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-			            <input id="imageTitle" name="imageTitle" class="form-control" value="${imageDetail.getImageTitle()}" />
-			         </div>
+                  <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                     <input id="imageTitle" name="imageTitle" class="form-control" value="${imageDetail.getImageTitle()}" />
+                  </div>
                   </div>
                   <div class="form-group">
                      <label class="col-xs-12 control-label">Keywords</label>
-			         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-			            <input id="imageKeywords" name="imageKeywords" class="form-control" value="${imageDetail.getImageKeywords()}" />
-			         </div>
+                  <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                     <input id="imageKeywords" name="imageKeywords" class="form-control" value="${imageDetail.getImageKeywords()}" />
+                  </div>
                   </div>
                   <div class="checkbox col-xs-12">
                      <label>
@@ -110,10 +92,10 @@
                      </div>
                   </div>
                   <div class="form-group">
-			         <div class="col-xs-12 text-center">
-			            <button type="submit" class="btn btn-success">Save Image Detail</button>&nbsp;
-			            <button type="reset" class="btn btn-default">Clear</button>&nbsp;			            
-			         </div>
+                  <div class="col-xs-12 text-center">
+                     <button type="submit" class="btn btn-success">Save Image Detail</button>&nbsp;
+                     <button type="reset" class="btn btn-default">Clear</button>&nbsp;                   
+                  </div>
                   </div>
                </form>
             </div>
@@ -127,22 +109,22 @@
                   <input type="hidden" id="postImageId" name="postImageId" value="${imageDetail.getImageId()}" >
                   <div class="form-group">
                      <label class="col-xs-3 control-label">Post Title</label>
-			         <div class="col-xs-6">
-			            <input id="blogTitle" name="blogTitle" class="form-control" value="" />
-			         </div>
+                  <div class="col-xs-6">
+                     <input id="blogTitle" name="blogTitle" class="form-control" value="" />
+                  </div>
                   </div>
                   <div class="form-group">
                      <label class="col-xs-3 control-label">Post Keywords</label>
-			         <div class="col-xs-6">
-			            <input id="blogKeywords" name="blogKeywords" class="form-control" value="" />
-			         </div>
+                  <div class="col-xs-6">
+                     <input id="blogKeywords" name="blogKeywords" class="form-control" value="" />
+                  </div>
                   </div>
                   <div class="form-group">
                      <label class="col-xs-3 control-label">Post Content</label>
-			         <div class="col-xs-9">
+                  <div class="col-xs-9">
 <textarea id="blogContent" name="blogContent" class="form-control" rows="8">
 </textarea>
-			         </div>
+                  </div>
                   </div>
                   <div class="row margin-updown" id="imageBlogPostError" style="display: none;">
                      <div class="col-xs-12">
@@ -152,14 +134,30 @@
                      </div>
                   </div>
                   <div class="form-group">
-			         <div class="col-xs-12 text-center">
-			            <button type="submit" class="btn btn-success">Save Post</button>&nbsp;
-			            <button type="reset" class="btn btn-default">Clear</button>&nbsp;			            
-			         </div>
+                  <div class="col-xs-12 text-center">
+                     <button type="submit" class="btn btn-success">Save Post</button>&nbsp;
+                     <button type="reset" class="btn btn-default">Clear</button>&nbsp;                   
+                  </div>
                   </div>
                </form>
             </div>
          </div>
+         <c:choose>
+            <c:when test="${imageDetail.getImageWidth() > imageDetail.getImageHeight()}">
+              <div class="row">
+                 <div class="col-xs-12 thumbnail">
+                    <img class="img-responsive pad" style="text-align: center;" width="100%" src="${pageContext.request.contextPath}/secure/image-full/${imageDetail.getImageId()}" alt="Photo">
+                 </div>
+              </div>
+            </c:when>
+            <c:otherwise>
+              <div class="row">
+                 <div class="col-xs-8 col-xs-offset-2 thumbnail">
+                    <img class="img-responsive pad" style="text-align: center;" width="100%" src="${pageContext.request.contextPath}/secure/image-full/${imageDetail.getImageId()}" alt="Photo">
+                 </div>
+              </div>
+            </c:otherwise>
+         </c:choose>
        </div>
      </div>
   </tiles:putAttribute>
