@@ -161,6 +161,9 @@ var loadArticleComment = function (articleId, parentCommentId, divId, baseUrl) {
               var h3 = $("<h4>", {
                  "class": "margin-updown-tiny"
               }).append(data.commentTitle)
+              var commentDate = $("<span>", { 
+                 "class": "text-muted pull-right"
+              }).append(data.commentUpdateDate);
               var author = $("<strong>");
               if (data.commentUserFullName != null && data.commentUserFullName.length > 0)
               {
@@ -174,6 +177,7 @@ var loadArticleComment = function (articleId, parentCommentId, divId, baseUrl) {
               {
                  author.append(data.commenterName);
               }
+              author.append(commentDate);
               author.append($("<hr>", { "class": "margin-updown-tiny"}))
               var p = $("<p>", {
                  "class": "margin-updown-tiny"
