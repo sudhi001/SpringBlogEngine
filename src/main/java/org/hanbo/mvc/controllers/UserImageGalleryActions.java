@@ -487,6 +487,21 @@ public class UserImageGalleryActions
       }
    }
 
+   @RequestMapping(value = "/galleries/{pageIdx}", method=RequestMethod.GET)
+   public ModelAndView photoGalleries(
+      @PathVariable("pageIdx")
+      int pageIdx
+   )
+   {
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata("My Photos");
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+              "photoGalleries", pageMetadata);
+      //retVal.addObject("imageDetail", imageDetail);
+      
+      return retVal;
+   }
    
    @RequestMapping(value = "/public/image-thumb/{imageId}", method=RequestMethod.GET)
    public void publicImageThumb(
