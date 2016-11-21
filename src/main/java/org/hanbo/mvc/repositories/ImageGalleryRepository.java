@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
+import org.hanbo.mvc.entities.ViewableGallery;
 
 public interface ImageGalleryRepository
 {
@@ -41,4 +42,6 @@ public interface ImageGalleryRepository
    List<Image> findUserImages(String ownerId, String[] searchWords, int pageIdx, int resultsCount);
 
    List<Image> allUserImages(String ownerId, int pageIdx, int resultsCount);
+   
+   List<ViewableGallery> getViewableGalleries(int pageIdx, int itemsPerPage, int maxSampleImagesCount);
 }

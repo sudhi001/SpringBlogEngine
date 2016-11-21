@@ -493,6 +493,8 @@ public class UserImageGalleryActions
       int pageIdx
    )
    {
+      //_imageGalleryService.getViewableGalleries(pageIdx);
+      
       PageMetadata pageMetadata
          = _util.creatPageMetadata("My Photos");
       ModelAndView retVal

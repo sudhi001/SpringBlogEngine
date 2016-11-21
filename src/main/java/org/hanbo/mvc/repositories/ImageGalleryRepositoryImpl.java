@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
 import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
+import org.hanbo.mvc.entities.ViewableGallery;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -469,5 +471,70 @@ public class ImageGalleryRepositoryImpl
       {
          throw new RuntimeException(e); 
       }
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<ViewableGallery> getViewableGalleries(int pageIdx, int itemsPerPage, int maxSampleImagesCount)
+   {
+      Session session = this._sessionFactory.getCurrentSession();
+      
+      Query query = session.createQuery("select gallery from Gallery gallery where gallery.visible = true and gallery.active = true order by galley.updateDate desc")
+         .setFirstResult(pageIdx * itemsPerPage)
+         .setMaxResults(itemsPerPage);
+      List<Gallery> foundObjs = query.list();
+      
+      List<ViewableGallery> retVals = new ArrayList<ViewableGallery>();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         for (Gallery gallery : foundObjs)
+         {
+            if (gallery != null)
+            {
+               String galleryId = gallery.getId();
+               
+               List<Image> sampleImages = 
+               getViewableGalleryImageSamples(session, galleryId, maxSampleImagesCount);
+               
+               if (sampleImages != null && sampleImages.size() > 0)
+               {
+                  ViewableGallery galleryToAdd = new ViewableGallery();
+                  galleryToAdd.setGallery(gallery);
+                  if (galleryToAdd.getSampleImages() == null)
+                  {
+                     galleryToAdd.setSampleImages(new ArrayList<Image>());
+                  }
+                  
+                  galleryToAdd.getSampleImages().addAll(sampleImages);
+                  
+                  retVals.add(galleryToAdd);
+               }
+            }
+         }
+      }
+      
+      return retVals;
+   }
+   
+   private List<Image> getViewableGalleryImageSamples(Session session, String galleryId, int sampleImagesCount)
+   {
+      List<Image> retVals = null;
+      if (session != null && !StringUtils.isEmpty(galleryId) && sampleImagesCount > 0)
+      {
+         Query query = session.createQuery("select image from Gallery gallery join gallery.galleryImages image"
+            + " where gallery.id = :galleryId and image.active = true order by image.uploadDate desc");
+         
+         retVals = query.list();
+         if (retVals != null && retVals.size() > 0)
+         {
+            return retVals;
+         }
+      }
+      
+      retVals = new ArrayList<Image>();
+      return retVals;
    }
 }

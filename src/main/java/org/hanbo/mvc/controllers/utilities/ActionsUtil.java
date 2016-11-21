@@ -1,6 +1,5 @@
 package org.hanbo.mvc.controllers.utilities;
 
-import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.springframework.security.core.Authentication;

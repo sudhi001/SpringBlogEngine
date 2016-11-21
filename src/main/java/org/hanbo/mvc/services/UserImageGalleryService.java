@@ -7,6 +7,7 @@ import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
 import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.hanbo.mvc.models.ImageSizeDataModel;
+import org.hanbo.mvc.models.ViewableGalleriesPageDataModel;
 import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,4 +45,6 @@ public interface UserImageGalleryService
    List<SearchUserPhotoResponse> findUserPhotos(String ownerId, String searchWords, int pageIdx);
 
    List<SearchUserPhotoResponse> allUserImagesJson(String ownerId, int pageIdx);
+   
+   ViewableGalleriesPageDataModel getViewableGalleries(int pageIdx);
 }

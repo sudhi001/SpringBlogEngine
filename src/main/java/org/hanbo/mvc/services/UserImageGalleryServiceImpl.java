@@ -18,6 +18,7 @@ import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.hanbo.mvc.models.ImageSizeDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
+import org.hanbo.mvc.models.ViewableGalleriesPageDataModel;
 import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 import org.hanbo.mvc.repositories.ImageGalleryRepository;
 import org.hanbo.mvc.repositories.UsersRepository;
@@ -615,6 +616,12 @@ public class UserImageGalleryServiceImpl
       }
       
       return retVals;
+   }
+   
+   @Override
+   public ViewableGalleriesPageDataModel getViewableGalleries(int pageIdx)
+   {
+      return null;
    }
    
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
