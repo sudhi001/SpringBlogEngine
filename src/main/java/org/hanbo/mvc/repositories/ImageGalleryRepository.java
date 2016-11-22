@@ -43,5 +43,7 @@ public interface ImageGalleryRepository
 
    List<Image> allUserImages(String ownerId, int pageIdx, int resultsCount);
    
+   long getViewableGalleriesCount();
+   
    List<ViewableGallery> getViewableGalleries(int pageIdx, int itemsPerPage, int maxSampleImagesCount);
 }

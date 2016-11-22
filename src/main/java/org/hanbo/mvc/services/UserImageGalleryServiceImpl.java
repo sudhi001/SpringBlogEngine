@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
 import org.hanbo.mvc.entities.LoginUser;
+import org.hanbo.mvc.entities.ViewableGallery;
 import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.GalleryDisplayDetail;
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
@@ -19,6 +20,7 @@ import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.hanbo.mvc.models.ImageSizeDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.ViewableGalleriesPageDataModel;
+import org.hanbo.mvc.models.ViewableGalleryDisplayDetail;
 import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 import org.hanbo.mvc.repositories.ImageGalleryRepository;
 import org.hanbo.mvc.repositories.UsersRepository;
@@ -621,7 +623,27 @@ public class UserImageGalleryServiceImpl
    @Override
    public ViewableGalleriesPageDataModel getViewableGalleries(int pageIdx)
    {
-      return null;
+      int viewableGalleriesPerPage = getConfigValue_ViewableGalleriesPerPage();
+      int imagesPerGallery = getConfigValue_ImagesPerGallery();
+      
+      long viewableGalleriesCount = this._imageGalleryRepo.getViewableGalleriesCount();
+      
+      List<ViewableGallery> viewableGalleries
+         = this._imageGalleryRepo.getViewableGalleries(pageIdx, viewableGalleriesPerPage, imagesPerGallery);
+      
+      ViewableGalleriesPageDataModel retVal
+         = new ViewableGalleriesPageDataModel();
+      if (viewableGalleries != null && viewableGalleries.size() > 0)
+      {
+         List<ViewableGalleryDisplayDetail> galleryDetails
+            = ImageDataModelEntityMapping.entitiesToGalleryDetails(viewableGalleries);
+         
+         retVal.setGalleryList(galleryDetails);
+         ItemListPageDataModel.createPageModel(retVal, viewableGalleries.size(), (int)viewableGalleriesCount, pageIdx, viewableGalleriesPerPage);
+      }
+      
+      ItemListPageDataModel.createEmptyPageDataModel(retVal);
+      return retVal;
    }
    
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
@@ -758,6 +780,22 @@ public class UserImageGalleryServiceImpl
    private int getConfigValue_FindOwnerPhotosPerPage()
    {
       String itemsCount = configValues.getProperty("OwnerFindPhotosPerPage");
+      int itemsCountVal = Integer.parseInt(itemsCount);
+
+      return itemsCountVal;
+   }
+   
+   private int getConfigValue_ViewableGalleriesPerPage()
+   {
+      String itemsCount = configValues.getProperty("viewableGalleriesPerPage");
+      int itemsCountVal = Integer.parseInt(itemsCount);
+
+      return itemsCountVal;
+   }
+   
+   private int getConfigValue_ImagesPerGallery()
+   {
+      String itemsCount = configValues.getProperty("imagesPerGallery");
       int itemsCountVal = Integer.parseInt(itemsCount);
 
       return itemsCountVal;

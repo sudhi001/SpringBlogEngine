@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
+import org.hanbo.mvc.entities.ViewableGallery;
 import org.hanbo.mvc.models.GalleryDisplayDetail;
 import org.hanbo.mvc.models.ImageDisplayDetail;
+import org.hanbo.mvc.models.ViewableGalleriesPageDataModel;
+import org.hanbo.mvc.models.ViewableGalleryDisplayDetail;
 import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 
 public class ImageDataModelEntityMapping
@@ -96,6 +99,85 @@ public class ImageDataModelEntityMapping
          }
       }
       
+      return retVals;
+   }
+   
+   public static ViewableGalleryDisplayDetail entityToGalleryDetail(ViewableGallery gallery)
+   {
+      if (gallery != null)
+      {
+         ViewableGalleryDisplayDetail retVal = new ViewableGalleryDisplayDetail();
+         
+         if (gallery.getGallery() != null)
+         {
+            retVal.setGalleryId(gallery.getGallery().getId());
+            retVal.setGalleryDescription(gallery.getGallery().getGalleryDescription());
+            retVal.setCreateDate(gallery.getGallery().getCreateDate());
+            retVal.setUpdateDate(gallery.getGallery().getUpdateDate());
+            retVal.setGalleryKeywords(gallery.getGallery().getGalleryKeywords());
+            retVal.setGalleryTitle(gallery.getGallery().getGalleryTitle());
+            retVal.setGalleryActive(gallery.getGallery().isActive());
+            retVal.setGalleryVisible(gallery.getGallery().isVisible());
+            retVal.setOwnerId(gallery.getGallery().getOwner().getId());
+            retVal.setOwnerName(gallery.getGallery().getOwner().getUserName());
+            
+            if (gallery.getSampleImages() != null)
+            {
+               for (Image image : gallery.getSampleImages())
+               {
+                  if (image != null)
+                  {
+                     ImageDisplayDetail imageDD = new ImageDisplayDetail();
+                     imageDD.setImageId(image.getId());
+                     imageDD.setImageTitle(image.getImageTitle());
+                     imageDD.setImageKeywords(image.getImageKeywords());
+                     imageDD.setUpdloadDate(image.getUploadDate());
+                     imageDD.setImageActive(image.isActive());
+                     imageDD.setImageNotSafeForWork(image.isNotSafeForWork());
+                     imageDD.setImageFilePath(image.getFilePath());
+                     imageDD.setImageThumbFilePath(image.getThumbnailFilePath());
+                     imageDD.setOwnerId(image.getOwner().getId());
+                     imageDD.setOwnerUserName(image.getOwner().getUserName());
+                     imageDD.setImageWidth(image.getFileSizeX());
+                     imageDD.setImageHeight(image.getFileSizeY());
+                     imageDD.setImageDisplayWidth(0);
+                     imageDD.setImageDisplayHeight(0);
+                     
+                     if (retVal.getSampleImages() == null)
+                     {
+                        retVal.setSampleImages(new ArrayList<ImageDisplayDetail>());
+                     }
+                     
+                     retVal.getSampleImages().add(imageDD);
+                  }
+               }
+            }
+            
+            return retVal;
+         }
+      }
+      
+      return null;
+   }
+   
+   public static List<ViewableGalleryDisplayDetail> entitiesToGalleryDetails(List<ViewableGallery> galleries)
+   {
+      List<ViewableGalleryDisplayDetail> retVals = new ArrayList<ViewableGalleryDisplayDetail>();
+      if (galleries != null)
+      {
+         for (ViewableGallery gallery : galleries)
+         {
+            if (gallery != null)
+            {
+               ViewableGalleryDisplayDetail galleryDisplay = entityToGalleryDetail(gallery);
+               if (galleryDisplay != null)
+               {
+                  retVals.add(galleryDisplay);
+               }
+            }
+         }
+      }
+         
       return retVals;
    }
 

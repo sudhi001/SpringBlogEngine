@@ -519,6 +519,27 @@ public class ImageGalleryRepositoryImpl
       return retVals;
    }
    
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public long getViewableGalleriesCount()
+   {
+      Session session = this._sessionFactory.getCurrentSession();
+      
+      Query query = session.createQuery("select count(gallery) from Gallery gallery where gallery.visible = true and gallery.active = true")
+         .setFirstResult(0)
+         .setMaxResults(1);
+      List<Long> foundObjs = query.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         return foundObjs.get(0);
+      }
+
+      return 0L;
+   }
+   
    private List<Image> getViewableGalleryImageSamples(Session session, String galleryId, int sampleImagesCount)
    {
       List<Image> retVals = null;
