@@ -7,6 +7,16 @@
   </tiles:putAttribute>
   
   <tiles:putAttribute name="body">
+    <h3>${pageMetadata.pageTitle}</h3>
+    <hr>
+    <c:choose>
+      <c:when test="${galleriesList != null && !galleriesList.isDataModelEmpty}">
+      </c:when>
+      <c:otherwise>
+         <p>No gallery available.</p>
+      </c:otherwise>
+    </c:choose>
+    Nothing
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">

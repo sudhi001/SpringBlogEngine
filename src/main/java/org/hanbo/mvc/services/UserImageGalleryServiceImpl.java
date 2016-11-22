@@ -639,7 +639,11 @@ public class UserImageGalleryServiceImpl
             = ImageDataModelEntityMapping.entitiesToGalleryDetails(viewableGalleries);
          
          retVal.setGalleryList(galleryDetails);
-         ItemListPageDataModel.createPageModel(retVal, viewableGalleries.size(), (int)viewableGalleriesCount, pageIdx, viewableGalleriesPerPage);
+         ItemListPageDataModel.createPageModel(retVal,
+            viewableGalleries.size(),
+            (int)viewableGalleriesCount,
+            pageIdx, viewableGalleriesPerPage);
+         return retVal;
       }
       
       ItemListPageDataModel.createEmptyPageDataModel(retVal);

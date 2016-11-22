@@ -11,6 +11,7 @@ import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.ViewableGalleriesPageDataModel;
 import org.hanbo.mvc.models.json.GenericJsonResponse;
 import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 import org.hanbo.mvc.services.UserImageGalleryService;
@@ -493,16 +494,25 @@ public class UserImageGalleryActions
       int pageIdx
    )
    {
-      //_imageGalleryService.getViewableGalleries(pageIdx);
+      ViewableGalleriesPageDataModel galleriesPage
+         = _imageGalleryService.getViewableGalleries(pageIdx);
       
-      PageMetadata pageMetadata
-         = _util.creatPageMetadata("My Photos");
-      ModelAndView retVal
-         = _util.getDefaultModelAndView(
-              "photoGalleries", pageMetadata);
-      //retVal.addObject("imageDetail", imageDetail);
-      
-      return retVal;
+      if (galleriesPage != null)
+      {
+         PageMetadata pageMetadata
+            = _util.creatPageMetadata("My Photos");
+         ModelAndView retVal
+            = _util.getDefaultModelAndView(
+                 "photoGalleries", pageMetadata);
+         retVal.addObject("galleriesList", galleriesPage);
+         return retVal;
+      }
+      else
+      {
+         ModelAndView retVal =
+            _util.createErorrPageViewModel("Error occurred", "Some error has occurred when loading the galleries page.");
+         return retVal;
+      }
    }
    
    @RequestMapping(value = "/public/image-thumb/{imageId}", method=RequestMethod.GET)
