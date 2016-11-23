@@ -482,7 +482,7 @@ public class ImageGalleryRepositoryImpl
    {
       Session session = this._sessionFactory.getCurrentSession();
       
-      Query query = session.createQuery("select gallery from Gallery gallery where gallery.visible = true and gallery.active = true order by galley.updateDate desc")
+      Query query = session.createQuery("select gallery from Gallery gallery where gallery.visible = true and gallery.active = true order by gallery.updateDate desc")
          .setFirstResult(pageIdx * itemsPerPage)
          .setMaxResults(itemsPerPage);
       List<Gallery> foundObjs = query.list();
@@ -494,6 +494,12 @@ public class ImageGalleryRepositoryImpl
          {
             if (gallery != null)
             {
+               if (gallery.getOwner() != null)
+               {
+                  gallery.getOwner().getId();
+                  gallery.getOwner().getUserName();
+               }
+               
                String galleryId = gallery.getId();
                
                List<Image> sampleImages = 
@@ -546,11 +552,23 @@ public class ImageGalleryRepositoryImpl
       if (session != null && !StringUtils.isEmpty(galleryId) && sampleImagesCount > 0)
       {
          Query query = session.createQuery("select image from Gallery gallery join gallery.galleryImages image"
-            + " where gallery.id = :galleryId and image.active = true order by image.uploadDate desc");
+            + " where gallery.id = :galleryId and image.active = true order by image.uploadDate desc")
+            .setParameter("galleryId", galleryId)
+            .setFirstResult(0)
+            .setMaxResults(sampleImagesCount);
          
          retVals = query.list();
          if (retVals != null && retVals.size() > 0)
          {
+            for (Image image : retVals)
+            {
+               if (image != null && image.getOwner() != null)
+               {
+                  image.getOwner().getId();
+                  image.getOwner().getUserName();
+               }
+            }
+            
             return retVals;
          }
       }
