@@ -20,6 +20,7 @@
                   <hr class="photogalleries-hr">
                   <div class="row">
                      <div class="col-xs-12">
+                        <p><strong>Last Modified: </strong> ${galleryDetail.getUpdateDateString()}</p>
                         <strong>Description</strong>
                         <p>${galleryDetail.getGalleryDescription()}</p>
                      </div>
@@ -41,13 +42,31 @@
                            </div>
                         </c:when>
                         <c:otherwise>
-                           <p>No images available.</p>
+                           <div class="col-xs-12">
+                              <div class="warning-block">
+                                 No images available.
+                              </div>
+                           </div>
                         </c:otherwise>                        
                      </c:choose>
                    </div>
                 </div>
             </div>
          </c:forEach>
+         <div class="row">
+            <div class="col-xs-12 text-center">
+               <nav aria-label="page-nav">
+                  <ul class="pager">
+                     <li>
+                        <c:if test="${galleriesList.isCanGoBack()}"><a href="${pageContext.request.contextPath}/galleries/${galleriesList.getPreviousPageIdx()}">Prev</a></c:if>
+                     </li>
+                     <li>
+                        <c:if test="${galleriesList.isHasMoreElement()}"><a href="${pageContext.request.contextPath}/galleries/${galleriesList.getNextPageIdx()}">Next</a></c:if>
+                     </li>
+                  </ul>
+               </nav>
+            </div>
+         </div>
       </c:when>
       <c:otherwise>
          <p>No gallery available.</p>

@@ -502,22 +502,23 @@ public class ImageGalleryRepositoryImpl
                
                String galleryId = gallery.getId();
                
+               ViewableGallery galleryToAdd = new ViewableGallery();
+               galleryToAdd.setGallery(gallery);
+               
                List<Image> sampleImages = 
                getViewableGalleryImageSamples(session, galleryId, maxSampleImagesCount);
                
                if (sampleImages != null && sampleImages.size() > 0)
                {
-                  ViewableGallery galleryToAdd = new ViewableGallery();
-                  galleryToAdd.setGallery(gallery);
                   if (galleryToAdd.getSampleImages() == null)
                   {
                      galleryToAdd.setSampleImages(new ArrayList<Image>());
                   }
                   
                   galleryToAdd.getSampleImages().addAll(sampleImages);
-                  
-                  retVals.add(galleryToAdd);
                }
+               
+               retVals.add(galleryToAdd);
             }
          }
       }
