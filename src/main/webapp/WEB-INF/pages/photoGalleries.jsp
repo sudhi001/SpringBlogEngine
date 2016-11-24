@@ -30,7 +30,7 @@
                            <c:forEach items="${galleryDetail.getSampleImages()}" var="imageDetail">
                               <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                  <div class="thumbnail gallery-image">
-                                    <a href="${pageContext.request.contextPath}/public/image/${imageDetail.imageId}">
+                                    <a href="#" onclick="viewImage('${pageContext.request.contextPath}/public/image/${imageDetail.imageId}', ${imageDetail.imageWidth}, ${imageDetail.imageHeight})">
                                        <img style="img-responsive" src="${pageContext.request.contextPath}/public/image-thumb/${imageDetail.imageId}" width="100%">
                                     </a>
                                  </div>
