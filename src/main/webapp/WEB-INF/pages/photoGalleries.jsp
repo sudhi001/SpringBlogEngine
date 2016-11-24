@@ -44,7 +44,7 @@
                         <c:otherwise>
                            <div class="col-xs-12">
                               <div class="warning-block">
-                                 No images available.
+                                 No images available. Need to make this gallery invisible.
                               </div>
                            </div>
                         </c:otherwise>                        

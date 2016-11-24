@@ -49,6 +49,7 @@ public class ImageGalleryRepositoryImpl
          associatedGallery.getAssociatedImages().add(image);
       }
       
+      associatedGallery.setUpdateDate(new Date());
       session.update(associatedGallery);
    }
    
