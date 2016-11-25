@@ -17,6 +17,7 @@ import org.hanbo.mvc.models.GalleryDisplayDetail;
 import org.hanbo.mvc.models.GalleryDisplayPageDataModel;
 import org.hanbo.mvc.models.GalleryImagesPageDisplayDataModel;
 import org.hanbo.mvc.models.ImageDisplayDetail;
+import org.hanbo.mvc.models.ImageDisplayPageDataModel;
 import org.hanbo.mvc.models.ImageSizeDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.ViewableGalleriesPageDataModel;
@@ -660,10 +661,35 @@ public class UserImageGalleryServiceImpl
       ViewableGallery viewableGallery = 
          this._imageGalleryRepo.getViewableGalleryAndImages(galleryId, pageIdx, imagesPerPage);
       
-      //if (viewableGallery != null)
-      //{
+      if (viewableGallery != null)
+      {
+         ViewableGalleryDisplayDetail galleryToView =
+            ImageDataModelEntityMapping.entityToGalleryDetail(viewableGallery);
          
-      //}
+         if (galleryToView != null)
+         {
+            if (galleryToView.getSampleImages() != null
+               && galleryToView.getSampleImages().size() > 0)
+            {
+               ImageDisplayPageDataModel imagesPage = new ImageDisplayPageDataModel();
+               imagesPage.setListItems(galleryToView.getSampleImages());
+               
+               ItemListPageDataModel.setCurrentPageModel(imagesPage, pageIdx,
+                  imagesPerPage, galleryToView.getSampleImages().size(),
+                  (int)viewableImagesInGalleryCount);
+               galleryToView.setSampleImagesDisplayPage(imagesPage);
+            }
+            else
+            {
+               ImageDisplayPageDataModel imagesPage = new ImageDisplayPageDataModel();
+               imagesPage.setListItems(new ArrayList<ImageDisplayDetail>());
+               ItemListPageDataModel.createEmptyPageDataModel(imagesPage);
+               galleryToView.setSampleImagesDisplayPage(imagesPage);
+            }
+            
+            return galleryToView;
+         }
+      }
       
       return null;
    }

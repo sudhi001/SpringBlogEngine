@@ -523,17 +523,17 @@ public class UserImageGalleryActions
       int pageIdx
    )
    {
-      ViewableGalleryDisplayDetail viewableGallery 
+      ViewableGalleryDisplayDetail galleryImagesPage 
          = _imageGalleryService.getViewableGallery(galleryId, pageIdx);
       
-      if (viewableGallery != null)
+      if (galleryImagesPage != null)
       {
          PageMetadata pageMetadata
-            = _util.creatPageMetadata(viewableGallery.getGalleryTitle());
+            = _util.creatPageMetadata(galleryImagesPage.getGalleryTitle());
          ModelAndView retVal
             = _util.getDefaultModelAndView(
                  "photoGallery", pageMetadata);
-         //retVal.addObject("galleriesList", galleriesPage);
+         retVal.addObject("galleryImagesPage", galleryImagesPage);
          return retVal;
       }
       else

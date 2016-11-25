@@ -8,6 +8,8 @@ public class ViewableGalleryDisplayDetail
 {
    private List<ImageDisplayDetail> sampleImages;
    
+   private ImageDisplayPageDataModel sampleImagesDisplayPage;
+   
    public ViewableGalleryDisplayDetail()
    {
       super();
@@ -22,5 +24,15 @@ public class ViewableGalleryDisplayDetail
    public void setSampleImages(List<ImageDisplayDetail> sampleImages)
    {
       this.sampleImages = sampleImages;
+   }
+
+   public ImageDisplayPageDataModel getSampleImagesDisplayPage()
+   {
+      return sampleImagesDisplayPage;
+   }
+
+   public void setSampleImagesDisplayPage(ImageDisplayPageDataModel sampleImagesDisplayPage)
+   {
+      this.sampleImagesDisplayPage = sampleImagesDisplayPage;
    }
 }
