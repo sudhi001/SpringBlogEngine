@@ -650,6 +650,24 @@ public class UserImageGalleryServiceImpl
       return retVal;
    }
    
+   @Override
+   public ViewableGalleryDisplayDetail getViewableGallery(String galleryId, int pageIdx)
+   {
+      int imagesPerPage = getConfigValue_ViewableImagesPerPage();
+      
+      long viewableImagesInGalleryCount = this._imageGalleryRepo.getViewableImagesInGalleryCount(galleryId);
+      
+      ViewableGallery viewableGallery = 
+         this._imageGalleryRepo.getViewableGalleryAndImages(galleryId, pageIdx, imagesPerPage);
+      
+      //if (viewableGallery != null)
+      //{
+         
+      //}
+      
+      return null;
+   }
+   
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
    {
       if (StringUtils.isEmpty(galleryTitle))
@@ -800,6 +818,14 @@ public class UserImageGalleryServiceImpl
    private int getConfigValue_ImagesPerGallery()
    {
       String itemsCount = configValues.getProperty("imagesPerGallery");
+      int itemsCountVal = Integer.parseInt(itemsCount);
+
+      return itemsCountVal;
+   }
+   
+   private int getConfigValue_ViewableImagesPerPage()
+   {
+      String itemsCount = configValues.getProperty("viewableImagesPerPage");
       int itemsCountVal = Integer.parseInt(itemsCount);
 
       return itemsCountVal;

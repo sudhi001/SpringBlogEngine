@@ -25,6 +25,12 @@ public class GalleryDisplayDetail
    private String ownerName;
    
    private String ownerId;
+   
+   private String ownerProfileId;
+   
+   private String ownerUserFullName;
+   
+   private String ownerIconFileId;
 
    public String getGalleryId()
    {
@@ -134,5 +140,35 @@ public class GalleryDisplayDetail
    public void setGalleryActive(boolean galleryActive)
    {
       this.galleryActive = galleryActive;
+   }
+   
+   public String getOwnerProfileId()
+   {
+      return ownerProfileId;
+   }
+
+   public void setOwnerProfileId(String ownerProfileId)
+   {
+      this.ownerProfileId = ownerProfileId;
+   }
+
+   public String getOwnerUserFullName()
+   {
+      return ownerUserFullName;
+   }
+
+   public void setOwnerUserFullName(String ownerUserFullName)
+   {
+      this.ownerUserFullName = ownerUserFullName;
+   }
+
+   public String getOwnerIconFileId()
+   {
+      return ownerIconFileId;
+   }
+
+   public void setOwnerIconFileId(String ownerIconFileId)
+   {
+      this.ownerIconFileId = ownerIconFileId;
    }
 }

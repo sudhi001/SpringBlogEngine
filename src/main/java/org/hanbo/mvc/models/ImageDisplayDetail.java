@@ -34,6 +34,12 @@ public class ImageDisplayDetail
    
    private String ownerUserName;
 
+   private String ownerProfileId;
+   
+   private String ownerUserFullName;
+   
+   private String ownerIconFileId;
+
    public String getImageId()
    {
       return imageId;
@@ -177,5 +183,35 @@ public class ImageDisplayDetail
    public void setImageDisplayHeight(int imageDisplayHeight)
    {
       this.imageDisplayHeight = imageDisplayHeight;
+   }
+
+   public String getOwnerProfileId()
+   {
+      return ownerProfileId;
+   }
+
+   public void setOwnerProfileId(String ownerProfileId)
+   {
+      this.ownerProfileId = ownerProfileId;
+   }
+
+   public String getOwnerUserFullName()
+   {
+      return ownerUserFullName;
+   }
+
+   public void setOwnerUserFullName(String ownerUserFullName)
+   {
+      this.ownerUserFullName = ownerUserFullName;
+   }
+
+   public String getOwnerIconFileId()
+   {
+      return ownerIconFileId;
+   }
+
+   public void setOwnerIconFileId(String ownerIconFileId)
+   {
+      this.ownerIconFileId = ownerIconFileId;
    }
 }

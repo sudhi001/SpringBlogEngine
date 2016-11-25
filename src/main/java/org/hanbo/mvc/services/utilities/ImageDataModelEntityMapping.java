@@ -118,8 +118,21 @@ public class ImageDataModelEntityMapping
             retVal.setGalleryTitle(gallery.getGallery().getGalleryTitle());
             retVal.setGalleryActive(gallery.getGallery().isActive());
             retVal.setGalleryVisible(gallery.getGallery().isVisible());
-            retVal.setOwnerId(gallery.getGallery().getOwner().getId());
-            retVal.setOwnerName(gallery.getGallery().getOwner().getUserName());
+            if (gallery.getGallery().getOwner() != null)
+            {
+               retVal.setOwnerId(gallery.getGallery().getOwner().getId());
+               retVal.setOwnerName(gallery.getGallery().getOwner().getUserName());
+            }
+            
+            if (gallery.getGallery().getOwner().getUserProfile() != null)
+            {
+               retVal.setOwnerProfileId(gallery.getGallery().getOwner().getUserProfile().getId());
+               retVal.setOwnerUserFullName(String.format("%s %s", gallery.getGallery().getOwner().getUserProfile().getFirstName(), gallery.getGallery().getOwner().getUserProfile().getLastName()));
+               if (gallery.getGallery().getOwner().getUserProfile().getUserIcon() != null)
+               {
+                  retVal.setOwnerIconFileId(gallery.getGallery().getOwner().getUserProfile().getUserIcon().getId());
+               }
+            }
             
             if (gallery.getSampleImages() != null)
             {
@@ -142,6 +155,21 @@ public class ImageDataModelEntityMapping
                      imageDD.setImageHeight(image.getFileSizeY());
                      imageDD.setImageDisplayWidth(0);
                      imageDD.setImageDisplayHeight(0);
+                     
+                     if (image.getOwner() != null)
+                     {
+                        imageDD.setOwnerId(image.getOwner().getId());
+                        imageDD.setOwnerUserName(image.getOwner().getUserName());
+                        if (image.getOwner().getUserProfile() != null)
+                        {
+                           imageDD.setOwnerProfileId(image.getOwner().getUserProfile().getId());
+                           imageDD.setOwnerUserFullName(String.format("%s %s", image.getOwner().getUserProfile().getLastName(), image.getOwner().getUserProfile().getFirstName()));
+                           if (image.getOwner().getUserProfile().getUserIcon() != null)
+                           {
+                              imageDD.setOwnerIconFileId(image.getOwner().getUserProfile().getUserIcon().getId());
+                           }
+                        }
+                     }
                      
                      if (retVal.getSampleImages() == null)
                      {

@@ -7,8 +7,11 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
+import org.hanbo.mvc.entities.FileResource;
 import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
+import org.hanbo.mvc.entities.LoginUser;
+import org.hanbo.mvc.entities.UserProfile;
 import org.hanbo.mvc.entities.ViewableGallery;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -548,6 +551,82 @@ public class ImageGalleryRepositoryImpl
       return 0L;
    }
    
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public long getViewableImagesInGalleryCount(String galleryId)
+   {
+      Session session = this._sessionFactory.getCurrentSession();
+      
+      Query query = session.createQuery("select count(image) from Gallery gallery join gallery.galleryImages image"
+            + " where gallery.id = :galleryId and image.active = true order by image.uploadDate desc")
+         .setParameter("galleryId", galleryId)
+         .setFirstResult(0)
+         .setMaxResults(1);
+      List<Long> foundObjs = query.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         return foundObjs.get(0);
+      }
+
+      return 0L;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public ViewableGallery getViewableGalleryAndImages(String galleryId, int pageIdx, int maxImgsPerPage)
+   {
+      Session session = this._sessionFactory.getCurrentSession();
+      ViewableGallery retVal = new ViewableGallery();
+      
+      Query query = session.createQuery("select gallery from Gallery gallery where gallery.id = :galleryId "
+         + "and gallery.visible = true and gallery.active = true")
+         .setParameter("galleryId", galleryId)
+         .setMaxResults(1);
+      List<Gallery> foundObjs = query.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         Gallery foundObj = foundObjs.get(0);
+         if (foundObj != null)
+         {
+            loadGalleryUserProfile(foundObj);
+            retVal.setGallery(foundObj);
+            
+            String foundGalId = foundObj.getId();
+            Query newQuery = session.createQuery("select image from Gallery gallery join gallery.galleryImages image"
+               + " where gallery.id = :galleryId and image.active = true order by image.uploadDate desc")
+               .setParameter("galleryId", foundGalId)
+               .setFirstResult(pageIdx * maxImgsPerPage)
+               .setMaxResults(maxImgsPerPage);
+            
+            List<Image> foundImgs = newQuery.list();
+            if (foundImgs != null && foundImgs.size() > 0)
+            {
+               for (Image foundImg : foundImgs)
+               {
+                  loadImageUserProfile(foundImg);
+                  
+                  if (retVal.getSampleImages() == null)
+                  {
+                     retVal.setSampleImages(new ArrayList<Image>());
+                  }
+                  
+                  retVal.getSampleImages().add(foundImg);
+               }
+            }
+           
+            return retVal;
+         }
+      }
+
+      return null;
+   }
+   
    private List<Image> getViewableGalleryImageSamples(Session session, String galleryId, int sampleImagesCount)
    {
       List<Image> retVals = null;
@@ -577,5 +656,62 @@ public class ImageGalleryRepositoryImpl
       
       retVals = new ArrayList<Image>();
       return retVals;
+   }
+   
+   
+   private void loadGalleryUserProfile(Gallery gallery)
+   {
+      if (gallery != null)
+      {
+         LoginUser owner = gallery.getOwner();
+         if (owner != null)
+         {
+            owner.getId();
+            owner.getUserName();
+            owner.getUserEmail();
+            
+            UserProfile userProfile = owner.getUserProfile();
+            if (userProfile != null)
+            {
+               userProfile.getFirstName();
+               userProfile.getLastName();
+               userProfile.getId();
+               
+               FileResource userIcon = userProfile.getUserIcon();
+               if (userIcon != null)
+               {
+                  userIcon.getId();
+               }
+            }
+         }
+      }
+   }
+   
+   private void loadImageUserProfile(Image image)
+   {
+      if (image != null)
+      {
+         LoginUser owner = image.getOwner();
+         if (owner != null)
+         {
+            owner.getId();
+            owner.getUserName();
+            owner.getUserEmail();
+            
+            UserProfile userProfile = owner.getUserProfile();
+            if (userProfile != null)
+            {
+               userProfile.getFirstName();
+               userProfile.getLastName();
+               userProfile.getId();
+               
+               FileResource userIcon = userProfile.getUserIcon();
+               if (userIcon != null)
+               {
+                  userIcon.getId();
+               }
+            }
+         }
+      }
    }
 }

@@ -12,6 +12,7 @@ import org.hanbo.mvc.models.ImageDisplayDetail;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.ViewableGalleriesPageDataModel;
+import org.hanbo.mvc.models.ViewableGalleryDisplayDetail;
 import org.hanbo.mvc.models.json.GenericJsonResponse;
 import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 import org.hanbo.mvc.services.UserImageGalleryService;
@@ -441,7 +442,6 @@ public class UserImageGalleryActions
          );
       }
    }
-   
 
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/images/findImages", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -514,6 +514,37 @@ public class UserImageGalleryActions
          return retVal;
       }
    }
+   
+   @RequestMapping(value = "/gallery/{galleryId}/page/{pageIdx}", method=RequestMethod.GET)
+   public ModelAndView photoGalleries(
+      @PathVariable("galleryId")
+      String galleryId,
+      @PathVariable("pageIdx")
+      int pageIdx
+   )
+   {
+      ViewableGalleryDisplayDetail viewableGallery 
+         = _imageGalleryService.getViewableGallery(galleryId, pageIdx);
+      
+      if (viewableGallery != null)
+      {
+         PageMetadata pageMetadata
+            = _util.creatPageMetadata(viewableGallery.getGalleryTitle());
+         ModelAndView retVal
+            = _util.getDefaultModelAndView(
+                 "photoGallery", pageMetadata);
+         //retVal.addObject("galleriesList", galleriesPage);
+         return retVal;
+      }
+      else
+      {
+         ModelAndView retVal =
+            _util.createErorrPageViewModel("Error occurred", "Some error has occurred when loading the photo gallery page.");
+         return retVal;
+      }
+   }
+   
+   
    
    @RequestMapping(value = "/public/image-thumb/{imageId}", method=RequestMethod.GET)
    public void publicImageThumb(
