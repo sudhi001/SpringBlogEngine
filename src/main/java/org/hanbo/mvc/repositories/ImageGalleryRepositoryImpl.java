@@ -498,12 +498,7 @@ public class ImageGalleryRepositoryImpl
          {
             if (gallery != null)
             {
-               if (gallery.getOwner() != null)
-               {
-                  gallery.getOwner().getId();
-                  gallery.getOwner().getUserName();
-               }
-               
+               loadGalleryUserProfile(gallery);
                String galleryId = gallery.getId();
                
                ViewableGallery galleryToAdd = new ViewableGallery();
@@ -514,12 +509,17 @@ public class ImageGalleryRepositoryImpl
                
                if (sampleImages != null && sampleImages.size() > 0)
                {
-                  if (galleryToAdd.getSampleImages() == null)
+                  for (Image img : sampleImages)
                   {
-                     galleryToAdd.setSampleImages(new ArrayList<Image>());
+                     loadImageUserProfile(img);
+                     
+                     if (galleryToAdd.getSampleImages() == null)
+                     {
+                        galleryToAdd.setSampleImages(new ArrayList<Image>());
+                     }
+                     
+                     galleryToAdd.getSampleImages().add(img);
                   }
-                  
-                  galleryToAdd.getSampleImages().addAll(sampleImages);
                }
                
                retVals.add(galleryToAdd);
