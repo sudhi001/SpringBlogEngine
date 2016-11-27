@@ -694,6 +694,23 @@ public class UserImageGalleryServiceImpl
       return null;
    }
    
+   @Override
+   public ImageDisplayDetail getViewableImageDetail(String imageId)
+   {
+      if (!StringUtils.isEmpty(imageId))
+      {
+         Image imageToView = this._imageGalleryRepo.getImage(imageId);
+         
+         if (imageToView != null)
+         {
+            ImageDisplayDetail retVal
+               = ImageDataModelEntityMapping.entityToImageDisplayDetail(imageToView);
+         }
+      }
+      
+      return null;
+   }
+   
    private void validateGalleryData(String galleryTitle, String galleryKeywords, String galleryDesc)
    {
       if (StringUtils.isEmpty(galleryTitle))

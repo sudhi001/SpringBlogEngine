@@ -3,8 +3,8 @@
 
 <tiles:insertDefinition name="defaultTemplate">
   <tiles:putAttribute name="cssContent">
-     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe.css">
-     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/photo-swipe/default-skin/default-skin.css">
+     <!-- <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe.css">
+     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/photo-swipe/default-skin/default-skin.css"> -->
      <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/custom/index.css">
   </tiles:putAttribute>
   
@@ -50,29 +50,36 @@
 
       <div class="box-body" style="display: block;">
         <div class="row">
-
+           <c:if test="${galleryImagesPage.sampleImagesDisplayPage != null && !galleryImagesPage.sampleImagesDisplayPage.isDataModelEmpty()}">
+           <div class="row">
+              <c:forEach  items="${galleryImagesPage.sampleImagesDisplayPage.getListItems()}" var="imageDetail">
+              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center">
+                 <div class="thumbnail gallery-image">
+                    <a href="${pageContext.request.contextPath}/images/imageDetail/${imageDetail.imageId}">
+                       <img style="img-responsive" src="${pageContext.request.contextPath}/public/image-thumb/${imageDetail.imageId}" width="100%">
+                    </a>
+                 </div>
+              </div>
+              </c:forEach>
+           </div>
+           </c:if>
         </div>
-        <!-- <span class="pull-right text-muted">127 likes - 3 comments</span> -->
       </div>
 
       <div class="box-footer box-comments" style="display: block;">
-         <c:if test="${galleryImagesPage.sampleImagesDisplayPage != null && !galleryImagesPage.sampleImagesDisplayPage.isDataModelEmpty()}">
-         <div class="row">
-            <c:forEach  items="${galleryImagesPage.sampleImagesDisplayPage.getListItems()}" var="imageDetail">
-            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center">
-               <div class="thumbnail gallery-image">
-                  <a href="${pageContext.request.contextPath}/images/imageDetail/${imageDetail.imageId}">
-                     <img style="img-responsive" src="${pageContext.request.contextPath}/public/image-thumb/${imageDetail.imageId}" width="100%">
-                  </a>
+         <c:if test="${galleryImagesPage.sampleImagesDisplayPage != null}">
+            <div class="row">
+               <div class="col-xs-12">
+                  <span class="pull-right text-muted">
+                  Total ${galleryImagesPage.sampleImagesDisplayPage.totalElementsCount} images, Displaying Page ${galleryImagesPage.sampleImagesDisplayPage.pageIdx}
+                  </span>
                </div>
             </div>
-            </c:forEach>
-         </div>
          </c:if>
       </div>
 
       <div class="box-footer" style="display: block;">
-         <c:if test="${galleryImagesPage.sampleImagesDisplayPage != null && !galleryImagesPage.sampleImagesDisplayPage.isDataModelEmpty()}">
+         <c:if test="${galleryImagesPage.sampleImagesDisplayPage != null && !galleryImagesPage.sampleImagesDisplayPage.isDataModelEmpty() && (galleryImagesPage.sampleImagesDisplayPage.isCanGoBack() || galleryImagesPage.sampleImagesDisplayPage.isHasMoreElement())}">
          <div class="row">
             <div class="col-xs-12 text-center">
                <nav aria-label="page-nav">
@@ -95,25 +102,7 @@
   <tiles:putAttribute name="javascriptContent">
     <script src="${pageContext.request.contextPath}/assets/js/jquery.min-1.11.1.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe.min.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe-ui-default.min.js"></script>
-    <script>
-       var viewImage = function (imgUrl, imgWidth, imgHeight) {
-          var pswpElement = document.querySelectorAll('.pswp')[0];
-   
-          var items = [{
-               src: imgUrl,
-               w: imgWidth,
-               h: imgHeight
-            }];
-   
-          var options = {
-             index: 0
-          };
-      
-          var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
-          gallery.init();
-       }
-    </script>
+    <!-- <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe-ui-default.min.js"></script> -->
   </tiles:putAttribute>
 </tiles:insertDefinition>

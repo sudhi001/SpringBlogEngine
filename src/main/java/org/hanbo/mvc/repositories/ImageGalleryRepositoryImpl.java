@@ -400,7 +400,10 @@ public class ImageGalleryRepositoryImpl
       List<Image> imagesFound = query.list();
       if (imagesFound.size() > 0)
       {
-         return imagesFound.get(0);
+         Image retVal = imagesFound.get(0);
+         if (retVal.getOwner() != null)
+         {
+         }
       }
       
       return null;

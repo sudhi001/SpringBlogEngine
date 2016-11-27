@@ -8,7 +8,6 @@ import org.hanbo.mvc.entities.Image;
 import org.hanbo.mvc.entities.ViewableGallery;
 import org.hanbo.mvc.models.GalleryDisplayDetail;
 import org.hanbo.mvc.models.ImageDisplayDetail;
-import org.hanbo.mvc.models.ViewableGalleriesPageDataModel;
 import org.hanbo.mvc.models.ViewableGalleryDisplayDetail;
 import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
 
@@ -32,6 +31,21 @@ public class ImageDataModelEntityMapping
       retVal.setImageHeight(img.getFileSizeY());
       retVal.setImageDisplayWidth(0);
       retVal.setImageDisplayHeight(0);
+      
+      if (img.getOwner() != null)
+      {
+         retVal.setOwnerId(img.getOwner().getId());
+         retVal.setOwnerUserName(img.getOwner().getUserName());
+         if (img.getOwner().getUserProfile() != null)
+         {
+            retVal.setOwnerProfileId(img.getOwner().getUserProfile().getId());
+            retVal.setOwnerUserFullName(String.format("%s %s", img.getOwner().getUserProfile().getLastName(), img.getOwner().getUserProfile().getFirstName()));
+            if (img.getOwner().getUserProfile().getUserIcon() != null)
+            {
+               retVal.setOwnerIconFileId(img.getOwner().getUserProfile().getUserIcon().getId());
+            }
+         }
+      }
       
       return retVal;
    }

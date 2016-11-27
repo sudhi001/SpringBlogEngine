@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.*;
 
 @Controller
@@ -516,7 +516,7 @@ public class UserImageGalleryActions
    }
    
    @RequestMapping(value = "/gallery/{galleryId}/page/{pageIdx}", method=RequestMethod.GET)
-   public ModelAndView photoGalleries(
+   public ModelAndView photoGallery(
       @PathVariable("galleryId")
       String galleryId,
       @PathVariable("pageIdx")
@@ -544,7 +544,39 @@ public class UserImageGalleryActions
       }
    }
    
-   
+   @RequestMapping(value = "/images/imageDetail/{imageId}", method=RequestMethod.GET)
+   public ModelAndView viewableImageDetail(
+      @PathVariable("imageId")
+      String imageId
+   )
+   {
+      if (!StringUtils.isEmpty(imageId))
+      {
+         ImageDisplayDetail viewableImage = _imageGalleryService.getViewableImageDetail(imageId);
+         if (viewableImage != null)
+         {
+            PageMetadata pageMetadata
+               = _util.creatPageMetadata(viewableImage.getImageTitle());
+            ModelAndView retVal
+               = _util.getDefaultModelAndView(
+                    "photoGallery", pageMetadata);
+            retVal.addObject("viewableImage", viewableImage);
+            return retVal;
+         }
+         else
+         {
+            ModelAndView retVal =
+               _util.createErorrPageViewModel("Error occurred", "Image id is null or empty.");
+            return retVal;
+         }
+      }
+      else
+      {
+         ModelAndView retVal =
+            _util.createErorrPageViewModel("Error occurred", "Image id is null or empty.");
+         return retVal;
+      }
+   }
    
    @RequestMapping(value = "/public/image-thumb/{imageId}", method=RequestMethod.GET)
    public void publicImageThumb(

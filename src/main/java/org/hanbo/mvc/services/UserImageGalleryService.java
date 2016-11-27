@@ -50,4 +50,6 @@ public interface UserImageGalleryService
    ViewableGalleriesPageDataModel getViewableGalleries(int pageIdx);
    
    ViewableGalleryDisplayDetail getViewableGallery(String galleryId, int pageIdx);
+   
+   ImageDisplayDetail getViewableImageDetail(String imageId);
 }
