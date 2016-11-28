@@ -76,6 +76,7 @@
 
       <div class="box-footer box-comments" style="display: block;">
         <c:if test="${!articleModel.isPreviewMode() && articleComments != null && articleComments.size() > 0}">
+          <h4>Comments</h4>
           <c:forEach items="${articleComments}" var="commentItem">
           <div class="box-comment">
              <c:choose>
