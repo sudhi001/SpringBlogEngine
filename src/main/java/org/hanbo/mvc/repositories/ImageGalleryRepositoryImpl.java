@@ -401,9 +401,9 @@ public class ImageGalleryRepositoryImpl
       if (imagesFound.size() > 0)
       {
          Image retVal = imagesFound.get(0);
-         if (retVal.getOwner() != null)
-         {
-         }
+         loadImageUserProfile(retVal);
+         
+         return retVal;
       }
       
       return null;

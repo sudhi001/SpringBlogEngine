@@ -559,7 +559,7 @@ public class UserImageGalleryActions
                = _util.creatPageMetadata(viewableImage.getImageTitle());
             ModelAndView retVal
                = _util.getDefaultModelAndView(
-                    "photoGallery", pageMetadata);
+                    "imageDetail", pageMetadata);
             retVal.addObject("viewableImage", viewableImage);
             return retVal;
          }

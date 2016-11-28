@@ -49,21 +49,19 @@
       </div>
 
       <div class="box-body" style="display: block;">
-        <div class="row">
-           <c:if test="${galleryImagesPage.sampleImagesDisplayPage != null && !galleryImagesPage.sampleImagesDisplayPage.isDataModelEmpty()}">
-           <div class="row">
-              <c:forEach  items="${galleryImagesPage.sampleImagesDisplayPage.getListItems()}" var="imageDetail">
-              <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center">
-                 <div class="thumbnail gallery-image">
-                    <a href="${pageContext.request.contextPath}/images/imageDetail/${imageDetail.imageId}">
-                       <img style="img-responsive" src="${pageContext.request.contextPath}/public/image-thumb/${imageDetail.imageId}" width="100%">
-                    </a>
-                 </div>
-              </div>
-              </c:forEach>
-           </div>
-           </c:if>
-        </div>
+         <c:if test="${galleryImagesPage.sampleImagesDisplayPage != null && !galleryImagesPage.sampleImagesDisplayPage.isDataModelEmpty()}">
+         <div class="row">
+            <c:forEach  items="${galleryImagesPage.sampleImagesDisplayPage.getListItems()}" var="imageDetail">
+            <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center">
+               <div class="thumbnail gallery-image">
+                  <a href="${pageContext.request.contextPath}/images/imageDetail/${imageDetail.imageId}">
+                     <img style="img-responsive" src="${pageContext.request.contextPath}/public/image-thumb/${imageDetail.imageId}" width="100%">
+                  </a>
+               </div>
+            </div>
+            </c:forEach>
+         </div>
+         </c:if>
       </div>
 
       <div class="box-footer box-comments" style="display: block;">

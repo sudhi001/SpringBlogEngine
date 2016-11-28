@@ -38,7 +38,7 @@
                               </div>
                            </c:forEach>
                            <div class="col-xs-12 text-right">
-                              <a href="${pageContext.request.contextPath}/gallery/${galleryDetail.galleryId}" class="btn btn-sm btn-primary">See All Images</a>
+                              <a href="${pageContext.request.contextPath}/gallery/${galleryDetail.galleryId}/page/0" class="btn btn-sm btn-primary">See All Images</a>
                            </div>
                         </c:when>
                         <c:otherwise>

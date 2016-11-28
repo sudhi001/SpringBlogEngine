@@ -705,6 +705,8 @@ public class UserImageGalleryServiceImpl
          {
             ImageDisplayDetail retVal
                = ImageDataModelEntityMapping.entityToImageDisplayDetail(imageToView);
+            
+            return retVal;
          }
       }
       

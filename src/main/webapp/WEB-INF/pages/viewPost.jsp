@@ -75,7 +75,7 @@
       </div>
 
       <div class="box-footer box-comments" style="display: block;">
-         <c:if test="${!articleModel.isPreviewMode() && articleComments != null && articleComments.size() > 0}">
+        <c:if test="${!articleModel.isPreviewMode() && articleComments != null && articleComments.size() > 0}">
           <c:forEach items="${articleComments}" var="commentItem">
           <div class="box-comment">
              <c:choose>
@@ -132,7 +132,7 @@ ${commentItem.commentContent}
              </div>
           </div>
           </c:forEach>
-         </c:if>
+        </c:if>
       </div>
 
       <div class="box-footer" style="display: block;">
