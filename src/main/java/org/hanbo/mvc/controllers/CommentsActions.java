@@ -8,7 +8,7 @@ import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.ArticleCommentDataModel;
 import org.hanbo.mvc.models.CommentInputDataModel;
 import org.hanbo.mvc.models.PageMetadata;
-import org.hanbo.mvc.models.UserArticleCommentsPageDataModel;
+import org.hanbo.mvc.models.UserCommentsPageDataModel;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.json.CommentJsonDataModel;
 import org.hanbo.mvc.models.json.UserCommentActionInputDataModel;
@@ -191,7 +191,7 @@ public class CommentsActions
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value="/admin/comments/{pageIdx}",
       method=RequestMethod.GET)
-   public ModelAndView allUserArticleComments(
+   public ModelAndView allUserComments(
       @PathVariable("pageIdx")
       int pageIdx
    )
@@ -202,15 +202,15 @@ public class CommentsActions
          throw new WebAppException("User is not logged in", WebAppException.ErrorType.SECURITY);
       }
       
-      UserArticleCommentsPageDataModel articleCommentsPageDataModel
-         = _commentService.getUnapprovedArticleComments(pageIdx);
+      UserCommentsPageDataModel approvedCommentsPageDataModel
+         = _commentService.getUnapprovedComments(pageIdx);
       
       PageMetadata pageMetadata
          = _util.creatPageMetadata("Unapproved Comments");
       ModelAndView retVal
          = _util.getDefaultModelAndView(
               "userCommentsList", pageMetadata);
-      retVal.addObject("unapprovedArticleComments", articleCommentsPageDataModel);
+      retVal.addObject("unapprovedVisitorComments", approvedCommentsPageDataModel);
       
       return retVal;
    }

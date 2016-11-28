@@ -226,7 +226,7 @@ public class CommentsRepositoryImpl
       Session session = _sessionFactory.getCurrentSession();
 
       Query query = 
-      session.createQuery("select visitorComment from VisitorComment visitorComment where visitorComment.commentApproved = false")
+      session.createQuery("select visitorComment from VisitorComment visitorComment where visitorComment.commentApproved = false order by visitorComment.updateDate desc")
          .setFirstResult(pageIdx * maxItemsCount)
          .setMaxResults(maxItemsCount);
       List<VisitorComment> foundObjs = query.list();
@@ -326,7 +326,17 @@ public class CommentsRepositoryImpl
       Session session = this._sessionFactory.getCurrentSession();
       if (session != null)
       {
-         return getCommentById(session, commentId);
+         VisitorComment retVal = getCommentById(session, commentId);
+         if (retVal != null)
+         {
+            if (retVal.getOwner() != null)
+            {
+               retVal.getOwner().getUserName();
+               retVal.getOwner().getUserEmail();
+            }
+            
+            return retVal;
+         }
       }
       
       return null;

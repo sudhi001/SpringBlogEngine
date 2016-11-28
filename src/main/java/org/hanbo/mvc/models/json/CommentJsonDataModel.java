@@ -4,6 +4,10 @@ public class CommentJsonDataModel
 {
    private String commentTitle;
    
+   private String commenterName;
+   
+   private String commenterEmail;
+   
    private String commentContent;
 
    public String getCommenTitle()
@@ -24,5 +28,25 @@ public class CommentJsonDataModel
    public void setCommentContent(String commentContent)
    {
       this.commentContent = commentContent;
+   }
+
+   public String getCommenterEmail()
+   {
+      return commenterEmail;
+   }
+
+   public void setCommenterEmail(String commenterEmail)
+   {
+      this.commenterEmail = commenterEmail;
+   }
+
+   public String getCommenterName()
+   {
+      return commenterName;
+   }
+
+   public void setCommenterName(String commenterName)
+   {
+      this.commenterName = commenterName;
    }
 }

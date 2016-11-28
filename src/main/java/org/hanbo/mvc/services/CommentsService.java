@@ -3,7 +3,6 @@ package org.hanbo.mvc.services;
 import java.util.List;
 
 import org.hanbo.mvc.models.ArticleCommentDataModel;
-import org.hanbo.mvc.models.UserArticleCommentsPageDataModel;
 import org.hanbo.mvc.models.UserCommentsPageDataModel;
 import org.hanbo.mvc.models.json.CommentJsonDataModel;
 
@@ -13,8 +12,6 @@ public interface CommentsService
    
    ArticleCommentDataModel loadArticleComment(String articleId, String commentId);
    
-   UserArticleCommentsPageDataModel getUnapprovedArticleComments(int pageIdx);
-
    UserCommentsPageDataModel getUnapprovedComments(int pageIdx);
    
    List<ArticleCommentDataModel> getArticleComments(String articleId, int pageIdx);

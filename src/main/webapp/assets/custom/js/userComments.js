@@ -18,6 +18,8 @@ var displayCommentDetail = function(commentId, baseUrl) {
       .done(function(data) {
          if (data != null) {
             $("#commentDetailDlg #commentTitle").html(data.commentTitle);
+            $("#commentDetailDlg #commenterName").html(data.commenterName);
+            $("#commentDetailDlg #commenterEmail").html(data.commenterEmail);
             $("#commentDetailDlg #commentContent").html(data.commentContent);
             $("#commentDetailDlg").modal("show");
          }

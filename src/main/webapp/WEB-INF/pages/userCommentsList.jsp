@@ -13,14 +13,14 @@
 
     <div class="row">
        <div class="col-md-8">
-          <span class="label label-info">You have ${unapprovedArticleComments.getTotalElementsCount()} unapproved comments.</span>
+          <span class="label label-info">You have ${unapprovedVisitorComments.getTotalElementsCount()} unapproved comments.</span>
        </div>
        <div class="col-md-4">
        </div>
     </div>
     <br/>
     <c:choose>
-      <c:when test="${!unapprovedArticleComments.isDataModelEmpty()}">
+      <c:when test="${!unapprovedVisitorComments.isDataModelEmpty()}">
       <table class="table table-hover">
         <tr>
           <th class="col-md-1"></th>
@@ -29,7 +29,7 @@
           <th class="col-md-2">Last Modified</th>
           <th class="col-md-2">Actions</th>
         </tr>
-        <c:forEach items="${unapprovedArticleComments.getCommentsList()}" var="commentItem">
+        <c:forEach items="${unapprovedVisitorComments.getUserComments()}" var="commentItem">
           <tr>
             <td>
                <span class="glyphicon glyphicon-comment"></span>
@@ -83,6 +83,7 @@
           </div>
           <div class="modal-body">
             <strong id="commentTitle">yak yak</strong>
+            <p><span id="commenterName">yak yak</span> (<span id="commenterEmail">yak yak</span>)</p>
             <p id="commentContent">yak yak</p>
           </div>
           <div class="modal-footer">
