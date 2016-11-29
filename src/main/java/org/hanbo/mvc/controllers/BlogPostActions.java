@@ -11,11 +11,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.exceptions.WebAppException;
-import org.hanbo.mvc.models.ArticleCommentDataModel;
 import org.hanbo.mvc.models.ArticleDataModel;
 import org.hanbo.mvc.models.ArticleListPageDataModel;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.VisitorCommentDataModel;
 import org.hanbo.mvc.services.ArticleService;
 import org.hanbo.mvc.services.CommentsService;
 import org.hanbo.mvc.services.PermaLinkService;
@@ -496,7 +496,7 @@ public class BlogPostActions
          
          if (retVal != null)
          {
-            List<ArticleCommentDataModel> allViewableComments
+            List<VisitorCommentDataModel> allViewableComments
                = this._commentsService.getViewableArticleComments(articleId);
             
             if (allViewableComments != null && allViewableComments.size() > 0)
@@ -505,7 +505,7 @@ public class BlogPostActions
             }
             else
             {
-               retVal.addObject("articleComments", new ArrayList<ArticleCommentDataModel>());
+               retVal.addObject("articleComments", new ArrayList<VisitorCommentDataModel>());
             }
             
             return retVal;

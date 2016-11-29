@@ -1,6 +1,8 @@
 package org.hanbo.mvc.models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.utilities.DateToString;
@@ -9,6 +11,8 @@ import org.springframework.util.StringUtils;
 public class VisitorCommentDataModel
 {
    private String commentId;
+   
+   private String refObjectId;
    
    private String parentCommentId;
    
@@ -39,7 +43,14 @@ public class VisitorCommentDataModel
    private String commentUserProfileId;
 
    private String commentUserIconId;
+   
+   private List<VisitorCommentDataModel> childComments;
 
+   public VisitorCommentDataModel()
+   {
+      setChildComments(new ArrayList<VisitorCommentDataModel>());
+   }
+   
    public String getCommentId()
    {
       return commentId;
@@ -272,5 +283,45 @@ public class VisitorCommentDataModel
    public void setCommentUserIconId(String commentUserIconId)
    {
       this.commentUserIconId = commentUserIconId;
+   }
+
+   public String getRefObjectId()
+   {
+      return refObjectId;
+   }
+
+   public void setRefObjectId(String refObjectId)
+   {
+      this.refObjectId = refObjectId;
+   }
+
+   public List<VisitorCommentDataModel> getChildComments()
+   {
+      return childComments;
+   }
+
+   public void setChildComments(List<VisitorCommentDataModel> childComments)
+   {
+      this.childComments = childComments;
+   }
+   
+   public void validateDataModel()
+   {
+      validateCommentContent();
+      
+      if (StringUtils.isEmpty(this.refObjectId))
+      {
+         throw new WebAppException("Cmment reference object id is null or empty.",
+            WebAppException.ErrorType.DATA);
+      }
+      
+      if (StringUtils.isEmpty(this.getCommentUserId()))
+      {
+         validateCommenterInfoNotEmpty();
+      }
+      else
+      {
+         validateCommenterInfo();
+      }
    }
 }

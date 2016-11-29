@@ -4,24 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hanbo.mvc.entities.VisitorComment;
-import org.hanbo.mvc.models.ArticleCommentDataModel;
 import org.hanbo.mvc.models.VisitorCommentDataModel;
 import org.springframework.util.StringUtils;
 
 public class CommentsDataModelEntityMapping
 {
-   public static ArticleCommentDataModel toDataModel_ArticleComment(VisitorComment commentEntity)
+   public static VisitorCommentDataModel toDataModel_ArticleComment(VisitorComment commentEntity)
    {
       if (commentEntity != null)
       {
-         ArticleCommentDataModel retVal = new ArticleCommentDataModel();
-         VisitorCommentDataModel tempRetVal = toDataModel_UserComment(commentEntity, retVal);
-         if (tempRetVal != null)
+         VisitorCommentDataModel retVal = new VisitorCommentDataModel();
+         if (retVal != null)
          {
-            retVal = (ArticleCommentDataModel)tempRetVal;
+            toDataModel_UserComment(commentEntity,  retVal);
             if (commentEntity.getRelatedArticle() != null)
             {   
-               retVal.setArticleId(commentEntity.getRelatedArticle().getId());
+               retVal.setRefObjectId(commentEntity.getRelatedArticle().getId());
             }
          }
          
@@ -81,14 +79,14 @@ public class CommentsDataModelEntityMapping
    }
 
    
-   public static List<ArticleCommentDataModel> toDataModels_ArticleComments(List<VisitorComment> commentEntities)
+   public static List<VisitorCommentDataModel> toDataModels_ArticleComments(List<VisitorComment> commentEntities)
    {
-      List<ArticleCommentDataModel> retVals = new ArrayList<ArticleCommentDataModel>();
+      List<VisitorCommentDataModel> retVals = new ArrayList<VisitorCommentDataModel>();
       if (commentEntities != null && commentEntities.size() > 0)
       {
          for (VisitorComment commentEntity : commentEntities)
          {
-            ArticleCommentDataModel dataModel = toDataModel_ArticleComment(commentEntity);
+            VisitorCommentDataModel dataModel = toDataModel_ArticleComment(commentEntity);
             
             if (dataModel != null)
             {

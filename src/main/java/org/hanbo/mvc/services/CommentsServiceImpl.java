@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.hanbo.mvc.entities.VisitorComment;
 import org.hanbo.mvc.exceptions.WebAppException;
-import org.hanbo.mvc.models.ArticleCommentDataModel;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.UserCommentsPageDataModel;
 import org.hanbo.mvc.models.VisitorCommentDataModel;
@@ -16,6 +15,7 @@ import org.hanbo.mvc.models.json.CommentJsonDataModel;
 import org.hanbo.mvc.repositories.CommentsRepository;
 import org.hanbo.mvc.services.utilities.CommentsDataModelEntityMapping;
 import org.hanbo.mvc.utilities.IdUtil;
+import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -33,7 +33,7 @@ public class CommentsServiceImpl implements CommentsService
    private Environment configValues;
    
    @Override
-   public void addArticleComment(ArticleCommentDataModel commentToSave)
+   public void addArticleComment(VisitorCommentDataModel commentToSave)
    {
       if (commentToSave != null)
       {
@@ -67,7 +67,7 @@ public class CommentsServiceImpl implements CommentsService
             }
          }
          
-         _commentsRepo.saveArticleComment(commentToSave.getArticleId(),
+         _commentsRepo.saveArticleComment(commentToSave.getRefObjectId(),
             commentToSave.getCommentUserId(),
             commentToSave.getParentCommentId(),
             commentEntity);
@@ -75,33 +75,18 @@ public class CommentsServiceImpl implements CommentsService
    }
    
    @Override
-   public ArticleCommentDataModel loadArticleComment(String articleId, String commentId)
-   {
-      VisitorComment commentEntity = this._commentsRepo.loadArticleComment(articleId, commentId);
-      if (commentEntity != null)
-      {
-         ArticleCommentDataModel retVal = CommentsDataModelEntityMapping.toDataModel_ArticleComment(commentEntity);
-         
-         return retVal;
-      }
-      
-      return null;
-   }
-   
-   @Override
-   public List<ArticleCommentDataModel> getViewableArticleComments(String articleId)
+   public List<VisitorCommentDataModel> getViewableArticleComments(String articleId)
    {
       int maxDisplayedComments = getMaxCommentsForDisplay();
       
-      List<ArticleCommentDataModel> retVals = new ArrayList<ArticleCommentDataModel>();
+      List<VisitorCommentDataModel> retVals = new ArrayList<VisitorCommentDataModel>();
       if (!StringUtils.isEmpty(articleId))
       {
          List<VisitorComment> comments = _commentsRepo.loadArticleViewableComments(articleId, maxDisplayedComments);
-         
+
          retVals
             = CommentsDataModelEntityMapping.toDataModels_ArticleComments(comments);
-      }
-      
+      } 
       return retVals;
    }
    
@@ -135,11 +120,11 @@ public class CommentsServiceImpl implements CommentsService
    }
    
    @Override
-   public List<ArticleCommentDataModel> getArticleComments(String articleId, int pageIdx)
+   public List<VisitorCommentDataModel> getArticleComments(String articleId, int pageIdx)
    {
       int adminCommentsPerPageCount = getAdminCommentsCountForDisplay();
       
-      List<ArticleCommentDataModel> retVals = new ArrayList<ArticleCommentDataModel>();
+      List<VisitorCommentDataModel> retVals = new ArrayList<VisitorCommentDataModel>();
       if (!StringUtils.isEmpty(articleId))
       {
          List<VisitorComment> comments = _commentsRepo.loadArticleComments(articleId,
@@ -207,13 +192,13 @@ public class CommentsServiceImpl implements CommentsService
       return retVal;
    }
    
-   private List<ArticleCommentDataModel> associateArticleComments(List<ArticleCommentDataModel> unorderedCommentsList)
+   private List<VisitorCommentDataModel> associateArticleComments(List<VisitorCommentDataModel> unorderedCommentsList)
    {
-      List<ArticleCommentDataModel> retVals = new ArrayList<ArticleCommentDataModel>();
+      List<VisitorCommentDataModel> retVals = new ArrayList<VisitorCommentDataModel>();
       if (unorderedCommentsList != null && !unorderedCommentsList.isEmpty())
       {
-         Map<String, ArticleCommentDataModel> commentsAssociation = new HashMap<String, ArticleCommentDataModel>();
-         for (ArticleCommentDataModel comment : unorderedCommentsList)
+         Map<String, VisitorCommentDataModel> commentsAssociation = new HashMap<String, VisitorCommentDataModel>();
+         for (VisitorCommentDataModel comment : unorderedCommentsList)
          {
             if (comment != null)
             {
@@ -231,7 +216,7 @@ public class CommentsServiceImpl implements CommentsService
                {
                   if (commentsAssociation.containsKey(parentCommentId))
                   {
-                     ArticleCommentDataModel parentComment = commentsAssociation.get(parentCommentId);
+                     VisitorCommentDataModel parentComment = commentsAssociation.get(parentCommentId);
                      if (parentComment != null)
                      {
                         parentComment.getChildComments().add(comment);
@@ -241,11 +226,11 @@ public class CommentsServiceImpl implements CommentsService
             }
          }
          
-         for (Map.Entry<String, ArticleCommentDataModel> entry : commentsAssociation.entrySet())
+         for (Map.Entry<String, VisitorCommentDataModel> entry : commentsAssociation.entrySet())
          {
             if (entry != null && entry.getValue() != null)
             {
-               ArticleCommentDataModel comment = entry.getValue();
+               VisitorCommentDataModel comment = entry.getValue();
                if (StringUtils.isEmpty(comment.getParentCommentId()))
                {
                   retVals.add(comment);
@@ -273,5 +258,33 @@ public class CommentsServiceImpl implements CommentsService
       int itemsCountVal = Integer.parseInt(itemsCount);
       
       return itemsCountVal;
+   }
+
+   @Override
+   public void addImageComment(VisitorCommentDataModel comment) {
+      // TODO Auto-generated method stub
+   }
+   
+   @Override
+   public List<VisitorCommentDataModel> getViewableImageComments(String imageId) {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   @Override
+   public VisitorCommentDataModel loadArticleComment(String articleId, String commentId)
+   {
+      if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+      {
+         VisitorComment comment = 
+            _commentsRepo.loadArticleComment(articleId, commentId);
+         
+         VisitorCommentDataModel retVal = 
+            CommentsDataModelEntityMapping.toDataModel_ArticleComment(comment);
+         
+         return retVal;
+      }
+      
+      return null;
    }
 }
