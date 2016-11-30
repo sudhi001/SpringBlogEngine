@@ -1,17 +1,17 @@
-handleClickAddCommentBtn = function (articleId, parentCommentId, baseUrl) {
+handleClickAddCommentBtn = function (refObjectId, parentCommentId, baseUrl) {
    resetCommentEditing();
-   $("#addCommentDlg #addCommentForm #articleId").val(articleId);
+   $("#addCommentDlg #addCommentForm #refObjectId").val(refObjectId);
    $("#addCommentDlg #addCommentForm #parentCommentId").val(parentCommentId);
    
    $("#addCommentDlg").modal("show");   
 } 
 
-validateAndSubmitComment = function (baseUrl) {
+validateAndSubmitComment = function (addCommentUrl) {
    var errorMsg = [];
    var showError = false;
-   var textVal = $("#addCommentDlg #addCommentForm #articleId").val();
+   var textVal = $("#addCommentDlg #addCommentForm #refObjectId").val();
    if (textVal == null || textVal.length <= 0) {
-      errorMsg.push("Related article id is null or empty.");
+      errorMsg.push("Related refObject id is null or empty.");
       showError = true;
    }
    
@@ -57,7 +57,7 @@ validateAndSubmitComment = function (baseUrl) {
    }
    
    if (!showError && (errorMsg == null || errorMsg.length <= 0)) {
-      var articleId = $("#addCommentDlg #addCommentForm #articleId").val();
+      var refObjectId = $("#addCommentDlg #addCommentForm #refObjectId").val();
       var parentCommentId = $("#addCommentDlg #addCommentForm #parentCommentId").val();
       var commentTitle = $("#addCommentDlg #addCommentForm #commentTitle").val();
       var commenterName = $("#addCommentDlg #addCommentForm #commenterName").val();
@@ -65,8 +65,8 @@ validateAndSubmitComment = function (baseUrl) {
       var commentContent = $("#addCommentDlg #addCommentForm #commentContent").val();
       var commentPrivate = $("#addCommentDlg #addCommentForm #commentPrivate").prop("checked") === true;
       
-      var articleCommentObj = {
-         originId: articleId,
+      var commentObj = {
+         originId: refObjectId,
          commentPrivate: commentPrivate,
          parentCommentId: parentCommentId,
          commentTitle: commentTitle,
@@ -75,16 +75,16 @@ validateAndSubmitComment = function (baseUrl) {
          commenterEmail: commenterEmail
       };
       
-      if (baseUrl != null) {
+      if (addCommentUrl != null) {
          resetCommentEditingErrorDisplay();
          
          $.ajax({
             type: "POST",
-            url: baseUrl + "/public/comments/addArticleComment",
+            url: addCommentUrl,
             xhrFields: {
                withCredentials: true
             },
-            data: JSON.stringify(articleCommentObj),
+            data: JSON.stringify(commentObj),
             dataType: "json",
             contentType: "application/json",
             async:false

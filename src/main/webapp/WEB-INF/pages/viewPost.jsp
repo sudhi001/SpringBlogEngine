@@ -198,7 +198,7 @@ ${commentItem.commentContent}
           </div>
           <div class="modal-body">
             <form id="addCommentForm" class="form-horizontal" onsubmit="return false;" onreset="">
-               <input type="hidden" id="articleId" name="articleId" value="${articleModel.articleId}">
+               <input type="hidden" id="refObjectId" name="refObjectId" value="${articleModel.articleId}">
                <input type="hidden" id="parentCommentId" name="parentCommentId" value="">
                <div class="form-group">
                   <label class="col-xs-12 col-sm-3 control-label" for="commentTitle">Subject<span class="field-required">*</span></label>
@@ -223,7 +223,7 @@ ${commentItem.commentContent}
                <div class="form-group">
                   <label class="col-xs-12 col-sm-3 control-label" for="commentContent">Your Comment<span class="field-required">*</span></label>
                   <div class="col-xs-12 col-sm-9">
-<textarea class="form-control input-sm post-comment-height" row="6" id="commentContent" name="commentContent">
+<textarea class="form-control input-sm post-comment-height" rows="6" id="commentContent" name="commentContent">
 </textarea>
                   </div>
                </div>
@@ -249,7 +249,7 @@ ${commentItem.commentContent}
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-success" onclick="validateAndSubmitComment('${pageContext.request.contextPath}')">Add Comment</button>
+            <button class="btn btn-success" onclick="validateAndSubmitComment('${pageContext.request.contextPath}/public/comments/addArticleComment')">Add Comment</button>
             <button class="btn btn-danger" onclick="resetCommentEditing()">Clear</button>
           </div>
         </div>

@@ -1,5 +1,7 @@
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %> 
 
 <tiles:insertDefinition name="defaultTemplate">
   <tiles:putAttribute name="cssContent">
@@ -80,7 +82,8 @@
          </div>
       </div>
 
-      <div class="box-footer" style="display: block;">
+      <div class="box-footer text-right" style="display: block;">
+         <button class="btn btn-sm" onclick="handleClickAddCommentBtn('${viewableImage.imageId}', '', '${pageContext.request.contextPath}')">Add Comment</button>
       </div>
     </div>
     
@@ -129,6 +132,74 @@
            </div>
        </div>
     </div>
+    
+    <div id="addCommentDlg" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Add Comment</h4>
+          </div>
+          <div class="modal-body">
+            <form id="addCommentForm" class="form-horizontal" onsubmit="return false;" onreset="">
+               <input type="hidden" id="refObjectId" name="refObjectId" value="${viewableImage.imageId}">
+               <input type="hidden" id="parentCommentId" name="parentCommentId" value="">
+               <div class="form-group">
+                  <label class="col-xs-12 col-sm-3 control-label" for="commentTitle">Subject<span class="field-required">*</span></label>
+                  <div class="col-xs-12 col-sm-9">
+                     <input class="form-control input-sm" type="text" id="commentTitle" name="commentTitle">
+                  </div>
+               </div>
+               <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+               <div class="form-group">
+                  <label class="col-xs-12 col-sm-3 control-label" for="commenterName">Your Name<span class="field-required">*</span></label>
+                  <div class="col-xs-12 col-sm-6">
+                     <input class="form-control input-sm" type="text" id="commenterName" name="commenterName">
+                  </div>
+               </div>
+               <div class="form-group">
+                  <label class="col-xs-12 col-sm-3 control-label" for="commenterEmail">Your Email<span class="field-required">*</span></label>
+                  <div class="col-xs-12 col-sm-6">
+                     <input class="form-control input-sm" type="text" id="commenterEmail" name="commenterEmail">
+                  </div>
+               </div>
+               </sec:authorize>
+               <div class="form-group">
+                  <label class="col-xs-12 col-sm-3 control-label" for="commentContent">Your Comment<span class="field-required">*</span></label>
+                  <div class="col-xs-12 col-sm-9">
+<textarea class="form-control input-sm post-comment-height" rows="6" id="commentContent" name="commentContent">
+</textarea>
+                  </div>
+               </div>
+               <div class="checkbox" style="margin-bottom: 10px;">
+                  <label class="col-md-9 col-md-offset-3">
+                     <input type="checkbox" id="commentPrivate"/><span class="field-required">*</span> Private Message
+                  </label>
+               </div>
+               <div id="addCommentFormSuccess" class="form-group text-center" style="display: none;">
+                  <div class="col-xs-12">
+                     <div class="success-block" id="addCommentFormSuccessMsg">
+                        test test
+                     </div>
+                  </div>
+               </div>
+               <div id="addCommentFormError" class="form-group text-center" style="display: none;">
+                  <div class="col-xs-12">
+                     <div class="warning-block" id="addCommentFormErrorMsg">
+                        test test
+                     </div>
+                  </div>
+               </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success" onclick="validateAndSubmitComment('${pageContext.request.contextPath}/public/comments/addImageComment')">Add Comment</button>
+            <button class="btn btn-danger" onclick="resetCommentEditing()">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
   </tiles:putAttribute>
   
   <tiles:putAttribute name="javascriptContent">
@@ -136,6 +207,7 @@
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe-ui-default.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/addComments.js"></script>
     <script type="text/javascript">
     var viewImage = function (imgUrl, imgWidth, imgHeight) {
        var pswpElement = document.querySelectorAll('.pswp')[0];

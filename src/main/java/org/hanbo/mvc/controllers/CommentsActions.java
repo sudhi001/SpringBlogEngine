@@ -48,68 +48,28 @@ public class CommentsActions
       HttpServletRequest request
    )
    {
-      String loggedInUserId = null;
-      UserPrincipalDataModel loginUser = this._util.getLoginUser();
-      if (loginUser != null)
-      {
-         loggedInUserId = loginUser.getUserId();
-      }
-      
-      try
-      {
-         if (!StringUtils.isEmpty(commentJsonObject))
-         {
-            CommentInputDataModel commentReceived = 
-            JsonUtil.convertJsonToObject(commentJsonObject, CommentInputDataModel.class);
-            
-            if (commentReceived != null)
-            {
-               VisitorCommentDataModel commentToAdd
-                  = new VisitorCommentDataModel();
-               commentToAdd.setRefObjectId(commentReceived.getOriginId());
-               commentToAdd.setParentCommentId(commentReceived.getParentCommentId());
-               commentToAdd.setCommentContent(commentReceived.getCommentContent());
-               commentToAdd.setCommentTitle(commentReceived.getCommentTitle());
-               commentToAdd.setCommenterName(commentReceived.getCommenterName());
-               commentToAdd.setCommenterEmail(commentReceived.getCommenterEmail());
-               commentToAdd.setCommentApproved(false);
-               commentToAdd.setCommentPrivate(commentReceived.isCommentPrivate());
-               
-               String ipAddress = request.getHeader("X-FORWARDED-FOR");
-               if (ipAddress == null) {
-                     ipAddress = request.getRemoteAddr();
-               }
-               commentToAdd.setCommentSourceIp(ipAddress);
-               
-               if (!StringUtils.isEmpty(loggedInUserId))
-               {
-                  commentToAdd.setCommentUserId(loggedInUserId);
-               }
-               
-               final HttpHeaders httpHeaders= new HttpHeaders();
-               httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-               _commentService.addArticleComment(commentToAdd);
-
-               return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);
-            }
-            else
-            {
-               String respJsonVal = JsonUtil.simpleErrorMessage("Comment content is empty.");
-               return new ResponseEntity<String>(respJsonVal, HttpStatus.BAD_REQUEST);
-            }
-         }
-         else
-         {
-            String respJsonVal = JsonUtil.simpleErrorMessage("Comment content is empty.");
-            return new ResponseEntity<String>(respJsonVal, HttpStatus.BAD_REQUEST);
-         }
-      }
-      catch(Exception ex)
-      {
-         ex.printStackTrace();
-         String respJsonVal = JsonUtil.simpleErrorMessage("Unknown exception occurred.");
-         return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
-      }
+      return addCommentToRefObject(
+         commentJsonObject,
+         "article",
+         request
+      );
+   }
+   
+   @RequestMapping(value = "/public/comments/addImageComment",
+      method=RequestMethod.POST,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> addImageComment(
+      @RequestBody
+      String commentJsonObject,      
+      HttpServletRequest request
+   )
+   {
+      return addCommentToRefObject(
+         commentJsonObject,
+         "image",
+         request
+      );
    }
    
    @RequestMapping(value = "/public/comments/loadArticleComment",
@@ -123,16 +83,13 @@ public class CommentsActions
       String commentId
    )
    {
-      System.out.println("1");
       if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
       {
-         System.out.println("2");
          VisitorCommentDataModel articleComment
             = this._commentService.loadArticleComment(articleId, commentId);
          
          if (articleComment != null)
          {
-            System.out.println("3");
             String jsonResp = JsonUtil.convertObjectToJson(articleComment);
             
             final HttpHeaders httpHeaders= new HttpHeaders();
@@ -142,7 +99,6 @@ public class CommentsActions
          }
       }
       
-      System.out.println("4");
       String respJsonVal = JsonUtil.simpleErrorMessage("Article Id is null or empty, or comment Id is null or empty.");
       return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
    }
@@ -307,6 +263,87 @@ public class CommentsActions
       {
         e.printStackTrace();
          return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Unknown error occurred"), httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+   }
+   
+   private ResponseEntity<String> addCommentToRefObject(
+      String commentJsonObject,
+      String addType,
+      HttpServletRequest request
+   )
+   {
+      String loggedInUserId = null;
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser != null)
+      {
+         loggedInUserId = loginUser.getUserId();
+      }
+      
+      try
+      {
+         if (!StringUtils.isEmpty(commentJsonObject))
+         {
+            CommentInputDataModel commentReceived = 
+            JsonUtil.convertJsonToObject(commentJsonObject, CommentInputDataModel.class);
+            
+            if (commentReceived != null)
+            {
+               VisitorCommentDataModel commentToAdd
+                  = new VisitorCommentDataModel();
+               commentToAdd.setRefObjectId(commentReceived.getOriginId());
+               commentToAdd.setParentCommentId(commentReceived.getParentCommentId());
+               commentToAdd.setCommentContent(commentReceived.getCommentContent());
+               commentToAdd.setCommentTitle(commentReceived.getCommentTitle());
+               commentToAdd.setCommenterName(commentReceived.getCommenterName());
+               commentToAdd.setCommenterEmail(commentReceived.getCommenterEmail());
+               commentToAdd.setCommentApproved(false);
+               commentToAdd.setCommentPrivate(commentReceived.isCommentPrivate());
+               
+               String ipAddress = request.getHeader("X-FORWARDED-FOR");
+               if (ipAddress == null) {
+                  ipAddress = request.getRemoteAddr();
+               }
+               commentToAdd.setCommentSourceIp(ipAddress);
+               
+               if (!StringUtils.isEmpty(loggedInUserId))
+               {
+                  commentToAdd.setCommentUserId(loggedInUserId);
+               }
+               
+               final HttpHeaders httpHeaders= new HttpHeaders();
+               httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+               if (addType.equals("article"))
+               {
+                  _commentService.addArticleComment(commentToAdd);
+                  return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);
+               }
+               else if (addType.equals("image"))
+               {
+                  _commentService.addImageComment(commentToAdd);
+                  return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);
+               }
+               else
+               {
+                  return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Comment was not added, Failed."), httpHeaders, HttpStatus.BAD_REQUEST);
+               }
+            }
+            else
+            {
+               String respJsonVal = JsonUtil.simpleErrorMessage("Comment content is empty.");
+               return new ResponseEntity<String>(respJsonVal, HttpStatus.BAD_REQUEST);
+            }
+         }
+         else
+         {
+            String respJsonVal = JsonUtil.simpleErrorMessage("Comment content is empty.");
+            return new ResponseEntity<String>(respJsonVal, HttpStatus.BAD_REQUEST);
+         }
+      }
+      catch(Exception ex)
+      {
+         ex.printStackTrace();
+         String respJsonVal = JsonUtil.simpleErrorMessage("Unknown exception occurred.");
+         return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
       }
    }
 }

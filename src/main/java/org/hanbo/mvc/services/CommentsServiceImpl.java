@@ -15,7 +15,6 @@ import org.hanbo.mvc.models.json.CommentJsonDataModel;
 import org.hanbo.mvc.repositories.CommentsRepository;
 import org.hanbo.mvc.services.utilities.CommentsDataModelEntityMapping;
 import org.hanbo.mvc.utilities.IdUtil;
-import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
