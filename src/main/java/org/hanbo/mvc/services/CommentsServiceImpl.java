@@ -233,8 +233,19 @@ public class CommentsServiceImpl implements CommentsService
    @Override
    public List<VisitorCommentDataModel> getViewableImageComments(String imageId)
    {
-      // TODO Auto-generated method stub
-      return null;
+      int maxDisplayedComments = getMaxCommentsForDisplay();
+      
+      List<VisitorCommentDataModel> retVals = new ArrayList<VisitorCommentDataModel>();
+      if (!StringUtils.isEmpty(imageId))
+      {
+         System.out.println("here2");
+         List<VisitorComment> comments = _commentsRepo.loadImageViewableComments(imageId, maxDisplayedComments);
+
+         retVals
+            = CommentsDataModelEntityMapping.toDataModels_ArticleComments(comments);
+      }
+      
+      return retVals;
    }
 
    @Override

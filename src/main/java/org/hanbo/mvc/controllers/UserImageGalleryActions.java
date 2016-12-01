@@ -1,6 +1,7 @@
 package org.hanbo.mvc.controllers;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -13,8 +14,10 @@ import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.ViewableGalleriesPageDataModel;
 import org.hanbo.mvc.models.ViewableGalleryDisplayDetail;
+import org.hanbo.mvc.models.VisitorCommentDataModel;
 import org.hanbo.mvc.models.json.GenericJsonResponse;
 import org.hanbo.mvc.models.json.SearchUserPhotoResponse;
+import org.hanbo.mvc.services.CommentsService;
 import org.hanbo.mvc.services.UserImageGalleryService;
 import org.hanbo.mvc.utilities.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +46,10 @@ public class UserImageGalleryActions
    
    @Autowired
    private UserImageGalleryService _imageGalleryService;
-
+   
+   @Autowired
+   private CommentsService _commentsService;
+   
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/galleries/allMyGalleries/{pageIdx}", method=RequestMethod.GET)
    public ModelAndView allMyGalleries(
@@ -561,6 +567,23 @@ public class UserImageGalleryActions
                = _util.getDefaultModelAndView(
                     "imageDetail", pageMetadata);
             retVal.addObject("viewableImage", viewableImage);
+         
+            if (retVal != null)
+            {
+               List<VisitorCommentDataModel> allViewableComments
+                  = this._commentsService.getViewableImageComments(imageId);
+               System.out.println("here");
+               if (allViewableComments != null && allViewableComments.size() > 0)
+               {
+                  System.out.println("image comments count: " + allViewableComments.size());
+                  retVal.addObject("imageComments", allViewableComments);
+               }
+               else
+               {
+                  retVal.addObject("imageComments", new ArrayList<VisitorCommentDataModel>());
+               }
+            }
+            
             return retVal;
          }
          else

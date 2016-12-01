@@ -15,10 +15,13 @@ public interface CommentsRepository
 
    List<VisitorComment> loadArticleComments(String articleId, int pageIdx, int itemsCount);
 
-   List<VisitorComment> loadArticleComments(Session session, String queryString, String articleId, int pageIdx, int maxResultsCount);
+   List<VisitorComment> loadComments(Session session, String queryString, String refObjIdName,
+      String refObjId, int pageIdx, int maxResultsCount);
 
    List<VisitorComment> loadArticleViewableComments(String articleId, int maxResultsCount);
    
+   List<VisitorComment> loadImageViewableComments(String imageId, int maxResultsCount);
+
    long getUnapprovedCommentsCount();
    
    List<VisitorComment> getUnapprovedComments(int pageIdx, int maxItemsCount);

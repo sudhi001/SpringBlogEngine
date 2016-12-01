@@ -94,8 +94,8 @@ public class CommentsRepositoryImpl
    {
       Session session = _sessionFactory.getCurrentSession();
       
-      return loadArticleComments(session, "select visitorComment from VisitorComment visitorComment "
-         + "where visitorComment.relatedArticle.id = :articleId order by visitorComment.updateDate desc", articleId, pageIdx, maxResultsCount);
+      return loadComments(session, "select visitorComment from VisitorComment visitorComment "
+         + "where visitorComment.relatedArticle.id = :articleId order by visitorComment.updateDate desc", "articleId", articleId, pageIdx, maxResultsCount);
    }
    
    @Transactional(
@@ -107,9 +107,27 @@ public class CommentsRepositoryImpl
    {
       Session session = _sessionFactory.getCurrentSession();
       
-      return loadArticleComments(session, "select visitorComment from VisitorComment visitorComment where visitorComment.relatedArticle.id = :articleId "
-         + "and visitorComment.commentPrivate = false and visitorComment.commentApproved = true order by visitorComment.updateDate desc", articleId, 0, maxResultsCount);
+      return loadComments(session, "select visitorComment from VisitorComment visitorComment where visitorComment.relatedArticle.id = :articleId "
+         + "and visitorComment.commentPrivate = false and visitorComment.commentApproved = true order by visitorComment.updateDate desc", "articleId", articleId, 0, maxResultsCount);
    }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public List<VisitorComment> loadImageViewableComments(String imageId, int maxResultsCount)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      List<VisitorComment> retVals = 
+         loadComments(session, "select visitorComment from VisitorComment visitorComment where visitorComment.relatedImage.id = :imageId "
+            + "and visitorComment.commentPrivate = false and visitorComment.commentApproved = true order by visitorComment.updateDate desc", "imageId", imageId, 0, maxResultsCount);
+      System.out.println("image comments count: " + retVals.size());
+      
+      return retVals;
+   }
+      
    
    @Transactional(
       propagation = Propagation.REQUIRED,
@@ -165,14 +183,16 @@ public class CommentsRepositoryImpl
    }
    
    @Override
-   public List<VisitorComment> loadArticleComments(Session session, String queryString, String articleId, int pageIdx, int maxResultsCount)
+   public List<VisitorComment> loadComments(
+         Session session, String queryString, String refObjIdName,
+         String refObjId, int pageIdx, int maxResultsCount)
    {
       List<VisitorComment> retVals = new ArrayList<VisitorComment>();
       if (session != null)
       {
          Query query = 
             session.createQuery(queryString)
-               .setParameter("articleId", articleId)
+               .setParameter(refObjIdName, refObjId)
                .setFirstResult(pageIdx * maxResultsCount)
                .setMaxResults(maxResultsCount);
          
@@ -184,7 +204,6 @@ public class CommentsRepositoryImpl
                preloadVisitorComment(comment);
             }
          }
-         
       }
       
       return retVals;
