@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.exceptions.WebAppException;
 import org.hanbo.mvc.models.CommentInputDataModel;
+import org.hanbo.mvc.models.CommentRefObjectType;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserCommentsPageDataModel;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
@@ -50,7 +51,7 @@ public class CommentsActions
    {
       return addCommentToRefObject(
          commentJsonObject,
-         "article",
+         CommentRefObjectType.Article,
          request
       );
    }
@@ -67,7 +68,7 @@ public class CommentsActions
    {
       return addCommentToRefObject(
          commentJsonObject,
-         "image",
+         CommentRefObjectType.Image,
          request
       );
    }
@@ -268,7 +269,7 @@ public class CommentsActions
    
    private ResponseEntity<String> addCommentToRefObject(
       String commentJsonObject,
-      String addType,
+      CommentRefObjectType refObjType,
       HttpServletRequest request
    )
    {
@@ -312,12 +313,12 @@ public class CommentsActions
                
                final HttpHeaders httpHeaders= new HttpHeaders();
                httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-               if (addType.equals("article"))
+               if (refObjType == CommentRefObjectType.Article)
                {
                   _commentService.addArticleComment(commentToAdd);
                   return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);
                }
-               else if (addType.equals("image"))
+               else if (refObjType == CommentRefObjectType.Image)
                {
                   _commentService.addImageComment(commentToAdd);
                   return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("No Error, Success."), httpHeaders, HttpStatus.OK);

@@ -391,19 +391,37 @@ public class ImageGalleryRepositoryImpl
    public Image getImage(String imageId)
    {
       Session session = this._sessionFactory.getCurrentSession();
-      Query query = session.createQuery(
-         "select image from Image image where image.id = :imageId"
-      ).setParameter("imageId", imageId)
-       .setMaxResults(1)
-       .setFirstResult(0);
-
-      List<Image> imagesFound = query.list();
-      if (imagesFound.size() > 0)
+      Image imageFound = getImage(session, imageId);
+      if (imageFound != null)
       {
-         Image retVal = imagesFound.get(0);
-         loadImageUserProfile(retVal);
+         loadImageUserProfile(imageFound);
          
-         return retVal;
+         return imageFound;
+      }
+      
+      return null;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public Image getImage(Session session, String imageId)
+   {
+      if (session != null)
+      {
+         Query query = session.createQuery(
+            "select image from Image image where image.id = :imageId"
+         ).setParameter("imageId", imageId)
+          .setMaxResults(1)
+          .setFirstResult(0);
+
+         List<Image> imagesFound = query.list();
+         if (imagesFound.size() > 0)
+         {
+            return imagesFound.get(0);
+         }
       }
       
       return null;

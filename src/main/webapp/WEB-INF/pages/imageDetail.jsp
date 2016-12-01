@@ -207,6 +207,7 @@
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe-ui-default.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/validateEmail.js"></script>
     <script src="${pageContext.request.contextPath}/assets/custom/js/addComments.js"></script>
     <script type="text/javascript">
     var viewImage = function (imgUrl, imgWidth, imgHeight) {

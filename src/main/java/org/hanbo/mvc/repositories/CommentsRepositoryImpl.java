@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Article;
+import org.hanbo.mvc.entities.Image;
 import org.hanbo.mvc.entities.LoginUser;
 import org.hanbo.mvc.entities.VisitorComment;
 import org.hanbo.mvc.exceptions.WebAppException;
@@ -29,6 +30,9 @@ public class CommentsRepositoryImpl
    private ArticlesRepository _articleRepo;
    
    @Autowired
+   private ImageGalleryRepository _imageRepo;
+   
+   @Autowired
    private UsersRepository _userRepo;
    
    @Override
@@ -37,7 +41,7 @@ public class CommentsRepositoryImpl
       isolation = Isolation.READ_COMMITTED
    )
    public void saveArticleComment(String articleId, String commentOwnerId,
-      String parentCommentid, VisitorComment commentToSave)
+      String parentCommentId, VisitorComment commentToSave)
    {
       Session session = _sessionFactory.getCurrentSession();
       
@@ -53,36 +57,33 @@ public class CommentsRepositoryImpl
          throw new WebAppException("Article to comment is not found.", WebAppException.ErrorType.DATA);
       }
       
-      if (!StringUtils.isEmpty(commentOwnerId))
+      saveComment(session, commentToSave, commentOwnerId, parentCommentId);
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public void saveImageComment(String imageId, String commentOwnerId,
+      String parentCommentId, VisitorComment commentToSave)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Image commentImage = 
+         _imageRepo.getImage(session, imageId);
+      if (commentImage != null)
       {
-         LoginUser commentOwner = _userRepo.getUserById(session, commentOwnerId);
-         if (commentOwner != null)
-         {
-            commentToSave.setOwner(commentOwner);
-            commentToSave.setCommenter("");
-            commentToSave.setCommenterEmail("");
-         }
-         else
-         {
-            throw new WebAppException("Comment owner is not found.", WebAppException.ErrorType.DATA);
-         }
+         commentToSave.setRelatedImage(commentImage);
+      }
+      else
+      {
+         throw new WebAppException("Article to comment is not found.", WebAppException.ErrorType.DATA);
       }
       
-      if (!StringUtils.isEmpty(parentCommentid))
-      {
-         VisitorComment parentComment = this.getCommentById(session, parentCommentid);
-         if (parentComment != null)
-         {
-            commentToSave.setParentComment(parentComment);
-         }
-         else
-         {
-            throw new WebAppException("Parent comment is not found.", WebAppException.ErrorType.DATA);
-         }
-      }
-    
-      session.saveOrUpdate(commentToSave);
+      saveComment(session, commentToSave, commentOwnerId, parentCommentId);
    }
+
    
    @Transactional(
       propagation = Propagation.REQUIRED,
@@ -397,6 +398,42 @@ public class CommentsRepositoryImpl
          }
          
          // XXX add more data extraction if needed.
+      }
+   }
+   
+   private void saveComment(Session session, VisitorComment commentToSave, String commentOwnerId, String parentCommentId)
+   {
+      if (session != null && commentToSave != null)
+      {
+         if (!StringUtils.isEmpty(commentOwnerId))
+         {
+            LoginUser commentOwner = _userRepo.getUserById(session, commentOwnerId);
+            if (commentOwner != null)
+            {
+               commentToSave.setOwner(commentOwner);
+               commentToSave.setCommenter("");
+               commentToSave.setCommenterEmail("");
+            }
+            else
+            {
+               throw new WebAppException("Comment owner is not found.", WebAppException.ErrorType.DATA);
+            }
+         }
+         
+         if (!StringUtils.isEmpty(parentCommentId))
+         {
+            VisitorComment parentComment = this.getCommentById(session, parentCommentId);
+            if (parentComment != null)
+            {
+               commentToSave.setParentComment(parentComment);
+            }
+            else
+            {
+               throw new WebAppException("Parent comment is not found.", WebAppException.ErrorType.DATA);
+            }
+         }
+       
+         session.saveOrUpdate(commentToSave);
       }
    }
 }

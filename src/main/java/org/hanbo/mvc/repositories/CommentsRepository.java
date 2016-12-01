@@ -8,8 +8,11 @@ import org.hibernate.Session;
 public interface CommentsRepository
 {
    void saveArticleComment(String articleId, String commentOwnerId,
-      String parentCommentid, VisitorComment commentToSave);
+      String parentCommentId, VisitorComment commentToSave);
    
+   void saveImageComment(String imageId, String commentOwnerId,
+      String parentCommentId, VisitorComment commentToSave);
+
    List<VisitorComment> loadArticleComments(String articleId, int pageIdx, int itemsCount);
 
    List<VisitorComment> loadArticleComments(Session session, String queryString, String articleId, int pageIdx, int maxResultsCount);

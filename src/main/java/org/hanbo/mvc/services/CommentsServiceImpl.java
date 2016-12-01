@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.hanbo.mvc.entities.VisitorComment;
 import org.hanbo.mvc.exceptions.WebAppException;
+import org.hanbo.mvc.models.CommentRefObjectType;
 import org.hanbo.mvc.models.ItemListPageDataModel;
 import org.hanbo.mvc.models.UserCommentsPageDataModel;
 import org.hanbo.mvc.models.VisitorCommentDataModel;
@@ -34,43 +35,7 @@ public class CommentsServiceImpl implements CommentsService
    @Override
    public void addArticleComment(VisitorCommentDataModel commentToSave)
    {
-      if (commentToSave != null)
-      {
-         commentToSave.validateDataModel();
-         
-         VisitorComment commentEntity = new VisitorComment();
-         
-         Date dateNow = new Date();
-         
-         commentEntity.setId(IdUtil.generateUuid());
-         commentEntity.setTitle(commentToSave.getCommentTitle());
-         commentEntity.setContent(commentToSave.getCommentContent());
-         commentEntity.setCreateDate(dateNow);
-         commentEntity.setUpdateDate(dateNow);
-         commentEntity.setCommentApproved(false);
-         commentEntity.setCommentPrivate(commentToSave.isCommentPrivate());
-         commentEntity.setSourceIp(commentToSave.getCommentSourceIp());
-
-         if (StringUtils.isEmpty(commentToSave.getCommentUserId()))
-         {
-            commentEntity.setCommenter(commentToSave.getCommenterName());
-            commentEntity.setCommenterEmail(commentToSave.getCommenterEmail());
-         }
-         else 
-         {
-            commentEntity.setCommenter("");
-            commentEntity.setCommenterEmail("");
-            if (StringUtils.isEmpty(commentToSave.getCommentUserId()))
-            {
-               throw new WebAppException("Comment owner's user id cannot be null or empty.", WebAppException.ErrorType.SECURITY);
-            }
-         }
-         
-         _commentsRepo.saveArticleComment(commentToSave.getRefObjectId(),
-            commentToSave.getCommentUserId(),
-            commentToSave.getParentCommentId(),
-            commentEntity);
-      }
+      addCommentToRefObject(commentToSave, CommentRefObjectType.Article);
    }
    
    @Override
@@ -260,12 +225,14 @@ public class CommentsServiceImpl implements CommentsService
    }
 
    @Override
-   public void addImageComment(VisitorCommentDataModel comment) {
-      // TODO Auto-generated method stub
+   public void addImageComment(VisitorCommentDataModel commentToSave)
+   {
+      addCommentToRefObject(commentToSave, CommentRefObjectType.Image);
    }
    
    @Override
-   public List<VisitorCommentDataModel> getViewableImageComments(String imageId) {
+   public List<VisitorCommentDataModel> getViewableImageComments(String imageId)
+   {
       // TODO Auto-generated method stub
       return null;
    }
@@ -285,5 +252,56 @@ public class CommentsServiceImpl implements CommentsService
       }
       
       return null;
+   }
+   
+   private void addCommentToRefObject(VisitorCommentDataModel commentToSave, CommentRefObjectType refObjType)
+   {
+      if (commentToSave != null)
+      {
+         commentToSave.validateDataModel();
+         
+         VisitorComment commentEntity = new VisitorComment();
+         
+         Date dateNow = new Date();
+         
+         commentEntity.setId(IdUtil.generateUuid());
+         commentEntity.setTitle(commentToSave.getCommentTitle());
+         commentEntity.setContent(commentToSave.getCommentContent());
+         commentEntity.setCreateDate(dateNow);
+         commentEntity.setUpdateDate(dateNow);
+         commentEntity.setCommentApproved(false);
+         commentEntity.setCommentPrivate(commentToSave.isCommentPrivate());
+         commentEntity.setSourceIp(commentToSave.getCommentSourceIp());
+
+         if (StringUtils.isEmpty(commentToSave.getCommentUserId()))
+         {
+            commentEntity.setCommenter(commentToSave.getCommenterName());
+            commentEntity.setCommenterEmail(commentToSave.getCommenterEmail());
+         }
+         else 
+         {
+            commentEntity.setCommenter("");
+            commentEntity.setCommenterEmail("");
+            if (StringUtils.isEmpty(commentToSave.getCommentUserId()))
+            {
+               throw new WebAppException("Comment owner's user id cannot be null or empty.", WebAppException.ErrorType.SECURITY);
+            }
+         }
+         
+         if (refObjType == CommentRefObjectType.Article)
+         {
+            _commentsRepo.saveArticleComment(commentToSave.getRefObjectId(),
+               commentToSave.getCommentUserId(),
+               commentToSave.getParentCommentId(),
+               commentEntity);
+         }
+         else if (refObjType == CommentRefObjectType.Image)
+         {
+            _commentsRepo.saveImageComment(commentToSave.getRefObjectId(),
+               commentToSave.getCommentUserId(),
+               commentToSave.getParentCommentId(),
+               commentEntity);
+         }
+      }
    }
 }

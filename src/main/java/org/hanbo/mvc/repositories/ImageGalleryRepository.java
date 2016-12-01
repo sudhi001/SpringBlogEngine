@@ -6,6 +6,7 @@ import java.util.List;
 import org.hanbo.mvc.entities.Gallery;
 import org.hanbo.mvc.entities.Image;
 import org.hanbo.mvc.entities.ViewableGallery;
+import org.hibernate.Session;
 
 public interface ImageGalleryRepository
 {
@@ -38,6 +39,8 @@ public interface ImageGalleryRepository
    Image getUserImage(String imageId, String ownerId);
    
    Image getImage(String imageId);
+   
+   Image getImage(Session session, String imageId);
    
    List<Image> findUserImages(String ownerId, String[] searchWords, int pageIdx, int resultsCount);
 
