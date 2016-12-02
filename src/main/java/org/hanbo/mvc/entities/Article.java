@@ -78,10 +78,14 @@ public class Article
    
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "relatedArticle")
    private Set<VisitorComment> relatedComments;
+
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "relatedArticle")
+   private Set<VisitorLike> relatedLikes;
    
    public Article()
    {
       relatedComments = new HashSet<VisitorComment>();
+      relatedLikes = new HashSet<VisitorLike>();
    }
    
    public String getId()
@@ -228,5 +232,15 @@ public class Article
    public void setRelatedComments(Set<VisitorComment> relatedComments)
    {
       this.relatedComments = relatedComments;
+   }
+
+   public Set<VisitorLike> getRelatedLikes()
+   {
+      return relatedLikes;
+   }
+
+   public void setRelatedLikes(Set<VisitorLike> relatedLikes)
+   {
+      this.relatedLikes = relatedLikes;
    }
 }

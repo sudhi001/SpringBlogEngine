@@ -87,11 +87,15 @@ public class Image
    @OneToMany(fetch = FetchType.LAZY, mappedBy = "relatedImage")
    private Set<VisitorComment> relatedComments;
    
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "relatedImage")
+   private Set<VisitorLike> relatedLikes;
+   
    public Image()
    {
       active = true;
       associatedGalleries = new HashSet<Gallery>();
       relatedComments = new HashSet<VisitorComment>();
+      relatedLikes = new HashSet<VisitorLike>();
    }
    
    public String getId()
@@ -272,5 +276,15 @@ public class Image
    public void setRelatedComments(Set<VisitorComment> relatedComments)
    {
       this.relatedComments = relatedComments;
+   }
+
+   public Set<VisitorLike> getRelatedLikes()
+   {
+      return relatedLikes;
+   }
+
+   public void setRelatedLikes(Set<VisitorLike> relatedLikes)
+   {
+      this.relatedLikes = relatedLikes;
    }
 }

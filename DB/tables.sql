@@ -1,5 +1,7 @@
 use OldBlogEngine;
 
+DROP TABLE IF EXISTS visitorlike;
+
 DROP TABLE IF EXISTS visitorcomment;
 
 DROP TABLE IF EXISTS imagetogallery;
@@ -202,6 +204,23 @@ CREATE TABLE visitorcomment (
    FOREIGN KEY (ownerid) REFERENCES user(id),
    FOREIGN KEY (parentcommentid) REFERENCES visitorcomment(id)  
 );
+
+CREATE TABLE visitorlike (
+   id VARCHAR(45) NOT NULL PRIMARY KEY,
+   likeit BIT(1) NOT NULL DEFAULT 1,
+   sourceip VARCHAR(39) NOT NULL,
+   articleid VARCHAR(45) NULL,
+   imageid VARCHAR(45) NULL,
+   createdate DATETIME NOT NULL,
+   updatedate DATETIME NOT NULL,
+   
+   FOREIGN KEY (articleid) REFERENCES article(id),
+   FOREIGN KEY (imageid) REFERENCES image(id)
+);
+
+CREATE UNIQUE INDEX visitorlike_sourceipidx ON visitorlike (sourceip);
+CREATE UNIQUE INDEX visitorlike_articleidx ON visitorlike (articleid);
+CREATE UNIQUE INDEX visitorlike_imageidx ON visitorlike (imageid);
 
 INSERT INTO user (
    id, username, userpass,
