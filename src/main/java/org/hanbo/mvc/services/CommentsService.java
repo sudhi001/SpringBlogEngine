@@ -13,6 +13,8 @@ public interface CommentsService
    void addImageComment(VisitorCommentDataModel comment);
    
    VisitorCommentDataModel loadArticleComment(String articleId, String commentId);
+
+   VisitorCommentDataModel loadComment(String refObjectId, String commentId, String refObjectType);
    
    UserCommentsPageDataModel getUnapprovedComments(int pageIdx);
    

@@ -28,6 +28,8 @@ public interface CommentsRepository
    
    VisitorComment loadArticleComment(String articleId, String commentId);
    
+   VisitorComment loadImageComment(String imageId, String commentId);
+
    void deleteArticleComment(String articleId, String commentId);   
    
    void deleteArticleComments(String articleId);

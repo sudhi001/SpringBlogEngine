@@ -128,7 +128,6 @@ public class CommentsRepositoryImpl
       return retVals;
    }
       
-   
    @Transactional(
       propagation = Propagation.REQUIRED,
       isolation = Isolation.READ_COMMITTED
@@ -140,6 +139,32 @@ public class CommentsRepositoryImpl
       
       Query query = session.createQuery("select visitorComment from VisitorComment visitorComment where visitorComment.id = :commentId and relatedArticle.id = :articleId")
          .setParameter("articleId", articleId)
+         .setParameter("commentId", commentId)
+         .setFirstResult(0)
+         .setMaxResults(1);
+      List<VisitorComment> foundObjs =  query.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         VisitorComment retVal = foundObjs.get(0);
+         preloadVisitorComment(retVal);
+         
+         return retVal;
+      }
+      
+      return null;
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public VisitorComment loadImageComment(String imageId, String commentId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      
+      Query query = session.createQuery("select visitorComment from VisitorComment visitorComment where visitorComment.id = :commentId and relatedImage.id = :imageId")
+         .setParameter("imageId", imageId)
          .setParameter("commentId", commentId)
          .setFirstResult(0)
          .setMaxResults(1);

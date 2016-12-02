@@ -126,7 +126,7 @@ ${commentItem.commentContent}
                 <div class="row">
                    <div class="col-xs-12 text-right">
                       <c:if test="${commentItem.parentCommentId != null && commentItem.parentCommentId.length() > 0}">
-                         <button class="btn btn-sm" onclick="loadArticleComment('${viewableImage.imageId}', '${commentItem.parentCommentId}', '#prevComment_${commentItem.commentId}', '${pageContext.request.contextPath}')">Previous Comment/Reply</button>
+                         <button class="btn btn-sm" onclick="loadArticleComment('${viewableImage.imageId}', '${commentItem.parentCommentId}', 'Image', '#prevComment_${commentItem.commentId}', '${pageContext.request.contextPath}')">Previous Comment/Reply</button>
                       </c:if>
                       <button class="btn btn-sm" onclick="handleClickAddCommentBtn('${viewableImage.imageId}', '${commentItem.commentId}', '${pageContext.request.contextPath}')">Reply</button>
                    </div>

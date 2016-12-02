@@ -265,6 +265,33 @@ public class CommentsServiceImpl implements CommentsService
       return null;
    }
    
+   @Override
+   public VisitorCommentDataModel loadComment(String refObjectId, String commentId, String refObjectType)
+   {
+      if (!StringUtils.isEmpty(refObjectId) && !StringUtils.isEmpty(commentId) && !StringUtils.isEmpty(refObjectType))
+      {
+         CommentRefObjectType refObjType = CommentRefObjectType.valueOf(refObjectType);
+         
+         VisitorComment comment = null;
+         if (refObjType == CommentRefObjectType.Article)
+         {
+            comment = 
+               _commentsRepo.loadArticleComment(refObjectId, commentId);
+         }
+         else if (refObjType == CommentRefObjectType.Image)
+         {
+            comment =
+               _commentsRepo.loadImageComment(refObjectId, commentId);
+         }
+         VisitorCommentDataModel retVal = 
+            CommentsDataModelEntityMapping.toDataModel_ArticleComment(comment);
+         
+         return retVal;
+      }
+      
+      return null;
+   }
+   
    private void addCommentToRefObject(VisitorCommentDataModel commentToSave, CommentRefObjectType refObjType)
    {
       if (commentToSave != null)

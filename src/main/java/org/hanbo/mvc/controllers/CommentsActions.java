@@ -73,21 +73,23 @@ public class CommentsActions
       );
    }
    
-   @RequestMapping(value = "/public/comments/loadArticleComment",
+   @RequestMapping(value = "/public/comments/loadComment",
       method=RequestMethod.GET,
       produces = MediaType.APPLICATION_JSON_VALUE)
    @ResponseBody
-   public ResponseEntity<String> loadArticleComment(
-      @RequestParam("articleId")
-      String articleId,      
+   public ResponseEntity<String> loadComment(
+      @RequestParam("refObjectId")
+      String refObjectId,      
       @RequestParam("commentId")
-      String commentId
+      String commentId,
+      @RequestParam("refObjectType")
+      String refObjectType
    )
    {
-      if (!StringUtils.isEmpty(articleId) && !StringUtils.isEmpty(commentId))
+      if (!StringUtils.isEmpty(refObjectId) && !StringUtils.isEmpty(commentId) && !StringUtils.isEmpty(refObjectType))
       {
          VisitorCommentDataModel articleComment
-            = this._commentService.loadArticleComment(articleId, commentId);
+            = this._commentService.loadComment(refObjectId, commentId, refObjectType);
          
          if (articleComment != null)
          {
@@ -103,6 +105,8 @@ public class CommentsActions
       String respJsonVal = JsonUtil.simpleErrorMessage("Article Id is null or empty, or comment Id is null or empty.");
       return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
    }
+   
+   
    
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/comments/loadComment",

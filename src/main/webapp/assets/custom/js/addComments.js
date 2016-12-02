@@ -124,9 +124,10 @@ var resetCommentEditingErrorDisplay = function () {
    $("#addCommentDlg #addCommentForm #addCommentFormSuccess").hide();
 }
 
-var loadArticleComment = function (articleId, parentCommentId, divId, baseUrl) {
-  if (articleId != null && articleId.length > 0 &&
+var loadArticleComment = function (refObjectId, parentCommentId, refObjectType, divId, baseUrl) {
+  if (refObjectId != null && refObjectId.length > 0 &&
      parentCommentId != null && parentCommentId.length > 0 &&
+     refObjectType != null && refObjectType.length > 0 &&
      divId != null && divId.length > 0)
   {
      var pCommentId = $(divId + " input:hidden").val();
@@ -137,13 +138,14 @@ var loadArticleComment = function (articleId, parentCommentId, divId, baseUrl) {
      else
      {
         var loadCommentParam = {
-           articleId: articleId,
-           commentId: parentCommentId
+           refObjectId: refObjectId,
+           commentId: parentCommentId,
+           refObjectType: refObjectType
         };
         
         $.ajax({
            type: "GET",
-           url: baseUrl + "/public/comments/loadArticleComment/",
+           url: baseUrl + "/public/comments/loadComment",
            xhrFields: {
               withCredentials: true
            },
