@@ -123,7 +123,6 @@ public class CommentsRepositoryImpl
       List<VisitorComment> retVals = 
          loadComments(session, "select visitorComment from VisitorComment visitorComment where visitorComment.relatedImage.id = :imageId "
             + "and visitorComment.commentPrivate = false and visitorComment.commentApproved = true order by visitorComment.updateDate desc", "imageId", imageId, 0, maxResultsCount);
-      System.out.println("image comments count: " + retVals.size());
       
       return retVals;
    }

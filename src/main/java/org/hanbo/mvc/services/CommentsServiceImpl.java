@@ -238,7 +238,6 @@ public class CommentsServiceImpl implements CommentsService
       List<VisitorCommentDataModel> retVals = new ArrayList<VisitorCommentDataModel>();
       if (!StringUtils.isEmpty(imageId))
       {
-         System.out.println("here2");
          List<VisitorComment> comments = _commentsRepo.loadImageViewableComments(imageId, maxDisplayedComments);
 
          retVals

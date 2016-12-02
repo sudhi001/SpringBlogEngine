@@ -572,10 +572,8 @@ public class UserImageGalleryActions
             {
                List<VisitorCommentDataModel> allViewableComments
                   = this._commentsService.getViewableImageComments(imageId);
-               System.out.println("here");
                if (allViewableComments != null && allViewableComments.size() > 0)
                {
-                  System.out.println("image comments count: " + allViewableComments.size());
                   retVal.addObject("imageComments", allViewableComments);
                }
                else
