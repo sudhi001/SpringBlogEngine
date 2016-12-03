@@ -42,7 +42,7 @@ public class VisitorLikeRepositoryImpl
       Session session = _sessionFactory.getCurrentSession();
       return getRefObectVisitorLikesCount(session, "select count(unique visitorLike.id) "
          + "from VisitorLike visitorLike where visitorLike.relatedArticle.id = :articleId",
-         "article", refObjectId);
+         "articleId", refObjectId);
    }
    
    @Transactional(
