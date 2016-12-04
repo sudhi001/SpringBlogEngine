@@ -20,9 +20,12 @@ public class VisitorLike
    @Column(name = "id", nullable = false, length = 45)
    private String id;
 
-   @Column(name = "likeit", nullable = false)
-   private boolean likeIt;
-
+   @Column(name = "likecount", nullable = false)
+   private int likeCount;
+   
+   @Column(name = "dislikecount", nullable = false)
+   private int dislikeCount;
+   
    @Column(name = "sourceip", nullable = false, length = 39)
    private String sourceIp;
    
@@ -50,16 +53,6 @@ public class VisitorLike
    public void setId(String id)
    {
       this.id = id;
-   }
-
-   public boolean isLikeIt()
-   {
-      return likeIt;
-   }
-
-   public void setLikeIt(boolean likeIt)
-   {
-      this.likeIt = likeIt;
    }
 
    public String getSourceIp()
@@ -110,5 +103,25 @@ public class VisitorLike
    public void setRelatedImage(Image relatedImage)
    {
       this.relatedImage = relatedImage;
+   }
+
+   public int getLikeCount()
+   {
+      return likeCount;
+   }
+
+   public void setLikeCount(int likeCount)
+   {
+      this.likeCount = likeCount;
+   }
+
+   public int getDislikeCount()
+   {
+      return dislikeCount;
+   }
+
+   public void setDislikeCount(int dislikeCount)
+   {
+      this.dislikeCount = dislikeCount;
    }
 }

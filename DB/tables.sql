@@ -207,7 +207,8 @@ CREATE TABLE visitorcomment (
 
 CREATE TABLE visitorlike (
    id VARCHAR(45) NOT NULL PRIMARY KEY,
-   likeit BIT(1) NOT NULL DEFAULT 1,
+   likecount INT NOT NULL DEFAULT 0,
+   dislikecount INT NOT NULL DEFAULT 0,
    sourceip VARCHAR(39) NOT NULL,
    articleid VARCHAR(45) NULL,
    imageid VARCHAR(45) NULL,

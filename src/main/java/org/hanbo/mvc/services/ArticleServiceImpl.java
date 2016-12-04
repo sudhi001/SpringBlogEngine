@@ -73,7 +73,7 @@ public class ArticleServiceImpl implements ArticleService
    @Override
    public ArticleDataModel getArticleById(String articleId)
    {
-      Article article = articlesRepo.getReportById(articleId);
+      Article article = articlesRepo.getArticleById(articleId);
       
       if(article == null)
       {
@@ -91,7 +91,7 @@ public class ArticleServiceImpl implements ArticleService
    @Override
    public ArticleDataModel getArticleById(String articleId, String authorId)
    {
-      Article article = articlesRepo.getReportById(articleId, authorId);
+      Article article = articlesRepo.getArticleById(articleId, authorId);
       
       if(article == null)
       {
@@ -117,7 +117,7 @@ public class ArticleServiceImpl implements ArticleService
       validateArticleIds(articleId, userId);
       
       Article existingArticle
-         = this.articlesRepo.getReportById(articleId, userId);
+         = this.articlesRepo.getArticleById(articleId, userId);
       
       Date dateNow = new Date();
       articleDataModel.setArticleUpdateDate(dateNow);

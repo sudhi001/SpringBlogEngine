@@ -47,7 +47,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       isolation = Isolation.READ_COMMITTED
    )
    @Override
-   public Article getReportById(String articleId)
+   public Article getArticleById(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();
       Query objQuery = session.createQuery("select article from Article article "
@@ -65,7 +65,7 @@ public class ArticlesRepositoryImpl implements ArticlesRepository
       isolation = Isolation.READ_COMMITTED
    )
    @Override
-   public Article getReportById(String articleId, String authorId)
+   public Article getArticleById(String articleId, String authorId)
    {
       Session session = _sessionFactory.getCurrentSession();
       Query objQuery = session.createQuery("select article from Article article "

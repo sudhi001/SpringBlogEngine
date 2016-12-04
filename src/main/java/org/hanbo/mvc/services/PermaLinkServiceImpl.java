@@ -78,7 +78,7 @@ public class PermaLinkServiceImpl implements PermaLinkService
    @Override
    public void deletePermaLink(String articleId, String authorId)
    {
-      Article articleToModify = this._articleRepo.getReportById(articleId, authorId);
+      Article articleToModify = this._articleRepo.getArticleById(articleId, authorId);
       if (articleToModify == null)
       {
          throw new WebAppException(

@@ -9,9 +9,9 @@ public interface ArticlesRepository
 {
    void saveArticle(Article article);
    
-   Article getReportById(String articleId);
+   Article getArticleById(String articleId);
    
-   Article getReportById(
+   Article getArticleById(
       String articleId, String authorId
    );
    

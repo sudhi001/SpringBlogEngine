@@ -2,7 +2,9 @@ package org.hanbo.mvc.repositories;
 
 import java.util.List;
 
+import org.hanbo.mvc.entities.Article;
 import org.hanbo.mvc.entities.VisitorLike;
+import org.hanbo.mvc.utilities.IdUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 @SuppressWarnings("unchecked")
 @Repository
@@ -20,6 +22,9 @@ public class VisitorLikeRepositoryImpl
 {
    @Autowired
    private SessionFactory _sessionFactory;
+   
+   @Autowired
+   private ArticlesRepository _articleRepo;
 
    @Transactional(
       propagation = Propagation.REQUIRED,
@@ -30,6 +35,42 @@ public class VisitorLikeRepositoryImpl
    {
       Session session = _sessionFactory.getCurrentSession();
       session.saveOrUpdate(likeToSave);
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public void addVisitorLikeToArticle(String articleId, boolean likeIt, String sourceIp)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery("select visitorLike from VisitorLike visitorLike "
+            + "where visitorLike.relatedArticle.id = :articleId and visitorLike.sourceip = :sourceIp")
+         .setParameter("articleId", articleId)
+         .setParameter("sourceIp", sourceIp)
+         .setMaxResults(1);
+      List<VisitorLike> foundObjs = query.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         VisitorLike visitorLike = foundObjs.get(0);
+         
+         if (visitorLike != null)
+         {
+            if (likeIt)
+            {
+               int currentLikeCount = visitorLike.getLikeCount();
+               visitorLike.setLikeCount(currentLikeCount + 1);
+            }
+            else
+            {
+               int currentDislikeCount = visitorLike.getDislikeCount();
+               visitorLike.setDislikeCount(currentDislikeCount + 1);
+            }
+            
+            session.update(visitorLike);
+         }
+      }
    }
 
    @Transactional(

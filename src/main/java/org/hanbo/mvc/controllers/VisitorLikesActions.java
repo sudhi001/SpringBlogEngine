@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -25,9 +26,18 @@ public class VisitorLikesActions
    public ResponseEntity<String> addLikeToArticle(
       @PathVariable("articleId")
       String articleId,
+      @RequestParam("like")
+      boolean visitorLike,
       HttpServletRequest likeReq
    )
-   {  
+   {
+      String ipAddress = likeReq.getHeader("X-FORWARDED-FOR");
+      if (ipAddress == null) {
+         ipAddress = likeReq.getRemoteAddr();
+      }
+      
+      
+      
       return null;
    }
 }
