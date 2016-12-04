@@ -38,7 +38,7 @@
                        </c:otherwise>
                     </c:choose>
                  </a></span></div>
-                 <div class="col-xs-6"><span class="description"><strong>Uploaded Date:</strong> - ${viewableImage.getUpdloadDateString()}</span></div>
+                 <div class="col-xs-6"><span class="description"><strong>Uploaded Date:</strong> - ${viewableImage.getUploadDateString()}</span></div>
               </div>
               <c:if test="${viewableImage.imageKeywords != null && viewableImage.imageKeywords.length() > 0}">
                  <div class="row">

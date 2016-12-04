@@ -1,5 +1,6 @@
 package org.hanbo.mvc.repositories;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Article;
@@ -51,6 +52,8 @@ public class VisitorLikeRepositoryImpl
          .setParameter("sourceIp", sourceIp)
          .setMaxResults(1);
       List<VisitorLike> foundObjs = query.list();
+      
+      Date dateNow = new Date();
       if (foundObjs != null && foundObjs.size() > 0)
       {
          VisitorLike visitorLike = foundObjs.get(0);
@@ -68,8 +71,13 @@ public class VisitorLikeRepositoryImpl
                visitorLike.setDislikeCount(currentDislikeCount + 1);
             }
             
+            visitorLike.setUpdateDate(dateNow);
             session.update(visitorLike);
          }
+      }
+      else
+      {
+         Article articleToLike = _articleRepo.getArticleById(articleId);
       }
    }
 

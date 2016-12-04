@@ -89,18 +89,18 @@ public class ImageDisplayDetail
       this.imageThumbFilePath = imageThumbFilePath;
    }
 
-   public Date getUpdloadDate()
+   public Date getUploadDate()
    {
       return uploadDate;
    }
    
-   public String getUpdloadDateString()
+   public String getUploadDateString()
    {
       return
       DateToString.dateToString(uploadDate, "MM/dd/yyyy");
    }
 
-   public void setUpdloadDate(Date uploadDate)
+   public void setUploadDate(Date uploadDate)
    {
       this.uploadDate = uploadDate;
    }

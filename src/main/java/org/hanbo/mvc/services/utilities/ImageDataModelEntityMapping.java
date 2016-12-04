@@ -20,7 +20,7 @@ public class ImageDataModelEntityMapping
       retVal.setImageId(img.getId());
       retVal.setImageTitle(img.getImageTitle());
       retVal.setImageKeywords(img.getImageKeywords());
-      retVal.setUpdloadDate(img.getUploadDate());
+      retVal.setUploadDate(img.getUploadDate());
       retVal.setImageActive(img.isActive());
       retVal.setImageNotSafeForWork(img.isNotSafeForWork());
       retVal.setImageFilePath(img.getFilePath());
@@ -158,7 +158,7 @@ public class ImageDataModelEntityMapping
                      imageDD.setImageId(image.getId());
                      imageDD.setImageTitle(image.getImageTitle());
                      imageDD.setImageKeywords(image.getImageKeywords());
-                     imageDD.setUpdloadDate(image.getUploadDate());
+                     imageDD.setUploadDate(image.getUploadDate());
                      imageDD.setImageActive(image.isActive());
                      imageDD.setImageNotSafeForWork(image.isNotSafeForWork());
                      imageDD.setImageFilePath(image.getFilePath());
