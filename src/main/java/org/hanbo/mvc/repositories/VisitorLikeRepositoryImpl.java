@@ -78,6 +78,28 @@ public class VisitorLikeRepositoryImpl
       else
       {
          Article articleToLike = _articleRepo.getArticleById(articleId);
+         
+         if (articleToLike != null)
+         {
+            VisitorLike visitorLike = new VisitorLike();
+            visitorLike.setId(IdUtil.generateUuid());
+            visitorLike.setRelatedArticle(articleToLike);
+            visitorLike.setSourceIp(sourceIp);
+            visitorLike.setUpdateDate(dateNow);
+            visitorLike.setCreateDate(dateNow);
+            if (likeIt)
+            {
+               int currentLikeCount = visitorLike.getLikeCount();
+               visitorLike.setLikeCount(currentLikeCount + 1);
+            }
+            else
+            {
+               int currentDislikeCount = visitorLike.getDislikeCount();
+               visitorLike.setDislikeCount(currentDislikeCount + 1);
+            }
+            
+            session.save(visitorLike);
+         }
       }
    }
 
