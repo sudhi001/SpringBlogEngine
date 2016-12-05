@@ -69,7 +69,7 @@ public class UserImageGalleryActions
       }
 
       GalleryDisplayPageDataModel pageDataModel =
-      _imageGalleryService.getUserGalleries(loginUser.getUserId(), pageIdx);
+         _imageGalleryService.getUserGalleries(loginUser.getUserId(), pageIdx);
       
       PageMetadata pageMetadata
          = _util.creatPageMetadata("All My Galleries");

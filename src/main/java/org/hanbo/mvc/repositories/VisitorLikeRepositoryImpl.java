@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hanbo.mvc.entities.Article;
+import org.hanbo.mvc.entities.Image;
 import org.hanbo.mvc.entities.VisitorLike;
 import org.hanbo.mvc.utilities.IdUtil;
 import org.hibernate.Query;
@@ -26,6 +27,9 @@ public class VisitorLikeRepositoryImpl
    
    @Autowired
    private ArticlesRepository _articleRepo;
+   
+   @Autowired
+   private ImageGalleryRepository _imageRepo;
 
    @Transactional(
       propagation = Propagation.REQUIRED,
@@ -47,7 +51,7 @@ public class VisitorLikeRepositoryImpl
    {
       Session session = _sessionFactory.getCurrentSession();
       Query query = session.createQuery("select visitorLike from VisitorLike visitorLike "
-            + "where visitorLike.relatedArticle.id = :articleId and visitorLike.sourceip = :sourceIp")
+            + "where visitorLike.relatedArticle.id = :articleId and visitorLike.sourceIp = :sourceIp")
          .setParameter("articleId", articleId)
          .setParameter("sourceIp", sourceIp)
          .setMaxResults(1);
@@ -108,11 +112,89 @@ public class VisitorLikeRepositoryImpl
       isolation = Isolation.READ_COMMITTED
    )
    @Override
+   public void addVisitorLikeToImage(String imageId, boolean likeIt, String sourceIp)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery("select visitorLike from VisitorLike visitorLike "
+            + "where visitorLike.relatedImage.id = :imageId and visitorLike.sourceIp = :sourceIp")
+         .setParameter("imageId", imageId)
+         .setParameter("sourceIp", sourceIp)
+         .setMaxResults(1);
+      List<VisitorLike> foundObjs = query.list();
+      
+      Date dateNow = new Date();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         VisitorLike visitorLike = foundObjs.get(0);
+         
+         if (visitorLike != null)
+         {
+            if (likeIt)
+            {
+               int currentLikeCount = visitorLike.getLikeCount();
+               visitorLike.setLikeCount(currentLikeCount + 1);
+            }
+            else
+            {
+               int currentDislikeCount = visitorLike.getDislikeCount();
+               visitorLike.setDislikeCount(currentDislikeCount + 1);
+            }
+            
+            visitorLike.setUpdateDate(dateNow);
+            session.update(visitorLike);
+         }
+      }
+      else
+      {
+         Image imageToLike = _imageRepo.getImage(imageId);
+         
+         if (imageToLike != null)
+         {
+            VisitorLike visitorLike = new VisitorLike();
+            visitorLike.setId(IdUtil.generateUuid());
+            visitorLike.setRelatedImage(imageToLike);
+            visitorLike.setSourceIp(sourceIp);
+            visitorLike.setUpdateDate(dateNow);
+            visitorLike.setCreateDate(dateNow);
+            if (likeIt)
+            {
+               int currentLikeCount = visitorLike.getLikeCount();
+               visitorLike.setLikeCount(currentLikeCount + 1);
+            }
+            else
+            {
+               int currentDislikeCount = visitorLike.getDislikeCount();
+               visitorLike.setDislikeCount(currentDislikeCount + 1);
+            }
+            
+            session.save(visitorLike);
+         }
+      }
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
    public long getArticleVisitorLikesCount(String refObjectId)
    {
       Session session = _sessionFactory.getCurrentSession();
-      return getRefObectVisitorLikesCount(session, "select count(unique visitorLike.id) "
-         + "from VisitorLike visitorLike where visitorLike.relatedArticle.id = :articleId",
+      return getRefObectVisitorLikesCount(session, "select count(distinct visitorLike.sourceIp) "
+         + "from VisitorLike visitorLike where visitorLike.relatedArticle.id = :articleId and visitorLike.likeCount > 0",
+         "articleId", refObjectId);
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public long getArticleVisitorDislikesCount(String refObjectId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      return getRefObectVisitorLikesCount(session, "select count(distinct visitorLike.sourceIp) "
+         + "from VisitorLike visitorLike where visitorLike.relatedArticle.id = :articleId and visitorLike.dislikeCount > 0",
          "articleId", refObjectId);
    }
    
@@ -124,8 +206,21 @@ public class VisitorLikeRepositoryImpl
    public long getImageVisitorLikesCount(String refObjectId)
    {
       Session session = _sessionFactory.getCurrentSession();
-      return getRefObectVisitorLikesCount(session, "select count(unique visitorLike.id) "
-         + "from VisitorLike visitorLike where visitorLike.relatedImage.id = :imageId",
+      return getRefObectVisitorLikesCount(session, "select count(distinct visitorLike.sourceIp) "
+         + "from VisitorLike visitorLike where visitorLike.relatedImage.id = :imageId and visitorLike.likeCount > 0",
+         "imageId", refObjectId);
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public long getImageVisitorDislikesCount(String refObjectId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      return getRefObectVisitorLikesCount(session, "select count(distinct visitorLike.sourceIp) "
+         + "from VisitorLike visitorLike where visitorLike.relatedImage.id = :imageId and visitorLike.dislikeCount > 0",
          "imageId", refObjectId);
    }
    

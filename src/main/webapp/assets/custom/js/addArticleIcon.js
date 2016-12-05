@@ -94,7 +94,7 @@ var setArticleIcon = function (articleId, iconResourceId, baseUrl) {
          }
       });
    }
-}
+};
 
 var clickRemoveArticleIconBtn = function (articleId, baseUrl) {
    if (articleId != null && articleId.length > 0) {
@@ -112,7 +112,7 @@ var clickRemoveArticleIconBtn = function (articleId, baseUrl) {
          }
       });
    }
-}
+};
 
 var clicNavigationBack = function (baseUrl) {
    var idx = $("#addArticleIconDlg #addArticleIconForm #currentPageIdx").val();

@@ -74,6 +74,16 @@
         <!-- <span class="pull-right text-muted">127 likes - 3 comments</span> -->
       </div>
 
+      <div class="box-footer box-comments" style="display: block; margin-bottom: 15px;">
+         <div class="row">
+            <div class="col-xs-12 text-right">
+               <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-thumbs-down"></span></button>
+               <button class="btn btn-primary btn-xs" onclick="addArticleVisitorLike('${pageContext.request.contextPath}/likes/article/${articleModel.articleId}', true)"><span class="glyphicon glyphicon-thumbs-up"></span></button>
+               <span class="pull-right text-muted"><span id="likeSpan">127 like(s),</span> <span id="dislikeSpan">58 dislike(s),</span> <span id="commentsCount">3 comments</span></span>
+            </div>
+         </div>
+      </div>
+      
       <div class="box-footer box-comments" style="display: block;">
         <c:if test="${!articleModel.isPreviewMode() && articleComments != null && articleComments.size() > 0}">
           <h4>Comments</h4>
@@ -265,7 +275,7 @@ ${commentItem.commentContent}
     <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe-ui-default.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/custom/js/validateEmail.js"></script>
     <script src="${pageContext.request.contextPath}/assets/custom/js/addComments.js"></script>
-    <script type="text/javascript">
+    <script src="${pageContext.request.contextPath}/assets/custom/js/visitorLike.js"></script>    <script type="text/javascript">
        var viewImage = function (imgUrl, imgWidth, imgHeight) {
           var pswpElement = document.querySelectorAll('.pswp')[0];
 
