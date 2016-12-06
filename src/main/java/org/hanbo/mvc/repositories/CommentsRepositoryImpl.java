@@ -386,6 +386,30 @@ public class CommentsRepositoryImpl
       return null;
    }
    
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public long getArticleViewableCommentsCount(String articleId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      String queryStr = "select count(visitorComment) from VisitorComment visitorComment where visitorComment.isapproved = true and visitorComment.isprivate = false and vistorComment.relatedArticle.id = :articleId";
+      return getViewableRefObjectCommentsCount(session, queryStr, "articleId", articleId);
+   }
+   
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public long getImageViewableCommentsCount(String imageId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      String queryStr = "select count(visitorComment) from VisitorComment visitorComment where visitorComment.isapproved = true and visitorComment.isprivate = false and vistorComment.relatedImage.id = :imageId";
+      return getViewableRefObjectCommentsCount(session, queryStr, "imageId", imageId);
+   }
+   
    private VisitorComment getCommentById(Session session, String commentId)
    {
       Query query = session.createQuery("select comment from VisitorComment comment where comment.id = :commentId")
@@ -478,5 +502,24 @@ public class CommentsRepositoryImpl
        
          session.saveOrUpdate(commentToSave);
       }
+   }
+   
+   private long getViewableRefObjectCommentsCount(Session session, String query, String queryParam, String queryParamValue)
+   {
+      long retVal = 0L;
+      if (session != null && !StringUtils.isEmpty(query) && !StringUtils.isEmpty(queryParam) && !StringUtils.isEmpty(queryParamValue))
+      {
+         Query queryObj = session.createQuery(query)
+            .setParameter(queryParam, queryParamValue)
+            .setMaxResults(1);
+         
+         List<Long> foundObjs = queryObj.list();
+         if (foundObjs != null && foundObjs.size() > 0)
+         {
+            retVal = foundObjs.get(0);
+         }
+      }
+      
+      return retVal;
    }
 }

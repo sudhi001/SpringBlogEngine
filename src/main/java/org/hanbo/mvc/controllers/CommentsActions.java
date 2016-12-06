@@ -105,9 +105,7 @@ public class CommentsActions
       String respJsonVal = JsonUtil.simpleErrorMessage("Article Id is null or empty, or comment Id is null or empty.");
       return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
    }
-   
-   
-   
+
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
    @RequestMapping(value = "/admin/comments/loadComment",
       method=RequestMethod.GET,
@@ -268,6 +266,39 @@ public class CommentsActions
       {
         e.printStackTrace();
          return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Unknown error occurred"), httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+   }
+   
+   @RequestMapping(value = "/public/comments/count/{refObjectId}",
+      method=RequestMethod.GET,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+   @ResponseBody
+   public ResponseEntity<String> getRefObjectCommentsCount(
+      @PathVariable("refObjectId")
+      String refObjectId,
+      @RequestParam("refObjectType")
+      String refObjectType
+   )
+   {
+      final HttpHeaders httpHeaders= new HttpHeaders();
+      httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+      if (!StringUtils.isEmpty(refObjectId) && !StringUtils.isEmpty(refObjectType))
+      {
+         try
+         {
+            //int commentsCount = _commentService.;
+            // TODO
+            return null;
+         }
+         catch(Exception e)
+         {
+            return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Unknown error occurred"), httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+         }
+      }
+      else
+      {
+         return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Unknown error occurred"), httpHeaders, HttpStatus.BAD_REQUEST);
       }
    }
    

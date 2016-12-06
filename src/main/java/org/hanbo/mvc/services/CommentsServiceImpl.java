@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 @Service
 @PropertySource("classpath:/site.properties")
@@ -150,6 +150,25 @@ public class CommentsServiceImpl implements CommentsService
                retVal.setCommenterName(foundObj.getCommenter());
                retVal.setCommenterEmail(foundObj.getCommenterEmail());
             }
+         }
+      }
+      
+      return retVal;
+   }
+   
+   @Override
+   public int getViewableCommentsCount(String refOjectId, CommentRefObjectType objectType)
+   {
+      int retVal = 0;
+      if (!StringUtils.isEmpty(refOjectId))
+      {
+         if (objectType == CommentRefObjectType.Article)
+         {
+            retVal = (int)this._commentsRepo.getArticleViewableCommentsCount(refOjectId);
+         }
+         else if (objectType == CommentRefObjectType.Image)
+         {
+            retVal = (int)this._commentsRepo.getImageViewableCommentsCount(refOjectId);
          }
       }
       

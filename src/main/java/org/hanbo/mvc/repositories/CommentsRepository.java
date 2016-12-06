@@ -43,4 +43,8 @@ public interface CommentsRepository
    boolean deleteComment(String commentId);
 
    VisitorComment loadComment(String commentId);
+   
+   long getArticleViewableCommentsCount(String articleId);
+
+   long getImageViewableCommentsCount(String imageId);
 }

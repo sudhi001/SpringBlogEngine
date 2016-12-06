@@ -64,4 +64,26 @@ public class VisitorLikesActions
          return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
       }
    }
+   
+   @RequestMapping(value = "/likes/article/{articleId}", method=RequestMethod.GET)
+   public ResponseEntity<String> addLikeToArticle(
+      @PathVariable("articleId")
+      String articleId
+   )
+   {
+      final HttpHeaders httpHeaders= new HttpHeaders();
+      httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+      try
+      {
+         ArticleVisitorLikeStatistics articleLikeStatistics =
+            _visitorLikeService.getArticleVisitorLikeStatistics(articleId);
+         return new ResponseEntity<String>(JsonUtil.convertObjectToJson(articleLikeStatistics), httpHeaders, HttpStatus.OK);
+      }
+      catch(Exception ex)
+      {
+         ex.printStackTrace();
+         String respJsonVal = JsonUtil.simpleErrorMessage("Unknown exception occurred.");
+         return new ResponseEntity<String>(respJsonVal, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+   }
 }

@@ -2,6 +2,7 @@ package org.hanbo.mvc.services;
 
 import java.util.List;
 
+import org.hanbo.mvc.models.CommentRefObjectType;
 import org.hanbo.mvc.models.UserCommentsPageDataModel;
 import org.hanbo.mvc.models.VisitorCommentDataModel;
 import org.hanbo.mvc.models.json.CommentJsonDataModel;
@@ -23,6 +24,8 @@ public interface CommentsService
    List<VisitorCommentDataModel> getViewableArticleComments(String articleId);
    
    List<VisitorCommentDataModel> getViewableImageComments(String imageId);
+   
+   int getViewableCommentsCount(String refOjectId, CommentRefObjectType objectType);
 
    CommentJsonDataModel loadComment(String commentId);
    

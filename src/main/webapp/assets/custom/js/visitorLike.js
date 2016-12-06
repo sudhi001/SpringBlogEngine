@@ -21,3 +21,22 @@ var addArticleVisitorLike = function(articleLikeUrl, likeIt) {
       });
    }
 };
+
+var getArticleVisitorLikesCount = function(articleLikeUrl) {
+   if (articleLikeUrl != null) {
+      $.ajax({
+         type: "GET",
+         url: articleLikeUrl,
+         xhrFields: {
+            withCredentials: true
+         },
+         async: false,
+         success: function(data) {
+            $("#likeSpan").html(data.likeCount + " like(s),")
+            $("#dislikeSpan").html(data.dislikeCount + " dislike(s),")
+         },
+         error: function(data) {
+         }
+      });
+   }
+};

@@ -73,3 +73,27 @@ var adminDeleteComment = function (commentId, baseUrl) {
    }).fail(function() {
    });
 };
+
+var getCommentsCount = function(commentCountUrl, refObjType) {
+   if (commentCountUrl != null) {
+      var countReq = {
+         refObjectType: refObjType
+      };
+      
+      $.ajax({
+         type: "GET",
+         url: commentCountUrl,
+         xhrFields: {
+            withCredentials: true
+         },
+         data: countReq,
+         async:false
+      })
+      .done(function(data) {
+         if (data != null) {
+            
+         }
+      }).fail(function() {
+      });
+   }
+};

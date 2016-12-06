@@ -76,10 +76,13 @@
 
       <div class="box-footer box-comments" style="display: block; margin-bottom: 15px;">
          <div class="row">
-            <div class="col-xs-12 text-right">
-               <button class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-thumbs-down"></span></button>
+            <div class="col-xs-6 col-sm-9 col-md-9 text-right">
+               <button class="btn btn-danger btn-xs" onclick="addArticleVisitorLike('${pageContext.request.contextPath}/likes/article/${articleModel.articleId}', false)"><span class="glyphicon glyphicon-thumbs-down"></span></button>
                <button class="btn btn-primary btn-xs" onclick="addArticleVisitorLike('${pageContext.request.contextPath}/likes/article/${articleModel.articleId}', true)"><span class="glyphicon glyphicon-thumbs-up"></span></button>
-               <span class="pull-right text-muted"><span id="likeSpan">127 like(s),</span> <span id="dislikeSpan">58 dislike(s),</span> <span id="commentsCount">3 comments</span></span>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-3 text-center">
+               <span class="pull-right text-muted"><span id="likeSpan">0 like(s),</span> <span id="dislikeSpan">0 dislike(s),</span> 
+               <span id="commentsCount">3 comments</span></span>
             </div>
          </div>
       </div>
@@ -275,7 +278,8 @@ ${commentItem.commentContent}
     <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe-ui-default.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/custom/js/validateEmail.js"></script>
     <script src="${pageContext.request.contextPath}/assets/custom/js/addComments.js"></script>
-    <script src="${pageContext.request.contextPath}/assets/custom/js/visitorLike.js"></script>    <script type="text/javascript">
+    <script src="${pageContext.request.contextPath}/assets/custom/js/visitorLike.js"></script>
+    <script type="text/javascript">
        var viewImage = function (imgUrl, imgWidth, imgHeight) {
           var pswpElement = document.querySelectorAll('.pswp')[0];
 
@@ -291,7 +295,9 @@ ${commentItem.commentContent}
       
           var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
           gallery.init();
-       }
+       };
+       
+       getArticleVisitorLikesCount('${pageContext.request.contextPath}/likes/article/${articleModel.articleId}');
     </script> 
   </tiles:putAttribute>
 </tiles:insertDefinition>
