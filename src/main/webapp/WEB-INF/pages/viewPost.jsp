@@ -81,8 +81,8 @@
                <button class="btn btn-primary btn-xs" onclick="addArticleVisitorLike('${pageContext.request.contextPath}/likes/article/${articleModel.articleId}', true)"><span class="glyphicon glyphicon-thumbs-up"></span></button>
             </div>
             <div class="col-xs-6 col-sm-3 col-md-3 text-center">
-               <span class="pull-right text-muted"><span id="likeSpan">0 like(s),</span> <span id="dislikeSpan">0 dislike(s),</span> 
-               <span id="commentsCount">3 comments</span></span>
+               <div class="pull-right text-muted"><span id="likeSpan">0 like(s),</span> <span id="dislikeSpan">0 dislike(s),</span> 
+               <span id="commentsCount">3 comments</span></div>
             </div>
          </div>
       </div>
@@ -298,6 +298,7 @@ ${commentItem.commentContent}
        };
        
        getArticleVisitorLikesCount('${pageContext.request.contextPath}/likes/article/${articleModel.articleId}');
+       getCommentsCount('${pageContext.request.contextPath}/public/comments/count/${articleModel.articleId}', 'Article');
     </script> 
   </tiles:putAttribute>
 </tiles:insertDefinition>

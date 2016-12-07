@@ -394,7 +394,7 @@ public class CommentsRepositoryImpl
    public long getArticleViewableCommentsCount(String articleId)
    {
       Session session = _sessionFactory.getCurrentSession();
-      String queryStr = "select count(visitorComment) from VisitorComment visitorComment where visitorComment.isapproved = true and visitorComment.isprivate = false and vistorComment.relatedArticle.id = :articleId";
+      String queryStr = "select count(visitorComment) from VisitorComment visitorComment where visitorComment.commentApproved = true and visitorComment.commentPrivate = false and visitorComment.relatedArticle.id = :articleId";
       return getViewableRefObjectCommentsCount(session, queryStr, "articleId", articleId);
    }
    
@@ -406,7 +406,7 @@ public class CommentsRepositoryImpl
    public long getImageViewableCommentsCount(String imageId)
    {
       Session session = _sessionFactory.getCurrentSession();
-      String queryStr = "select count(visitorComment) from VisitorComment visitorComment where visitorComment.isapproved = true and visitorComment.isprivate = false and vistorComment.relatedImage.id = :imageId";
+      String queryStr = "select count(visitorComment) from VisitorComment visitorComment where visitorComment.commentApproved = true and visitorComment.commentPrivate = false and visitorComment.relatedImage.id = :imageId";
       return getViewableRefObjectCommentsCount(session, queryStr, "imageId", imageId);
    }
    

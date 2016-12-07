@@ -12,6 +12,7 @@ import org.hanbo.mvc.models.UserCommentsPageDataModel;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
 import org.hanbo.mvc.models.VisitorCommentDataModel;
 import org.hanbo.mvc.models.json.CommentJsonDataModel;
+import org.hanbo.mvc.models.json.GenericValueResponse;
 import org.hanbo.mvc.models.json.UserCommentActionInputDataModel;
 import org.hanbo.mvc.services.CommentsService;
 import org.hanbo.mvc.utilities.JsonUtil;
@@ -287,12 +288,19 @@ public class CommentsActions
       {
          try
          {
-            //int commentsCount = _commentService.;
-            // TODO
-            return null;
+            CommentRefObjectType refObjType = CommentRefObjectType.valueOf(refObjectType);
+            int commentsCount = _commentService.getViewableCommentsCount(refObjectId, refObjType);
+            
+            GenericValueResponse<Integer> retObjVal = new GenericValueResponse<Integer>();
+            retObjVal.setResponseValue(commentsCount);
+
+            String jsonResp = JsonUtil.convertObjectToJson(retObjVal);
+            
+            return new ResponseEntity<String>(jsonResp, httpHeaders, HttpStatus.OK);
          }
          catch(Exception e)
          {
+            e.printStackTrace();
             return new ResponseEntity<String>(JsonUtil.simpleErrorMessage("Unknown error occurred"), httpHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
          }
       }

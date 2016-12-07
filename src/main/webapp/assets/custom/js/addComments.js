@@ -1,4 +1,4 @@
-handleClickAddCommentBtn = function (refObjectId, parentCommentId, baseUrl) {
+var handleClickAddCommentBtn = function (refObjectId, parentCommentId, baseUrl) {
    resetCommentEditing();
    $("#addCommentDlg #addCommentForm #refObjectId").val(refObjectId);
    $("#addCommentDlg #addCommentForm #parentCommentId").val(parentCommentId);
@@ -6,7 +6,7 @@ handleClickAddCommentBtn = function (refObjectId, parentCommentId, baseUrl) {
    $("#addCommentDlg").modal("show");   
 } 
 
-validateAndSubmitComment = function (addCommentUrl) {
+var validateAndSubmitComment = function (addCommentUrl) {
    var errorMsg = [];
    var showError = false;
    var textVal = $("#addCommentDlg #addCommentForm #refObjectId").val();
@@ -114,7 +114,7 @@ var resetCommentEditing = function () {
    $("#addCommentDlg #addCommentForm #commentPrivate").prop("checked", false);
    
    resetCommentEditingErrorDisplay();
-} 
+};
 
 var resetCommentEditingErrorDisplay = function () {
    $("#addCommentDlg #addCommentForm #addCommentFormError #addCommentFormErrorMsg").html("");
@@ -122,7 +122,7 @@ var resetCommentEditingErrorDisplay = function () {
    
    $("#addCommentDlg #addCommentForm #addCommentFormSuccess #addCommentFormSuccessMsg").html("");
    $("#addCommentDlg #addCommentForm #addCommentFormSuccess").hide();
-}
+};
 
 var loadArticleComment = function (refObjectId, parentCommentId, refObjectType, divId, baseUrl) {
   if (refObjectId != null && refObjectId.length > 0 &&
@@ -199,4 +199,28 @@ var loadArticleComment = function (refObjectId, parentCommentId, refObjectType, 
         });
      }
   }
-}
+};
+
+var getCommentsCount = function(commentCountUrl, refObjType) {
+   if (commentCountUrl != null) {
+      var countReq = {
+         refObjectType: refObjType
+      };
+      
+      $.ajax({
+         type: "GET",
+         url: commentCountUrl,
+         xhrFields: {
+            withCredentials: true
+         },
+         data: countReq,
+         async:false
+      })
+      .done(function(data) {
+         if (data != null) {
+            $(".box-comments #commentsCount").html(data.responseValue + " comments");
+         }
+      }).fail(function() {
+      });
+   }
+};
