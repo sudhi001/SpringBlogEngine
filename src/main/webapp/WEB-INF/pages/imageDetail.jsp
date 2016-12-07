@@ -74,7 +74,20 @@
            </c:choose>
          </div>
       </div>
-
+      
+      <div class="box-footer box-comments" style="display: block; margin-bottom: 15px;">
+         <div class="row">
+            <div class="col-xs-6 col-sm-9 col-md-9 text-right">
+               <button class="btn btn-danger btn-xs" onclick="addImageVisitorLike('${pageContext.request.contextPath}/likes/image/${viewableImage.imageId}', false)"><span class="glyphicon glyphicon-thumbs-down"></span></button>
+               <button class="btn btn-primary btn-xs" onclick="addImageVisitorLike('${pageContext.request.contextPath}/likes/image/${viewableImage.imageId}', true)"><span class="glyphicon glyphicon-thumbs-up"></span></button>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-3 text-center">
+               <div class="pull-right text-muted"><span id="likeSpan">0 like(s),</span> <span id="dislikeSpan">0 dislike(s),</span> 
+               <span id="commentsCount">3 comments</span></div>
+            </div>
+         </div>
+      </div>
+      
       <div class="box-footer box-comments" style="display: block;">
         <c:if test="${imageComments != null && imageComments.size() > 0}">
           <h4>Comments</h4>
@@ -280,7 +293,10 @@ ${commentItem.commentContent}
    
        var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
        gallery.init();
-    }
+    };
+    
+    getImageVisitorLikesCount('${pageContext.request.contextPath}/likes/image/${viewableImage.imageId}');
+    getCommentsCount('${pageContext.request.contextPath}/public/comments/count/${viewableImage.imageId}', 'Image');
     </script>
   </tiles:putAttribute>
 </tiles:insertDefinition>

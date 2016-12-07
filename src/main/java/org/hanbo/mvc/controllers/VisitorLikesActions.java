@@ -2,7 +2,7 @@ package org.hanbo.mvc.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.hanbo.mvc.models.json.ArticleVisitorLikeStatistics;
+import org.hanbo.mvc.models.json.VisitorLikeStatistics;
 //import org.apache.log4j.LogManager;
 //import org.apache.log4j.Logger;
 //import org.hanbo.mvc.controllers.utilities.ActionsUtil;
@@ -53,7 +53,7 @@ public class VisitorLikesActions
          
          _visitorLikeService.addVisitorLikeToArticle(articleId, visitorLike, ipAddress);
          
-         ArticleVisitorLikeStatistics articleLikeStatistics =
+         VisitorLikeStatistics articleLikeStatistics =
             _visitorLikeService.getArticleVisitorLikeStatistics(articleId);
          return new ResponseEntity<String>(JsonUtil.convertObjectToJson(articleLikeStatistics), httpHeaders, HttpStatus.OK);
       }
@@ -75,7 +75,7 @@ public class VisitorLikesActions
       httpHeaders.setContentType(MediaType.APPLICATION_JSON);
       try
       {
-         ArticleVisitorLikeStatistics articleLikeStatistics =
+         VisitorLikeStatistics articleLikeStatistics =
             _visitorLikeService.getArticleVisitorLikeStatistics(articleId);
          return new ResponseEntity<String>(JsonUtil.convertObjectToJson(articleLikeStatistics), httpHeaders, HttpStatus.OK);
       }

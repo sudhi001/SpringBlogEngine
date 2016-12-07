@@ -1,10 +1,14 @@
 package org.hanbo.mvc.services;
 
-import org.hanbo.mvc.models.json.ArticleVisitorLikeStatistics;
+import org.hanbo.mvc.models.json.VisitorLikeStatistics;
 
 public interface VisitorLikeService
 {
    void addVisitorLikeToArticle(String articleId, boolean likeIt, String sourceIp);
 
-   ArticleVisitorLikeStatistics getArticleVisitorLikeStatistics(String articleId);
+   VisitorLikeStatistics getArticleVisitorLikeStatistics(String articleId);
+
+   void addVisitorLikeToImage(String imageId, boolean likeIt, String sourceIp);
+
+   VisitorLikeStatistics getImageVisitorLikeStatistics(String articleId);
 }

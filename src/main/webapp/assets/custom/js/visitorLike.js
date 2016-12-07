@@ -13,8 +13,10 @@ var addArticleVisitorLike = function(articleLikeUrl, likeIt) {
          data: likeItReq,
          async: false,
          success: function(data) {
-            $("#likeSpan").html(data.likeCount + " like(s),")
-            $("#dislikeSpan").html(data.dislikeCount + " dislike(s),")
+            if (data != null) {
+               $("#likeSpan").html(data.likeCount + " like(s),");
+               $("#dislikeSpan").html(data.dislikeCount + " dislike(s),");
+            }
          },
          error: function(data) {
          }
@@ -32,8 +34,36 @@ var getArticleVisitorLikesCount = function(articleLikeUrl) {
          },
          async: false,
          success: function(data) {
-            $("#likeSpan").html(data.likeCount + " like(s),")
-            $("#dislikeSpan").html(data.dislikeCount + " dislike(s),")
+            if (data != null) {
+               $("#likeSpan").html(data.likeCount + " like(s),");
+               $("#dislikeSpan").html(data.dislikeCount + " dislike(s),");
+            }
+         },
+         error: function(data) {
+         }
+      });
+   }
+};
+
+var addImageVisitorLike = function(imageLikeUrl, likeIt) {
+   if (imageLikeUrl != null) {
+      var likeItReq = {
+         like: likeIt
+      };
+      
+      $.ajax({
+         type: "POST",
+         url: imageLikeUrl,
+         xhrFields: {
+            withCredentials: true
+         },
+         data: likeItReq,
+         async: false,
+         success: function(data) {
+            if (data != null) {
+               $("#likeSpan").html(data.likeCount + " like(s),");
+               $("#dislikeSpan").html(data.dislikeCount + " dislike(s),");
+            }
          },
          error: function(data) {
          }

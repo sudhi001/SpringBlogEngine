@@ -1,6 +1,6 @@
 package org.hanbo.mvc.models.json;
 
-public class ArticleVisitorLikeStatistics
+public class VisitorLikeStatistics
 {
    private String articleId;
    
