@@ -48,13 +48,32 @@ public class VisitorLikeServiceImpl
    @Override
    public void addVisitorLikeToImage(String imageId, boolean likeIt, String sourceIp)
    {
-      
+      if (_visitorLikeRepo != null
+         && !StringUtils.isEmpty(imageId)
+         && !StringUtils.isEmpty(sourceIp))
+      {
+         _visitorLikeRepo.addVisitorLikeToImage(imageId, likeIt, sourceIp);
+      }
    }
 
    @Override
-   public VisitorLikeStatistics getImageVisitorLikeStatistics(String articleId)
+   public VisitorLikeStatistics getImageVisitorLikeStatistics(String imageId)
    {
+      if (_visitorLikeRepo != null
+         && !StringUtils.isEmpty(imageId))
+      {
+         VisitorLikeStatistics retVal = new VisitorLikeStatistics();
+         
+         long likeCount = _visitorLikeRepo.getImageVisitorLikesCount(imageId);
+         long dislikeCount = _visitorLikeRepo.getImageVisitorDislikesCount(imageId);
+         
+         retVal.setArticleId(imageId);
+         retVal.setLikeCount(likeCount);
+         retVal.setDislikeCount(dislikeCount);
+         
+         return retVal;
+      }
+      
       return null;
    }
-
 }

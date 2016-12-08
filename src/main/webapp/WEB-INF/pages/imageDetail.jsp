@@ -277,6 +277,7 @@ ${commentItem.commentContent}
     <script src="${pageContext.request.contextPath}/assets/photo-swipe/photoswipe-ui-default.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/custom/js/validateEmail.js"></script>
     <script src="${pageContext.request.contextPath}/assets/custom/js/addComments.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/custom/js/visitorLike.js"></script>
     <script type="text/javascript">
     var viewImage = function (imgUrl, imgWidth, imgHeight) {
        var pswpElement = document.querySelectorAll('.pswp')[0];

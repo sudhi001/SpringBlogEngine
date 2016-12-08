@@ -10,5 +10,5 @@ public interface VisitorLikeService
 
    void addVisitorLikeToImage(String imageId, boolean likeIt, String sourceIp);
 
-   VisitorLikeStatistics getImageVisitorLikeStatistics(String articleId);
+   VisitorLikeStatistics getImageVisitorLikeStatistics(String imageId);
 }
