@@ -4,6 +4,8 @@ DROP TABLE IF EXISTS visitorlike;
 
 DROP TABLE IF EXISTS visitorcomment;
 
+DROP TABLE IF EXISTS userstatus;
+
 DROP TABLE IF EXISTS imagetogallery;
 
 DROP TABLE IF EXISTS gallery;
@@ -181,6 +183,16 @@ CREATE TABLE imagetogallery (
       ON UPDATE CASCADE
 );
 
+CREATE TABLE userstatus (
+   id VARCHAR(45) NOT NULL PRIMARY KEY,
+   statuscontent VARCHAR(1024) NOT NULL,
+   createdate DATETIME NOT NULL,
+   updatedate DATETIME NOT NULL,
+   ownerid VARCHAR(45) NULL,
+   
+   FOREIGN KEY (ownerid) REFERENCES user(id)
+);
+
 CREATE TABLE visitorcomment (
    id VARCHAR(45) NOT NULL PRIMARY KEY,
    commenter VARCHAR(96) NOT NULL,
@@ -193,6 +205,7 @@ CREATE TABLE visitorcomment (
    
    articleid VARCHAR(45) NULL,
    imageid VARCHAR(45) NULL,
+   statusid VARCHAR(45) NULL,
    ownerid VARCHAR(45) NULL,
    parentcommentid VARCHAR(45) NULL,
    
@@ -201,6 +214,7 @@ CREATE TABLE visitorcomment (
    
    FOREIGN KEY (articleid) REFERENCES article(id),
    FOREIGN KEY (imageid) REFERENCES image(id),
+   FOREIGN KEY (statusid) REFERENCES userstatus(id),
    FOREIGN KEY (ownerid) REFERENCES user(id),
    FOREIGN KEY (parentcommentid) REFERENCES visitorcomment(id)  
 );
@@ -212,16 +226,14 @@ CREATE TABLE visitorlike (
    sourceip VARCHAR(39) NOT NULL,
    articleid VARCHAR(45) NULL,
    imageid VARCHAR(45) NULL,
+   statusid VARCHAR(45) NULL,
    createdate DATETIME NOT NULL,
    updatedate DATETIME NOT NULL,
    
    FOREIGN KEY (articleid) REFERENCES article(id),
-   FOREIGN KEY (imageid) REFERENCES image(id)
+   FOREIGN KEY (imageid) REFERENCES image(id),
+   FOREIGN KEY (statusid) REFERENCES userstatus(id)
 );
-
-CREATE UNIQUE INDEX visitorlike_sourceipidx ON visitorlike (sourceip);
-CREATE UNIQUE INDEX visitorlike_articleidx ON visitorlike (articleid);
-CREATE UNIQUE INDEX visitorlike_imageidx ON visitorlike (imageid);
 
 INSERT INTO user (
    id, username, userpass,
