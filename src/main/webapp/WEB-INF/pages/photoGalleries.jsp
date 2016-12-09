@@ -9,7 +9,7 @@
   </tiles:putAttribute>
   
   <tiles:putAttribute name="body">
-    <h2>${pageMetadata.pageTitle}</h2>
+    <h2 class="text-right">${pageMetadata.pageTitle}</h2>
     <hr>
     <c:choose>
       <c:when test="${galleriesList != null && !galleriesList.isDataModelEmpty()}">

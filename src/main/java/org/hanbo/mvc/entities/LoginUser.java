@@ -34,11 +34,11 @@ public class LoginUser
    @Column(name = "active", nullable = false)
    private boolean active;
    
-   @Column(name = "createdate", columnDefinition="DATETIME")
+   @Column(name = "createdate", columnDefinition="DATETIME", nullable = false)
    @Temporal(TemporalType.TIMESTAMP)
    private Date createDate;
    
-   @Column(name = "updatedate", columnDefinition="DATETIME")
+   @Column(name = "updatedate", columnDefinition="DATETIME", nullable = false)
    @Temporal(TemporalType.TIMESTAMP)
    private Date updateDate;
 
@@ -65,6 +65,9 @@ public class LoginUser
    
    @OneToMany(fetch = FetchType.LAZY, mappedBy="owner")
    private Set<VisitorComment> userComments;
+   
+   @OneToMany(fetch = FetchType.LAZY, mappedBy="owner")
+   private Set<UserStatus> userStatuses;
 
    public LoginUser()
    {
@@ -75,6 +78,7 @@ public class LoginUser
       userImages = new HashSet<Image>();
       userGalleries = new HashSet<Gallery>();
       userComments = new HashSet<VisitorComment>();
+      userStatuses = new HashSet<UserStatus>();
    }
    
    public String getId()
@@ -225,5 +229,15 @@ public class LoginUser
    public void setUserComments(Set<VisitorComment> userComments)
    {
       this.userComments = userComments;
+   }
+
+   public Set<UserStatus> getUserStatuses()
+   {
+      return userStatuses;
+   }
+
+   public void setUserStatuses(Set<UserStatus> userStatuses)
+   {
+      this.userStatuses = userStatuses;
    }
 }

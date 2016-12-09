@@ -75,6 +75,10 @@ public class VisitorComment
    @JoinColumn(name = "imageid")
    private Image relatedImage;
    
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "statusid")
+   private UserStatus relatedUserStatus;
+   
    @OneToMany(fetch = FetchType.LAZY, mappedBy="parentComment")
    private Set<VisitorComment> childComments;
    
@@ -107,107 +111,143 @@ public class VisitorComment
       this.commenter = commenter;
    }
 
-   public String getCommenterEmail() {
+   public String getCommenterEmail()
+   {
       return commenterEmail;
    }
 
-   public void setCommenterEmail(String commenterEmail) {
+   public void setCommenterEmail(String commenterEmail)
+   {
       this.commenterEmail = commenterEmail;
    }
 
-   public String getSourceIp() {
+   public String getSourceIp()
+   {
       return sourceIp;
    }
 
-   public void setSourceIp(String sourceIp) {
+   public void setSourceIp(String sourceIp)
+   {
       this.sourceIp = sourceIp;
    }
 
-   public String getTitle() {
+   public String getTitle()
+   {
       return title;
    }
 
-   public void setTitle(String title) {
+   public void setTitle(String title)
+   {
       this.title = title;
    }
 
-   public String getContent() {
+   public String getContent()
+   {
       return content;
    }
 
-   public void setContent(String content) {
+   public void setContent(String content)
+   {
       this.content = content;
    }
 
-   public boolean isCommentPrivate() {
+   public boolean isCommentPrivate()
+   {
       return commentPrivate;
    }
 
-   public void setCommentPrivate(boolean commentPrivate) {
+   public void setCommentPrivate(boolean commentPrivate)
+   {
       this.commentPrivate = commentPrivate;
    }
 
-   public boolean isCommentApproved() {
+   public boolean isCommentApproved()
+   {
       return commentApproved;
    }
 
-   public void setCommentApproved(boolean commentApproved) {
+   public void setCommentApproved(boolean commentApproved)
+   {
       this.commentApproved = commentApproved;
    }
 
-   public Date getCreateDate() {
+   public Date getCreateDate()
+   {
       return createDate;
    }
 
-   public void setCreateDate(Date createDate) {
+   public void setCreateDate(Date createDate)
+   {
       this.createDate = createDate;
    }
 
-   public Date getUpdateDate() {
+   public Date getUpdateDate()
+   {
       return updateDate;
    }
 
-   public void setUpdateDate(Date updateDate) {
+   public void setUpdateDate(Date updateDate)
+   {
       this.updateDate = updateDate;
    }
 
-   public LoginUser getOwner() {
+   public LoginUser getOwner()
+   {
       return owner;
    }
 
-   public void setOwner(LoginUser owner) {
+   public void setOwner(LoginUser owner)
+   {
       this.owner = owner;
    }
 
-   public Article getRelatedArticle() {
+   public Article getRelatedArticle()
+   {
       return relatedArticle;
    }
 
-   public void setRelatedArticle(Article relatedArticle) {
+   public void setRelatedArticle(Article relatedArticle)
+   {
       this.relatedArticle = relatedArticle;
    }
 
-   public Image getRelatedImage() {
+   public Image getRelatedImage()
+   {
       return relatedImage;
    }
 
-   public void setRelatedImage(Image relatedImage) {
+   public void setRelatedImage(Image relatedImage)
+   {
       this.relatedImage = relatedImage;
    }
 
-   public Set<VisitorComment> getChildComments() {
+   public Set<VisitorComment> getChildComments()
+   {
       return childComments;
    }
 
-   public void setChildComments(Set<VisitorComment> childComments) {
+   public void setChildComments(Set<VisitorComment> childComments)
+   {
       this.childComments = childComments;
    }
 
-   public VisitorComment getParentComment() {
+   public VisitorComment getParentComment()
+   {
       return parentComment;
    }
 
-   public void setParentComment(VisitorComment parentComment) {
+   public void setParentComment(VisitorComment parentComment)
+   {
       this.parentComment = parentComment;
+   }
+
+   public UserStatus getRelatedUserStatus()
+   {
+      return relatedUserStatus;
+   }
+
+   public void setRelatedUserStatus(UserStatus relatedUserStatus)
+   {
+      this.relatedUserStatus = relatedUserStatus;
    }
 }

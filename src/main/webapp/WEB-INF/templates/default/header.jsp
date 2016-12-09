@@ -15,7 +15,8 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="${pageContext.request.contextPath}/blog/allPosts/0">Blog Posts</a></li>
+            <li><a href="${pageContext.request.contextPath}/public/updates/allUpdates/0">Updates</a></li>
+            <li><a href="${pageContext.request.contextPath}/blog/allPosts/0">Blog</a></li>
             <li><a href="${pageContext.request.contextPath}/galleries/0">Galleries</a></li>
             <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
               <li><a href="${pageContext.request.contextPath}/signin">Log in</a></li>
@@ -28,7 +29,7 @@
                   <li><a href="${pageContext.request.contextPath}/admin/blog/allMyPosts">My Posts</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/images/allMyImages">My Images</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/galleries/allMyGalleries/0">My Galleries</a></li>
-                  <li><a href="${pageContext.request.contextPath}/admin/updates/allMyUpdates">My Updates</a></li>
+                  <li><a href="${pageContext.request.contextPath}/admin/updates/allMyUpdates/0">My Updates</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/resources/allMyResources">My Resources</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/comments/0">Guest Comments</a></li>
                 </ul>

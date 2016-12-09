@@ -506,7 +506,7 @@ public class UserImageGalleryActions
       if (galleriesPage != null)
       {
          PageMetadata pageMetadata
-            = _util.creatPageMetadata("My Photos");
+            = _util.creatPageMetadata("My Galleries");
          ModelAndView retVal
             = _util.getDefaultModelAndView(
                  "photoGalleries", pageMetadata);

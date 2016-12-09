@@ -44,6 +44,10 @@ public class VisitorLike
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "imageid")
    private Image relatedImage;
+   
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "statusid")
+   private UserStatus relatedUserStatus;
 
    public String getId()
    {
@@ -123,5 +127,15 @@ public class VisitorLike
    public void setDislikeCount(int dislikeCount)
    {
       this.dislikeCount = dislikeCount;
+   }
+
+   public UserStatus getRelatedUserStatus()
+   {
+      return relatedUserStatus;
+   }
+
+   public void setRelatedUserStatus(UserStatus relatedUserStatus)
+   {
+      this.relatedUserStatus = relatedUserStatus;
    }
 }
