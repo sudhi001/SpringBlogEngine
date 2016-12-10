@@ -25,6 +25,9 @@ public class UserStatus
    @Column(name = "statuscontent", nullable = false, length = 1024)
    private String statusContent;
    
+   @Column(name = "statuscontent", nullable = false)
+   private boolean viewable;
+   
    @Column(name = "createdate", columnDefinition="DATETIME", nullable = false)
    @Temporal(TemporalType.TIMESTAMP)
    private Date createDate;
@@ -91,5 +94,15 @@ public class UserStatus
    public void setOwner(LoginUser owner)
    {
       this.owner = owner;
+   }
+
+   public boolean isViewable()
+   {
+      return viewable;
+   }
+
+   public void setViewable(boolean viewable)
+   {
+      this.viewable = viewable;
    }
 }

@@ -186,6 +186,7 @@ CREATE TABLE imagetogallery (
 CREATE TABLE userstatus (
    id VARCHAR(45) NOT NULL PRIMARY KEY,
    statuscontent VARCHAR(1024) NOT NULL,
+   viewable BIT(1) NOT NULL DEFAULT 0,
    createdate DATETIME NOT NULL,
    updatedate DATETIME NOT NULL,
    ownerid VARCHAR(45) NULL,
