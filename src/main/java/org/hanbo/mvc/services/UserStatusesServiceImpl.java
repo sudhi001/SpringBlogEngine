@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hanbo.mvc.entities.UserStatus;
+import org.hanbo.mvc.repositories.CommentsRepository;
 import org.hanbo.mvc.repositories.UserStatusesRepository;
+import org.hanbo.mvc.repositories.VisitorLikeRepository;
 import org.hanbo.mvc.services.utilities.UserUpdateDataModelEntityMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -26,10 +28,16 @@ public class UserStatusesServiceImpl
    @Autowired
    private Environment configValues;
    
+   @Autowired
+   private CommentsRepository commentsRepo;
+   
+   @Autowired
+   private VisitorLikeRepository visitorLikeRepo;
+   
    @Override
    public UserUpdatesPageDataModel getViewableUserUpdates(int pageIdx)
    {
-      int maxItemsCount = getAdminCommentsCountForDisplay();
+      int maxItemsCount = getViewableUserStatusesCountForDisplay();
       
       int allUserUpdatesCount = (int)this.userStatusesRepo.getViewableUserStatusesCount();
       
@@ -39,6 +47,20 @@ public class UserStatusesServiceImpl
       {
          List<UserUpdateDataModel> listOfUpdates = 
          UserUpdateDataModelEntityMapping.toDataModels(viewableStatuses);
+         
+         for (UserUpdateDataModel update : listOfUpdates)
+         {
+            if (update != null)
+            {
+               int commentsCount = (int)commentsRepo.getUserStatusViewableCommentsCount(update.getUserStatusId());
+               int visitorLikesCount = (int)this.visitorLikeRepo.getArticleVisitorLikesCount(update.getUserStatusId());
+               int visitorDislikesCount = (int)this.visitorLikeRepo.getArticleVisitorDislikesCount(update.getUserStatusId());
+               
+               update.setCommentsCount(commentsCount);
+               update.setVisitorLikesCount(visitorLikesCount);
+               update.setVisitorDislikesCount(visitorDislikesCount);
+            }
+         }
          
          retVal.setUserUpdates(listOfUpdates);
          if (listOfUpdates != null && listOfUpdates.size() > 0)
@@ -60,7 +82,7 @@ public class UserStatusesServiceImpl
       return retVal;
    }
    
-   private int getAdminCommentsCountForDisplay()
+   private int getViewableUserStatusesCountForDisplay()
    {
       String itemsCount = configValues.getProperty("viewableUserUpdatesPerPage");
       
@@ -68,6 +90,4 @@ public class UserStatusesServiceImpl
       
       return itemsCountVal;
    }
-
-
 }

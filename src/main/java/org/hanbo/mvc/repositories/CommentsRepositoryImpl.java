@@ -522,4 +522,34 @@ public class CommentsRepositoryImpl
       
       return retVal;
    }
+
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   @Override
+   public long getUserStatusViewableCommentsCount(String userStatusId)
+   {
+      Session session = this._sessionFactory.getCurrentSession();
+      return getUserStatusViewableCommentsCount(session, userStatusId);
+   }
+
+   @Override
+   public long getUserStatusViewableCommentsCount(Session session, String userStatusId)
+   {
+      if (session != null)
+      {
+         Query query =
+            session.createQuery("select count() from VisitorComment visitorComment where visitorComment.commentApproved = true and visitorComment.commentPrivate = false and visitorComment.relatedUserStatus = :userSatusId")
+               .setParameter("userStatusId", userStatusId)
+               .setMaxResults(1);
+         List<Long> foundObjs = query.list();
+         if (foundObjs != null)
+         {
+            return foundObjs.get(0);
+         }
+      }
+      
+      return 0L;
+   }
 }

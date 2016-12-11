@@ -47,4 +47,8 @@ public interface CommentsRepository
    long getArticleViewableCommentsCount(String articleId);
 
    long getImageViewableCommentsCount(String imageId);
+   
+   long getUserStatusViewableCommentsCount(String userStatusId);
+   
+   long getUserStatusViewableCommentsCount(Session session, String userStatusId);
 }

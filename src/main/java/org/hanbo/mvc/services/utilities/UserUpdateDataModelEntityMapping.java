@@ -16,6 +16,7 @@ public class UserUpdateDataModelEntityMapping
          retVal = new UserUpdateDataModel();
          
          retVal.setUserStatusId(entity.getId());
+         retVal.setStatusTitle(entity.getStatusTitle());
          retVal.setStatusContent(entity.getStatusContent());
          retVal.setStatusCreateDate(entity.getCreateDate());
          retVal.setStatusUpdateDate(entity.getUpateDate());

@@ -22,10 +22,13 @@ public class UserStatus
    @Column(name = "id", nullable = false, length = 45)
    private String id;
 
+   @Column(name = "statustitle", nullable = false, length = 128)
+   private String statusTitle;
+   
    @Column(name = "statuscontent", nullable = false, length = 1024)
    private String statusContent;
    
-   @Column(name = "statuscontent", nullable = false)
+   @Column(name = "viewable", nullable = false)
    private boolean viewable;
    
    @Column(name = "createdate", columnDefinition="DATETIME", nullable = false)
@@ -56,6 +59,16 @@ public class UserStatus
       this.id = id;
    }
 
+   public String getStatusTitle()
+   {
+      return statusTitle;
+   }
+
+   public void setStatusTitle(String statusTitle)
+   {
+      this.statusTitle = statusTitle;
+   }
+   
    public String getStatusContent()
    {
       return statusContent;

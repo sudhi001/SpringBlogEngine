@@ -2,7 +2,7 @@ package org.hanbo.mvc.controllers;
 
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.PageMetadata;
-import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.UserUpdatesPageDataModel;
 import org.hanbo.mvc.services.UserStatusesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,8 @@ public class UserUpdatesActions
    {
       if (userStatusesService != null)
       {
-         userStatusesService.getViewableUserUpdates(pageIdx);
+         UserUpdatesPageDataModel pageModel
+            = userStatusesService.getViewableUserUpdates(pageIdx);
          
          PageMetadata pageMetadata
             = _util.creatPageMetadata("My Updates");
@@ -37,6 +38,7 @@ public class UserUpdatesActions
             = _util.getDefaultModelAndView(
                "userUpdates", pageMetadata
             );
+         retVal.addObject("userUpdates", pageModel);
          return retVal;
       }
       else

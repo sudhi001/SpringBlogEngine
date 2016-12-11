@@ -2,9 +2,13 @@ package org.hanbo.mvc.models;
 
 import java.util.Date;
 
+import org.hanbo.mvc.utilities.DateToString;
+
 public class UserUpdateDataModel
 {
    private String userStatusId;
+   
+   private String statusTitle;
    
    private String statusContent;
    
@@ -23,6 +27,12 @@ public class UserUpdateDataModel
    private String statusOwnerUserProfileId;
 
    private String statusOwnerUserIconId;
+   
+   private int commentsCount;
+   
+   private int visitorLikesCount;
+
+   private int visitorDislikesCount;
 
    public String getUserStatusId()
    {
@@ -34,6 +44,16 @@ public class UserUpdateDataModel
       this.userStatusId = userStatusId;
    }
 
+   public String getStatusTitle()
+   {
+      return statusTitle;
+   }
+
+   public void setStatusTitle(String statusTitle)
+   {
+      this.statusTitle = statusTitle;
+   }
+   
    public String getStatusContent()
    {
       return statusContent;
@@ -49,6 +69,12 @@ public class UserUpdateDataModel
       return statusCreateDate;
    }
 
+   public String getStatusCreateDateString()
+   {
+      return 
+      DateToString.dateToString(statusCreateDate, "MM/dd/yyyy HH:mm:ss");
+   }
+   
    public void setStatusCreateDate(Date statusCreateDate)
    {
       this.statusCreateDate = statusCreateDate;
@@ -57,6 +83,12 @@ public class UserUpdateDataModel
    public Date getStatusUpdateDate()
    {
       return statusUpdateDate;
+   }
+   
+   public String getStatusUpdateDateString()
+   {
+      return 
+      DateToString.dateToString(statusUpdateDate, "MM/dd/yyyy HH:mm:ss");
    }
 
    public void setStatusUpdateDate(Date statusUpdateDate)
@@ -122,5 +154,35 @@ public class UserUpdateDataModel
    public void setStatusOwnerUserProfileId(String statusOwnerUserProfileId)
    {
       this.statusOwnerUserProfileId = statusOwnerUserProfileId;
+   }
+
+   public int getCommentsCount()
+   {
+      return commentsCount;
+   }
+
+   public void setCommentsCount(int commentsCount)
+   {
+      this.commentsCount = commentsCount;
+   }
+
+   public int getVisitorLikesCount()
+   {
+      return visitorLikesCount;
+   }
+
+   public void setVisitorLikesCount(int visitorLikesCount)
+   {
+      this.visitorLikesCount = visitorLikesCount;
+   }
+
+   public int getVisitorDislikesCount()
+   {
+      return visitorDislikesCount;
+   }
+
+   public void setVisitorDislikesCount(int visitorDislikesCount)
+   {
+      this.visitorDislikesCount = visitorDislikesCount;
    }
 }
