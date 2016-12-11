@@ -42,6 +42,43 @@ public class UserStatusesServiceImpl
       int allUserUpdatesCount = (int)this.userStatusesRepo.getViewableUserStatusesCount();
       
       List<UserStatus> viewableStatuses = this.userStatusesRepo.getViewableUserStatuses(pageIdx, maxItemsCount);
+      return 
+      prepareUseUpdatesPageDataModel(viewableStatuses, allUserUpdatesCount, pageIdx, maxItemsCount);
+   }
+   
+   private int getViewableUserStatusesCountForDisplay()
+   {
+      String itemsCount = configValues.getProperty("viewableUserUpdatesPerPage");
+      
+      int itemsCountVal = Integer.parseInt(itemsCount);
+      
+      return itemsCountVal;
+   }
+   
+   private int getAdminUserStatusesCountForDisplay()
+   {
+      String itemsCount = configValues.getProperty("adminUserUpdatesPerPage");
+      
+      int itemsCountVal = Integer.parseInt(itemsCount);
+      
+      return itemsCountVal;
+   }
+
+   @Override
+   public UserUpdatesPageDataModel getAllUserUpdates(String userId, int pageIdx)
+   {
+      int maxItemsCount = getAdminUserStatusesCountForDisplay();
+      
+      int allUserUpdatesCount = (int)this.userStatusesRepo.getAllUserStatusesCount(userId);
+      
+      List<UserStatus> viewableStatuses = this.userStatusesRepo.getAllUserStatuses(userId, pageIdx, maxItemsCount);
+
+      return 
+      prepareUseUpdatesPageDataModel(viewableStatuses, allUserUpdatesCount, pageIdx, maxItemsCount);
+   }
+   
+   private UserUpdatesPageDataModel prepareUseUpdatesPageDataModel(List<UserStatus> viewableStatuses, int allUserUpdatesCount, int pageIdx, int maxItemsCount)
+   {
       UserUpdatesPageDataModel retVal = new UserUpdatesPageDataModel();
       if (viewableStatuses != null && viewableStatuses.size() > 0)
       {
@@ -80,14 +117,5 @@ public class UserStatusesServiceImpl
       }
       
       return retVal;
-   }
-   
-   private int getViewableUserStatusesCountForDisplay()
-   {
-      String itemsCount = configValues.getProperty("viewableUserUpdatesPerPage");
-      
-      int itemsCountVal = Integer.parseInt(itemsCount);
-      
-      return itemsCountVal;
    }
 }

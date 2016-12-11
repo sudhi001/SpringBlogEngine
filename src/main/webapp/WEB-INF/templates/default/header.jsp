@@ -28,10 +28,10 @@
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="${pageContext.request.contextPath}/admin/viewUserProfile">My User Profile</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/blog/allMyPosts">My Posts</a></li>
-                  <li><a href="${pageContext.request.contextPath}/admin/images/allMyImages">My Images</a></li>
+                  <!-- <li><a href="${pageContext.request.contextPath}/admin/images/allMyImages">My Images</a></li> -->
                   <li><a href="${pageContext.request.contextPath}/admin/galleries/allMyGalleries/0">My Galleries</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/updates/allMyUpdates/0">My Updates</a></li>
-                  <li><a href="${pageContext.request.contextPath}/admin/resources/allMyResources">My Resources</a></li>
+                  <li><a href="${pageContext.request.contextPath}/admin/resources/allMyResources/0">My Resources</a></li>
                   <li><a href="${pageContext.request.contextPath}/admin/comments/0">Guest Comments</a></li>
                 </ul>
               </li>

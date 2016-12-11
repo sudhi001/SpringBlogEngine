@@ -51,7 +51,6 @@ public class UserStatusesRepositoryImpl
       return 0L;
    }
    
-   
    @Override
    @Transactional(
       propagation = Propagation.REQUIRED,
@@ -66,6 +65,62 @@ public class UserStatusesRepositoryImpl
          .setMaxResults(maxItemsCount)
          .setFirstResult(pageIdx * maxItemsCount);
       List<UserStatus> foundObjs = query.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         loadUserStatus(foundObjs);
+      }
+      
+      return foundObjs;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public long getAllUserStatusesCount(String ownerId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select count(userStatus) from UserStatus userStatus where "
+         + "and useStatus.owner.id = :ownerId")
+         .setParameter("ownerId", ownerId)
+         .setMaxResults(1);
+      List<Long> foundObjs = query.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         return foundObjs.get(0);
+      }
+      
+      return 0L;
+   }
+   
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public List<UserStatus> getAllUserStatuses(String ownerId, int pageIdx, int maxItemsCount)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select userStatus from UserStatus userStatus where "
+         + "and useStatus.owner.id = :ownerId")
+         .setParameter("ownerId", ownerId)
+         .setFirstResult(pageIdx * maxItemsCount)
+         .setMaxResults(maxItemsCount);
+      
+      List<UserStatus> foundObjs = query.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         loadUserStatus(foundObjs);
+      }
+      
+      return foundObjs;
+   }
+   
+   private void loadUserStatus(List<UserStatus> foundObjs)
+   {
       if (foundObjs != null && foundObjs.size() > 0)
       {
          for (UserStatus statusToLoad : foundObjs)
@@ -89,7 +144,5 @@ public class UserStatusesRepositoryImpl
             }
          }
       }
-      
-      return foundObjs;
    }
 }

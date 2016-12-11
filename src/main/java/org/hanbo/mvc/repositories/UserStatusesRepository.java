@@ -11,4 +11,8 @@ public interface UserStatusesRepository
    long getViewableUserStatusesCount();
    
    List<UserStatus> getViewableUserStatuses(int pageIdx, int maxItemsCount);
+
+   long getAllUserStatusesCount(String ownerId);
+   
+   List<UserStatus> getAllUserStatuses(String ownerId, int pageIdx, int maxItemsCount);
 }
