@@ -41,7 +41,7 @@ public class UserStatusesRepositoryImpl
       Session session = _sessionFactory.getCurrentSession();
       Query query = session.createQuery(
          "select count(userStatus) from UserStatus userStatus where "
-         + "and useStatus.viewable = true");
+         + "userStatus.viewable = true");
       List<Long> foundObjs = query.list();
       if (foundObjs != null && foundObjs.size() > 0)
       {
@@ -61,7 +61,7 @@ public class UserStatusesRepositoryImpl
       Session session = _sessionFactory.getCurrentSession();
       Query query = session.createQuery(
          "select userStatus from UserStatus userStatus where "
-         + "and useStatus.viewable = true")
+         + "userStatus.viewable = true")
          .setMaxResults(maxItemsCount)
          .setFirstResult(pageIdx * maxItemsCount);
       List<UserStatus> foundObjs = query.list();
@@ -83,7 +83,7 @@ public class UserStatusesRepositoryImpl
       Session session = _sessionFactory.getCurrentSession();
       Query query = session.createQuery(
          "select count(userStatus) from UserStatus userStatus where "
-         + "and useStatus.owner.id = :ownerId")
+         + "userStatus.owner.id = :ownerId")
          .setParameter("ownerId", ownerId)
          .setMaxResults(1);
       List<Long> foundObjs = query.list();
@@ -105,7 +105,7 @@ public class UserStatusesRepositoryImpl
       Session session = _sessionFactory.getCurrentSession();
       Query query = session.createQuery(
          "select userStatus from UserStatus userStatus where "
-         + "and useStatus.owner.id = :ownerId")
+         + "userStatus.owner.id = :ownerId")
          .setParameter("ownerId", ownerId)
          .setFirstResult(pageIdx * maxItemsCount)
          .setMaxResults(maxItemsCount);

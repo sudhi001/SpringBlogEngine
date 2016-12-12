@@ -24,7 +24,7 @@ public class UserUpdatesActions
    private UserStatusesService userStatusesService;
 
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
-   @RequestMapping(value = "/admin/resources/allMyResources/{pageIdx}",
+   @RequestMapping(value = "/admin/updates/allMyUpdates/{pageIdx}",
       method=RequestMethod.GET)
    public ModelAndView allMyUpdates(
       @PathVariable("pageIdx")
@@ -49,7 +49,7 @@ public class UserUpdatesActions
                = _util.creatPageMetadata("Manage My Updates");
             ModelAndView retVal
                = _util.getDefaultModelAndView(
-                  "userUpdates", pageMetadata
+                  "adminUserUpdates", pageMetadata
                );
             retVal.addObject("adminUserUpdates", pageModel);
             return retVal;
@@ -65,6 +65,20 @@ public class UserUpdatesActions
          return _util.createErorrPageViewModel(
             "Error occurred", "Invalid user detected.");
       }
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/admin/updates/addNewUpdate",
+      method=RequestMethod.GET)
+   public ModelAndView addNewUpdate()
+   {
+      PageMetadata pageMetadata
+         = _util.creatPageMetadata("Add New Update");
+      ModelAndView retVal
+         = _util.getDefaultModelAndView(
+            "editUserUpdate", pageMetadata
+         );
+      return retVal;
    }
    
    @RequestMapping(value = "/public/updates/allUpdates/{pageIdx}",
