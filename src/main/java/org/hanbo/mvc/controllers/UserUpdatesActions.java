@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hanbo.mvc.controllers.utilities.ActionsUtil;
 import org.hanbo.mvc.models.PageMetadata;
 import org.hanbo.mvc.models.UserPrincipalDataModel;
+import org.hanbo.mvc.models.UserUpdateInputDataModel;
 import org.hanbo.mvc.models.UserUpdatesPageDataModel;
 import org.hanbo.mvc.services.UserStatusesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -78,7 +80,59 @@ public class UserUpdatesActions
          = _util.getDefaultModelAndView(
             "editUserUpdate", pageMetadata
          );
+      
+      UserUpdateInputDataModel blankUpdate
+         = new UserUpdateInputDataModel();
+      retVal.addObject("userUpdate", blankUpdate);
       return retVal;
+   }
+   
+   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')")
+   @RequestMapping(value = "/public/updates/addEditUserUpdate",
+      method=RequestMethod.POST)
+   public ModelAndView addEditUserUpdate(
+      @RequestParam("userRequestId")
+      String userUpdateId,
+      @RequestParam("userRequestTitle")
+      String userUpdateTitle,
+      @RequestParam("userRequestContent")
+      String userUpdateContent,
+      @RequestParam("userRequestContent")
+      boolean userUpdatePublished
+   )
+   {
+      UserPrincipalDataModel loginUser = this._util.getLoginUser();
+      if (loginUser == null)
+      {
+         return _util.createErorrPageViewModel("User Authorization Failure", "User cannot be found.");
+      }
+      
+      String userId = loginUser.getUserId();
+      if (!StringUtils.isEmpty(userId))
+      {
+         if (!StringUtils.isEmpty(userUpdateId))
+         {
+            UserUpdateInputDataModel userUpdateDataModel
+               = new UserUpdateInputDataModel();
+            
+            userUpdateDataModel.setUserUpdateId(userUpdateId);
+            userUpdateDataModel.setUserUpdateTitle(userUpdateTitle);
+            userUpdateDataModel.setUserUpdateContent(userUpdateContent);
+            userUpdateDataModel.setUserUpdatePublished(userUpdatePublished);
+            
+            userStatusesService.editUserStatus(userId, userUpdateDataModel);
+         }
+         else
+         {
+            UserUpdateInputDataModel userUpdateDataModel
+               = new UserUpdateInputDataModel();
+            
+            userUpdateDataModel.setUserUpdateTitle(userUpdateTitle);
+            userUpdateDataModel.setUserUpdateContent(userUpdateContent);
+            userUpdateDataModel.setUserUpdatePublished(userUpdatePublished);
+            userStatusesService.addUserStatus(userId, userUpdateDataModel);
+         }
+      }
    }
    
    @RequestMapping(value = "/public/updates/allUpdates/{pageIdx}",

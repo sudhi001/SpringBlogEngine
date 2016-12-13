@@ -119,6 +119,30 @@ public class UserStatusesRepositoryImpl
       return foundObjs;
    }
    
+   @Override
+   @Transactional(
+      propagation = Propagation.REQUIRED,
+      isolation = Isolation.READ_COMMITTED
+   )
+   public UserStatus getUserStatus(String userId, String userUpdateId)
+   {
+      Session session = _sessionFactory.getCurrentSession();
+      Query query = session.createQuery(
+         "select userStatus from UserStatus userStatus where "
+         + "userStatus.owner.id = :ownerId and userStatus.id = :userUpdateId")
+         .setParameter("ownerId", userId)
+         .setParameter("userUpdateId", userUpdateId)
+         .setMaxResults(1);
+      
+      List<UserStatus> foundObjs = query.list();
+      if (foundObjs != null && foundObjs.size() > 0)
+      {
+         return foundObjs.get(0);
+      }
+      
+      return null;
+   }
+   
    private void loadUserStatus(List<UserStatus> foundObjs)
    {
       if (foundObjs != null && foundObjs.size() > 0)
